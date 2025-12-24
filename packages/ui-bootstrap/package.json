@@ -1,0 +1,16 @@
+{
+    "name": "@smartwizard/ui-bootstrap",
+    "version": "0.1.0",
+    "description": "Bootstrap theme for SmartWizard",
+    "main": "dist/index.css",
+    "scripts": {
+        "build": "sass scss/index.scss dist/index.css",
+        "dev": "sass --watch scss/index.scss dist/index.css"
+    },
+    "dependencies": {
+        "@smartwizard/core": "workspace:*"
+    },
+    "devDependencies": {
+        "sass": "^1.70.0"
+    }
+}

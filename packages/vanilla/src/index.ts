@@ -1,0 +1,1 @@
+export { SmartWizardDOM } from './SmartWizardDOM';

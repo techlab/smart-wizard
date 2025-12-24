@@ -1,0 +1,23 @@
+{
+    "name": "@smartwizard/vue",
+    "version": "0.1.0",
+    "description": "Vue bindings for SmartWizard",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --format cjs,esm --dts --external @smartwizard/core --external vue",
+        "dev": "tsup src/index.ts --format cjs,esm --watch"
+    },
+    "dependencies": {
+        "@smartwizard/core": "workspace:*"
+    },
+    "peerDependencies": {
+        "vue": "^3.0.0"
+    },
+    "devDependencies": {
+        "vue": "^3.0.0",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    }
+}
