@@ -1,11 +1,12 @@
 {
-    "name": "smart-wizard-monorepo",
+    "name": "smart-wizard",
     "version": "0.1.0",
     "private": true,
     "description": "SmartWizard - A modern, framework-agnostic wizard/stepper component",
     "scripts": {
-        "build": "turbo run build",
+        "start": "turbo run dev",
         "dev": "turbo run dev",
+        "build": "turbo run build",
         "lint": "turbo run lint",
         "test": "turbo run test"
     },

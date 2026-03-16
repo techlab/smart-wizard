@@ -304,8 +304,8 @@
   </div>
 
   <script type="module">
-    // Import SmartWizard from the built package
-    import { SmartWizard } from '../../packages/core/dist/index.mjs';
+    // Import SmartWizard (resolved by Vite alias to live source in dev)
+    import { SmartWizard } from '@smartwizard/core';
 
     // Initialize SmartWizard
     const wizard = new SmartWizard('#smartwizard', {

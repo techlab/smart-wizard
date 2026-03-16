@@ -1,0 +1,75 @@
+// Slide theme
+// Full-width content carousel with large left/right arrow buttons on the sides.
+// Navigation dots sit below. No traditional step nav bar — the prev/next buttons
+// ARE the navigation, like a hero carousel.
+// Reference: testimonial slider with side arrows and dot paginators.
+
+.sw-theme-slide {
+
+    display: flex;
+    flex-direction: column;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    position: relative;
+
+    // Hide the traditional nav bar entirely
+    >.nav {
+        display: none !important;
+    }
+
+    // Full-width content area
+    >.tab-content {
+        order: 0;
+        padding: 0;
+    }
+
+    // Toolbar becomes the carousel controls:
+    // Prev arrow | dots indicator | Next arrow
+    >.toolbar {
+        order: 1;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 0 0;
+        border: none;
+        background: transparent;
+
+        // Style prev/next as large circular icon buttons
+        .sw-btn-prev,
+        .sw-btn-next {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            padding: 0;
+            border-radius: 50%;
+            background: var(--sw-surface);
+            color: var(--sw-accent);
+            border: 2px solid var(--sw-border);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background var(--sw-transition), color var(--sw-transition), box-shadow var(--sw-transition), transform var(--sw-transition);
+            font-size: 1.1rem;
+            font-weight: 700;
+
+            &:hover:not(:disabled) {
+                background: var(--sw-accent);
+                color: var(--sw-accent-text);
+                border-color: var(--sw-accent);
+                box-shadow: 0 4px 18px color-mix(in srgb, var(--sw-accent) 40%, transparent);
+                transform: scale(1.08);
+            }
+
+            &:disabled,
+            &[disabled] {
+                opacity: 0.3;
+                pointer-events: none;
+                cursor: not-allowed;
+            }
+        }
+    }
+}

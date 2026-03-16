@@ -1,356 +1,610 @@
-import { WizardOptions, WizardInterface, StepInfo, StepState, StepDirection } from './types';
-import { defaultOptions } from './options';
-import { transitions } from './transitions';
 import {
-    addClass, removeClass, hasClass, addEvent, hideElement, showElement,
-    getAllDescendants, getFirstDescendant, getAttribute, getElementHeight,
-    setElementHeight, dispatchEvent, deepMerge, setAttribute
+    WizardOptions, WizardInterface, StepDirection, StepPosition, StepState,
+    ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, TransitionHandler
+} from './types';
+import { transitions } from './transitions';
+import { defaultOptions } from './options';
+import {
+    addClass, removeClass, hasClass, showElement, hideElement,
+    addEvent, dispatchEvent, getAttribute, setAttribute,
+    getFirstDescendant, getAllDescendants,
+    getElementHeight, setElementHeight, deepMerge
 } from './util';
 
+// CSS Custom Properties
+const CSS_PROPERTIES = {
+    PROGRESS_PERCENTAGE: '--sw-progress-percentage',
+};
+
+// Data attributes
+const DATA_ATTRIBUTES = {
+    THEME: 'data-theme',
+};
+
 export class SmartWizard implements WizardInterface {
-    main: HTMLElement;
-    nav: HTMLElement;
-    container: HTMLElement;
-    steps: HTMLElement[];
-    pages: HTMLElement[];
-    progressbar: HTMLElement[];
-    toolbar: HTMLElement | null = null;
-    currentIndex: number;
-    isInitialized: boolean;
-    options: WizardOptions;
+    public options: WizardOptions;
+    public readonly main: HTMLElement;
+    public container!: HTMLElement;
+    private nav!: HTMLElement;
+    public steps!: HTMLElement[];
+    public pages!: HTMLElement[];
+    private progressbars: HTMLElement[] = [];
+    private contentDirection!: ContentDirection;
+    private isInitialized: boolean = false;
+    public currentIndex: number = -1;
+    private touchStartX: number = 0;
+    private touchStartY: number = 0;
 
-    constructor(selector: string | HTMLElement, options: Partial<WizardOptions> = {}, autoload = true) {
-        // Initialize main element
-        const mainElement = typeof selector === 'string'
-            ? document.querySelector(selector) as HTMLElement
-            : selector;
+    constructor(element: HTMLElement, options?: Partial<WizardOptions>) {
+        this.options = deepMerge({ ...defaultOptions }, options ?? {});
+        this.main = element;
 
-        if (!mainElement) {
-            throw new Error('SmartWizard: Main element not found');
-        }
-        this.main = mainElement;
+        this.setup();
+        this.init();
 
-        // Get nav and container elements
-        const nav = getFirstDescendant('.nav', this.main);
-        const container = getFirstDescendant('.tab-content', this.main);
-
-        if (!nav || !container) {
-            throw new Error('SmartWizard: Required elements not found. Make sure .nav and .tab-content elements exist.');
-        }
-
-        this.nav = nav;
-        this.container = container;
-        this.currentIndex = -1;
-        this.isInitialized = false;
-
-        // Deep merge options with defaults
-        this.options = deepMerge({ ...defaultOptions }, options);
-
-        // Initialize arrays
-        this.steps = getAllDescendants('.nav-link', this.nav);
-        this.pages = getAllDescendants('.tab-pane', this.container);
-        this.progressbar = getAllDescendants('.progress-bar', this.main);
-
-        if (autoload) {
-            this.init();
-        }
+        requestAnimationFrame(() => {
+            this.load();
+        });
     }
 
-    init(): void {
-        if (this.isInitialized) {
-            return;
-        }
+    private setup(): void {
+        // Content container
+        const container = getFirstDescendant(`.${this.options.styles.content.container}`, this.main);
+        if (!container) throw new Error('SmartWizard: Content container not found');
+        this.container = container;
 
-        // Apply theme
-        if (this.options.theme && this.options.theme !== 'default') {
-            addClass(`${this.options.style.themePrefixCss}${this.options.theme}`, this.main);
-        }
+        // Navigation bar element
+        const nav = getFirstDescendant(`.${this.options.styles.navigation.container}`, this.main);
+        if (!nav) throw new Error('SmartWizard: Navigation element not found');
+        this.nav = nav;
 
-        // Apply justified class
-        if (this.options.justified) {
-            addClass(this.options.style.justifiedCss, this.nav);
-        }
+        // Step anchor elements
+        this.steps = getAllDescendants(`.${this.options.styles.navigation.link}`, this.nav);
 
-        // Hide all pages initially
-        this.pages.forEach(hideElement);
+        // Content pages
+        this.pages = Array.from(this.container.children).filter(
+            child => child.classList.contains(this.options.styles.content.panel)
+        ) as HTMLElement[];
 
-        // Remove active and done classes from steps
-        this.steps.forEach(step => {
-            removeClass(`${this.options.style.anchorDoneCss} ${this.options.style.anchorActiveCss}`, step);
-        });
+        // Progress bars
+        this.progressbars = getAllDescendants(`.${this.options.styles.progressBar.container}`, this.main);
 
-        // Apply initial step states
-        this.#applyStepStates();
+        // Direction, RTL/LTR
+        this.contentDirection = (this.main.getAttribute('dir') ||
+            document.documentElement.getAttribute('dir') || 'ltr') as ContentDirection;
 
-        // Create toolbar if needed
-        if (this.options.toolbar.position !== 'none') {
-            this.#createToolbar();
-        }
+        // Initial state
+        this.currentIndex = -1;
+        this.isInitialized = false;
+    }
 
-        // Show selected step
-        const selectedStep = Math.max(0, Math.min(this.options.selected, this.steps.length - 1));
-        this.#showStep(selectedStep);
+    private init(): void {
+        // Set main element classes including theme
+        this.setElements();
+        // Add toolbar
+        this.setToolbar();
+        // Set anchor states
+        this.setNav();
 
-        // Bind events
-        this.#bindEvents();
+        // Skip event binding if already initialized
+        if (this.isInitialized === true) return;
 
-        this.isInitialized = true;
+        // Assign events
+        this.setEvents();
 
         // Trigger initialized event
         dispatchEvent(this.main, 'initialized', {
-            detail: { wizard: this }
+            detail: { wizard: this },
+            bubbles: true
+        });
+
+        this.isInitialized = true;
+    }
+
+    private load(): void {
+        // Hide all pages
+        this.pages.forEach(p => hideElement(p));
+
+        // Reset index
+        this.currentIndex = -1;
+
+        // Get initial step
+        const idx = this.getInitialStep();
+
+        // Mark previous steps as completed if needed
+        if (idx > 0 && this.options.navigation.completed.enabled && this.options.navigation.completed.completeAllPreviousSteps) {
+            this.steps.slice(0, idx).forEach(step => {
+                addClass(this.options.styles.anchorStates.completed, step);
+            });
+        }
+
+        // Show the initial step
+        this.showStep(idx);
+
+        // Trigger loaded event
+        dispatchEvent(this.main, 'loaded', {
+            detail: { wizard: this },
+            bubbles: true
         });
     }
 
-    #applyStepStates(): void {
-        // Apply disabled steps
-        this.options.disabledSteps.forEach(idx => {
-            if (this.steps[idx]) {
-                addClass(this.options.style.anchorDisabledCss, this.steps[idx]);
-            }
-        });
+    private getInitialStep(): number {
+        // Determine target step from hash if enabled
+        let hashIndex: number | null = null;
+        if (this.options.behavior.useUrlHash) {
+            const hash = window.location.hash;
+            hashIndex = hash ? this.getStepByAnchor(hash) : null;
+        }
 
-        // Apply hidden steps
-        this.options.hiddenSteps.forEach(idx => {
-            if (this.steps[idx]) {
-                addClass(this.options.style.anchorHiddenCss, this.steps[idx]);
-            }
-        });
+        // Determine initial step index
+        const initialIndex = hashIndex ?? this.options.initialStep;
 
-        // Apply error steps
-        this.options.errorSteps.forEach(idx => {
-            if (this.steps[idx]) {
-                addClass(this.options.style.anchorErrorCss, this.steps[idx]);
-            }
-        });
+        // Find the first showable step starting from the initial index
+        const showableIndex = this.getShowable(initialIndex - 1, 'forward');
 
-        // Apply warning steps
-        this.options.warningSteps.forEach(idx => {
-            if (this.steps[idx]) {
-                addClass(this.options.style.anchorWarningCss, this.steps[idx]);
-            }
-        });
+        // If invalid or not showable, fallback to first showable
+        return showableIndex ?? (initialIndex > 0 ? this.getShowable(-1, 'forward') ?? 0 : initialIndex);
     }
 
-    #createToolbar(): void {
-        const toolbarHtml = `
-      <div class="${this.options.style.toolbarCss} ${this.options.style.toolbarPrefixCss}${this.options.toolbar.position}">
-        ${this.options.toolbar.showPreviousButton ? `<button class="${this.options.style.btnCss} ${this.options.style.btnPrevCss}" type="button">${this.options.lang.previous}</button>` : ''}
-        ${this.options.toolbar.extraHtml}
-        ${this.options.toolbar.showNextButton ? `<button class="${this.options.style.btnCss} ${this.options.style.btnNextCss}" type="button">${this.options.lang.next}</button>` : ''}
-      </div>
-    `;
-
-        const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = toolbarHtml;
-        const toolbar = tempDiv.firstElementChild as HTMLElement;
-
-        if (toolbar) {
-            if (this.options.toolbar.position === 'top' || this.options.toolbar.position === 'both') {
-                this.main.insertBefore(toolbar.cloneNode(true), this.main.firstChild);
+    private setElements(): void {
+        // Remove any existing theme class
+        const themePrefix = this.options.styles.themePrefix;
+        Array.from(this.main.classList).forEach(cls => {
+            if (cls.startsWith(themePrefix)) {
+                this.main.classList.remove(cls);
             }
-            if (this.options.toolbar.position === 'bottom' || this.options.toolbar.position === 'both') {
-                this.main.appendChild(toolbar);
+        });
+        addClass(this.options.styles.baseClass + ' ' + themePrefix + this.options.theme, this.main);
+
+        // Set display mode
+        this.setDisplayMode();
+    }
+
+    private setDisplayMode(): void {
+        const mode = this.options.displayMode;
+
+        // Remove existing data-theme attribute
+        this.main.removeAttribute(DATA_ATTRIBUTES.THEME);
+
+        if (mode === 'none') {
+            return;
+        }
+
+        if (mode === 'dark') {
+            setAttribute(this.main, DATA_ATTRIBUTES.THEME, 'dark');
+        } else if (mode === 'light') {
+            setAttribute(this.main, DATA_ATTRIBUTES.THEME, 'light');
+        } else if (mode === 'auto') {
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            setAttribute(this.main, DATA_ATTRIBUTES.THEME, prefersDark ? 'dark' : 'light');
+
+            if (window.matchMedia) {
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                const handleChange = (e: MediaQueryListEvent) => {
+                    setAttribute(this.main, DATA_ATTRIBUTES.THEME, e.matches ? 'dark' : 'light');
+                };
+                if (mediaQuery.addEventListener) {
+                    mediaQuery.addEventListener('change', handleChange);
+                } else if ((mediaQuery as any).addListener) {
+                    (mediaQuery as any).addListener(handleChange);
+                }
             }
-
-            // Bind toolbar button events
-            const prevButtons = getAllDescendants(`.${this.options.style.btnPrevCss}`, this.main);
-            const nextButtons = getAllDescendants(`.${this.options.style.btnNextCss}`, this.main);
-
-            prevButtons.forEach(btn => {
-                addEvent(btn, 'click', () => this.prev());
-            });
-
-            nextButtons.forEach(btn => {
-                addEvent(btn, 'click', () => this.next());
-            });
         }
     }
 
-    #bindEvents(): void {
-        // Step click events
+    private setToolbar(): void {
+        if (this.options.toolbar.position === 'none') return;
+
+        // Remove existing toolbars
+        const existingToolbars = getAllDescendants(`.${this.options.styles.toolbar.base}`, this.main);
+        existingToolbars.forEach(t => t.parentNode?.removeChild(t));
+
+        const { buttons, extraElements, position } = this.options.toolbar;
+        const { base: btnBase, next: btnNext, previous: btnPrev } = this.options.styles.buttons;
+        const { next: nextLabel, previous: prevLabel } = this.options.localization.buttons;
+        const { base: toolbarBase, prefix: toolbarPrefix } = this.options.styles.toolbar;
+
+        const createToolbar = (): HTMLElement => {
+            const div = document.createElement('div');
+            div.className = `${toolbarBase} ${toolbarPrefix}${position}`;
+
+            if (buttons.showPrevious) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `${btnBase} ${btnPrev}`;
+                btn.textContent = prevLabel;
+                div.appendChild(btn);
+            }
+
+            if (extraElements) {
+                const extra = document.createElement('div');
+                extra.innerHTML = extraElements;
+                while (extra.firstChild) {
+                    div.appendChild(extra.firstChild);
+                }
+            }
+
+            if (buttons.showNext) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = `${btnBase} ${btnNext}`;
+                btn.textContent = nextLabel;
+                div.appendChild(btn);
+            }
+
+            return div;
+        };
+
+        if (position === 'top' || position === 'both') {
+            const topBar = createToolbar();
+            this.main.insertBefore(topBar, this.main.firstChild);
+        }
+        if (position === 'bottom' || position === 'both') {
+            this.main.appendChild(createToolbar());
+        }
+    }
+
+    private setNav(): void {
+        const { anchorStates: states } = this.options.styles;
+
+        // Clear all state classes
+        this.steps.forEach(step => {
+            removeClass([
+                states.completed, states.active, states.default,
+                states.disabled, states.error, states.warning, states.hidden
+            ].join(' '), step);
+        });
+
+        // Add default class if navigation is controlled
+        if (!this.options.navigation.alwaysClickable || !this.options.navigation.enabled) {
+            this.steps.forEach(step => addClass(states.default, step));
+        }
+
+        // Apply step states from options
+        this.applyStepStates(this.options.stepStates.completed, states.completed);
+        this.applyStepStates(this.options.stepStates.disabled, states.disabled);
+        this.applyStepStates(this.options.stepStates.warning, states.warning);
+        this.applyStepStates(this.options.stepStates.error, states.error);
+        this.applyStepStates(this.options.stepStates.hidden, states.hidden);
+
+        // Add scroll buttons for nav bar
+        this.createAnchorScroll();
+    }
+
+    private applyStepStates(stepIndices: number[], cssClass: string): void {
+        stepIndices.forEach(idx => {
+            if (this.steps[idx]) {
+                addClass(cssClass, this.steps[idx]);
+            }
+        });
+    }
+
+    private setEvents(): void {
+        // Step anchor click
         this.steps.forEach((step, idx) => {
             addEvent(step, 'click', (e: Event) => {
                 e.preventDefault();
-                if (this.#isStepClickable(idx)) {
-                    this.goToStep(idx);
+                if (!this.options.navigation.enabled) return;
+                if (this.isShowable(idx)) {
+                    this.showStep(idx);
                 }
             });
         });
+
+        // Next / Prev / Scroll buttons (event delegation on main)
+        addEvent(this.main, 'click', (e: Event) => {
+            const target = e.target as HTMLElement;
+            const { next, previous, scrollNext, scrollPrevious } = this.options.styles.buttons;
+
+            if (target.classList.contains(next)) {
+                e.preventDefault();
+                this.navigate('forward');
+            } else if (target.classList.contains(previous)) {
+                e.preventDefault();
+                this.navigate('backward');
+            } else if (target.classList.contains(scrollNext)) {
+                e.preventDefault();
+                this.scrollAnchor('right');
+            } else if (target.classList.contains(scrollPrevious)) {
+                e.preventDefault();
+                this.scrollAnchor('left');
+            }
+        });
+
+        // Scroll end check on nav
+        this.nav.addEventListener('scrollend', () => this.scrollCheck());
+
+        // Redirect vertical wheel scroll to horizontal on nav
+        this.nav.addEventListener('wheel', (e: WheelEvent) => {
+            if (this.nav.scrollWidth <= this.nav.clientWidth) return;
+            if (e.deltaY === 0) return;
+            e.preventDefault();
+            this.nav.scrollLeft += e.deltaY;
+        }, { passive: false });
 
         // Keyboard navigation
-        if (this.options.keyboard.keyNavigation) {
+        if (this.options.keyboardNavigation.enabled) {
             addEvent(document, 'keyup', (e: Event) => {
-                const keyEvent = e as KeyboardEvent;
-                if (this.options.keyboard.keyLeft.includes(keyEvent.keyCode)) {
-                    this.prev();
-                } else if (this.options.keyboard.keyRight.includes(keyEvent.keyCode)) {
-                    this.next();
+                const key = e as KeyboardEvent;
+                if (this.options.keyboardNavigation.keys.left.includes(key.keyCode)) {
+                    this.navigate('backward');
+                } else if (this.options.keyboardNavigation.keys.right.includes(key.keyCode)) {
+                    this.navigate('forward');
                 }
             });
         }
 
-        // Handle hash changes
-        if (this.options.enableUrlHash && this.options.backButtonSupport) {
+        // Browser back/forward
+        if (this.options.behavior.useUrlHash && this.options.behavior.supportBrowserHistory) {
             addEvent(window, 'hashchange', () => {
-                const hash = window.location.hash;
-                const stepIndex = this.steps.findIndex(s => getAttribute(s, 'href') === hash);
-                if (stepIndex >= 0 && this.#isStepClickable(stepIndex)) {
-                    this.#showStep(stepIndex);
+                const idx = this.getURLHashIndex();
+                if (idx !== null && this.isShowable(idx)) {
+                    this.showStep(idx);
                 }
             });
         }
 
-        // Handle window resize for auto height adjustment
-        if (this.options.autoAdjustHeight) {
+        // Fix height on window resize
+        if (this.options.behavior.autoHeight) {
             addEvent(window, 'resize', () => {
-                if (this.currentIndex >= 0) {
-                    const currentPage = this.pages[this.currentIndex];
-                    if (currentPage) {
-                        this.#adjustHeight(currentPage);
-                    }
+                if (this.currentIndex >= 0 && this.pages[this.currentIndex]) {
+                    this.fixHeight(this.currentIndex);
                 }
             });
         }
+
+        // Swipe navigation on touch
+        addEvent(this.container, 'touchstart', (e: Event) => {
+            const touch = (e as TouchEvent).touches[0];
+            this.touchStartX = touch.clientX;
+            this.touchStartY = touch.clientY;
+        });
+
+        addEvent(this.container, 'touchend', (e: Event) => {
+            if (!this.options.swipeNavigation.enabled) return;
+            const touch = (e as TouchEvent).changedTouches[0];
+            const deltaX = touch.clientX - this.touchStartX;
+            const deltaY = touch.clientY - this.touchStartY;
+            // Ignore mostly-vertical swipes
+            if (Math.abs(deltaX) < Math.abs(deltaY)) return;
+            const { threshold } = this.options.swipeNavigation;
+            if (deltaX < -threshold) {
+                this.navigate('forward');
+            } else if (deltaX > threshold) {
+                this.navigate('backward');
+            }
+        });
     }
 
-    #showStep(idx: number, force: boolean = false): void {
-        if (idx < 0 || idx >= this.steps.length) {
+    private setAnchor(stepIdx: number): void {
+        const states = this.options.styles.anchorStates;
+
+        if (this.currentIndex !== null && this.currentIndex >= 0) {
+            let removeCss = `${states.active} ${states.default}`;
+            let addCss = '';
+
+            if (this.options.navigation.completed.enabled) {
+                const stepDirection = this.getStepDirection(stepIdx);
+
+                if (stepDirection === 'forward' && !this.options.navigation.completed.clearOnBack) {
+                    addCss = states.completed;
+                } else if (stepDirection === 'backward' && this.options.navigation.completed.clearOnBack) {
+                    removeCss += ' ' + states.completed;
+                } else {
+                    addCss = states.completed;
+                }
+            }
+
+            removeClass(removeCss, this.steps[this.currentIndex]);
+            if (addCss) addClass(addCss, this.steps[this.currentIndex]);
+        }
+
+        // Set target step as active
+        removeClass(states.completed + ' ' + states.default, this.steps[stepIdx]);
+        addClass(states.active, this.steps[stepIdx]);
+    }
+
+    private setButtons(stepIdx: number): void {
+        const isFirst = stepIdx === 0;
+        const isLast = stepIdx === this.steps.length - 1;
+        const { previous: btnPrev, next: btnNext } = this.options.styles.buttons;
+
+        getAllDescendants(`.${btnPrev}`, this.main).forEach(btn => {
+            if (isFirst) {
+                setAttribute(btn, 'disabled', 'disabled');
+            } else {
+                btn.removeAttribute('disabled');
+            }
+        });
+
+        getAllDescendants(`.${btnNext}`, this.main).forEach(btn => {
+            if (isLast) {
+                setAttribute(btn, 'disabled', 'disabled');
+            } else {
+                btn.removeAttribute('disabled');
+            }
+        });
+    }
+
+    private setProgressbar(stepIdx: number): void {
+        if (this.progressbars.length === 0) return;
+        const percent = ((stepIdx + 1) / this.steps.length) * 100;
+
+        this.progressbars.forEach(bar => {
+            // Set CSS custom property on bar's parent (container)
+            bar.style.setProperty(CSS_PROPERTIES.PROGRESS_PERCENTAGE, `${percent}%`);
+            // Also update the inner progress bar element directly
+            const progressBar = getFirstDescendant(`.${this.options.styles.progressBar.bar}`, bar);
+            if (progressBar) {
+                progressBar.style.width = `${percent}%`;
+                setAttribute(progressBar, 'aria-valuenow', Math.round(percent).toString());
+            }
+        });
+    }
+
+    private showStep(stepIdx: number): void {
+        if (stepIdx === -1 || stepIdx === null) return;
+        if (stepIdx === this.currentIndex) return;
+        if (!this.steps[stepIdx]) return;
+        if (!this.isEnabled(this.steps[stepIdx])) return;
+
+        const stepDirection = this.getStepDirection(stepIdx);
+
+        if (this.currentIndex !== -1) {
+            const leaveArgs: LeaveStepEventArgs = {
+                stepIndex: this.currentIndex,
+                nextStepIndex: stepIdx,
+                stepElement: this.steps[this.currentIndex] ?? null,
+                stepDirection,
+                stepPosition: this.getStepPosition(this.currentIndex),
+            };
+            const event = new CustomEvent('leaveStep', {
+                detail: leaveArgs,
+                bubbles: true,
+                cancelable: true
+            });
+            if (!this.main.dispatchEvent(event)) return;
+        }
+
+        // Load content if contentLoader is set
+        this.loadContent(stepIdx, () => {
+            const selStep = this.steps[stepIdx];
+            if (!selStep) return;
+
+            // Update URL hash
+            if (this.options.behavior.useUrlHash && this.options.behavior.supportBrowserHistory) {
+                const hash = getAttribute(selStep, 'href');
+                if (hash) this.setURLHash(hash);
+            }
+
+            // Update anchor classes
+            this.setAnchor(stepIdx);
+
+            // Scroll step into view
+            if (this.options.scrollToView) {
+                selStep.scrollIntoView({ behavior: 'smooth' });
+            }
+
+            // Get pages
+            const curPage = this.pages[this.currentIndex] ?? null;
+            const selPage = this.pages[stepIdx];
+            if (!selPage) return;
+
+            // Perform transition
+            const transition: TransitionHandler = (transitions as any)[this.options.transition.effect]
+                || (transitions as any)['default'];
+
+            transition(selPage, curPage, stepDirection, this, () => {
+                // Fix height
+                this.fixHeight(stepIdx);
+
+                // Trigger showStep event
+                const stepArgs: StepEventArgs = {
+                    stepIndex: stepIdx,
+                    stepElement: selStep,
+                    stepDirection,
+                    stepPosition: this.getStepPosition(stepIdx),
+                };
+                dispatchEvent(this.main, 'showStep', {
+                    detail: stepArgs,
+                    bubbles: true
+                });
+            });
+
+            // Update current index
+            this.currentIndex = stepIdx;
+            // Update buttons
+            this.setButtons(stepIdx);
+            // Update progress bar
+            this.setProgressbar(stepIdx);
+        });
+    }
+
+    private loadContent(idx: number, callback: () => void): void {
+        if (!this.options.contentLoader || typeof this.options.contentLoader !== 'function') {
+            callback();
             return;
         }
 
-        // Check if navigation is allowed
-        if (!force && !this.#isStepClickable(idx)) {
-            return;
-        }
-
-        const curStep = this.steps[this.currentIndex];
-        const selStep = this.steps[idx];
-        const curPage = this.pages[this.currentIndex];
         const selPage = this.pages[idx];
+        if (!selPage) { callback(); return; }
 
-        if (!selStep || !selPage) {
-            return;
-        }
+        const selStep = this.steps[idx];
+        if (!selStep) { callback(); return; }
 
-        // Get the direction of step navigation
-        const stepDirection: StepDirection = this.currentIndex < idx ? 'forward' : this.currentIndex > idx ? 'backward' : 'none';
+        const stepDirection = this.getStepDirection(idx);
+        const stepPosition = this.getStepPosition(idx);
 
-        // Trigger before step change event
-        const beforeEvent = dispatchEvent(this.main, 'leaveStep', {
-            detail: {
-                fromStep: this.currentIndex,
-                toStep: idx,
-                direction: stepDirection
-            },
-            cancelable: true
-        });
-
-        if (!beforeEvent) {
-            return; // Event was cancelled
-        }
-
-        // Update navigation classes
-        if (curStep) {
-            removeClass(this.options.style.anchorActiveCss, curStep);
-            if (this.options.anchor.enableDoneState) {
-                if (stepDirection === 'forward' && this.options.anchor.markPreviousStepsAsDone) {
-                    addClass(this.options.style.anchorDoneCss, curStep);
-                } else if (stepDirection === 'backward' && this.options.anchor.unDoneOnBackNavigation) {
-                    removeClass(this.options.style.anchorDoneCss, curStep);
+        this.options.contentLoader(idx, stepDirection, stepPosition, selStep, (content) => {
+            if (content) {
+                if (typeof content === 'string') {
+                    selPage.innerHTML = content;
+                } else {
+                    selPage.innerHTML = '';
+                    selPage.appendChild(content as Node);
                 }
             }
-        }
-
-        // Mark all previous steps as done if needed
-        if (this.options.anchor.markPreviousStepsAsDone && stepDirection === 'forward') {
-            for (let i = 0; i < idx; i++) {
-                if (this.steps[i]) {
-                    addClass(this.options.style.anchorDoneCss, this.steps[i]);
-                }
-            }
-        }
-
-        removeClass(this.options.style.anchorDoneCss, selStep);
-        addClass(this.options.style.anchorActiveCss, selStep);
-
-        // Get transition type
-        const transition = transitions[this.options.transition.animation] || transitions.none;
-
-        // Perform transition
-        transition(selPage, curPage || null, stepDirection, this, () => {
-            this.currentIndex = idx;
-            this.#updateProgress();
-
-            // Update URL hash if available
-            if (this.options.enableUrlHash) {
-                const href = getAttribute(selStep, 'href');
-                if (href) {
-                    this.#setURLHash(href);
-                }
-            }
-
-            // Adjust container height
-            if (this.options.autoAdjustHeight) {
-                this.#adjustHeight(selPage);
-            }
-
-            // Update toolbar buttons
-            this.#updateToolbarButtons();
-
-            // Trigger step change event
-            dispatchEvent(this.main, 'showStep', {
-                detail: {
-                    step: idx,
-                    direction: stepDirection,
-                    element: selStep
-                }
-            });
+            callback();
         });
     }
 
-    #adjustHeight(element: HTMLElement): void {
-        const height = getElementHeight(element);
-        if (height) {
-            setElementHeight(this.container, height);
+    private navigate(direction: StepDirection): void {
+        const stepIndex = direction === 'forward'
+            ? this.getShowable(this.currentIndex, 'forward')
+            : this.getShowable(this.currentIndex, 'backward');
+
+        if (stepIndex !== null) {
+            this.showStep(stepIndex);
         }
     }
 
-    #updateProgress(): void {
-        if (this.progressbar.length === 0) return;
+    private getShowable(fromIndex: number, direction: StepDirection): number | null {
+        const isForward = direction === 'forward';
+        let idx = fromIndex + (isForward ? 1 : -1);
 
-        const stepCount = this.steps.length;
-        const currentStep = this.currentIndex + 1;
-        const percent = (currentStep / stepCount) * 100;
-
-        this.progressbar.forEach(bar => {
-            bar.style.width = `${percent}%`;
-            setAttribute(bar, 'aria-valuenow', percent.toString());
-        });
+        while (isForward ? idx < this.steps.length : idx >= 0) {
+            if (this.isShowable(idx)) return idx;
+            idx += isForward ? 1 : -1;
+        }
+        return null;
     }
 
-    #updateToolbarButtons(): void {
-        const prevButtons = getAllDescendants(`.${this.options.style.btnPrevCss}`, this.main);
-        const nextButtons = getAllDescendants(`.${this.options.style.btnNextCss}`, this.main);
-
-        prevButtons.forEach(btn => {
-            if (this.currentIndex === 0) {
-                setAttribute(btn, 'disabled', 'disabled');
-            } else {
-                btn.removeAttribute('disabled');
-            }
-        });
-
-        nextButtons.forEach(btn => {
-            if (this.currentIndex === this.steps.length - 1) {
-                setAttribute(btn, 'disabled', 'disabled');
-            } else {
-                btn.removeAttribute('disabled');
-            }
-        });
+    private isShowable(idx: number): boolean {
+        const step = this.steps[idx];
+        if (!step) return false;
+        return this.isEnabled(step);
     }
 
-    #setURLHash(hash: string): void {
+    private isEnabled(step: HTMLElement): boolean {
+        const { disabled, hidden } = this.options.styles.anchorStates;
+        return !hasClass(disabled, step) && !hasClass(hidden, step);
+    }
+
+    private getStepDirection(stepIdx: number): StepDirection {
+        if (this.currentIndex < stepIdx) return 'forward';
+        if (this.currentIndex > stepIdx) return 'backward';
+        return 'none';
+    }
+
+    private getStepPosition(idx: number): StepPosition {
+        if (idx === 0) return 'first';
+        if (idx === this.steps.length - 1) return 'last';
+        return 'middle';
+    }
+
+    private getStepByAnchor(hash: string): number | null {
+        for (let i = 0; i < this.steps.length; i++) {
+            if (getAttribute(this.steps[i], 'href') === hash) return i;
+        }
+        return null;
+    }
+
+    private getURLHashIndex(): number | null {
+        const hash = window.location.hash;
+        return hash ? this.getStepByAnchor(hash) : null;
+    }
+
+    private setURLHash(hash: string): void {
         if (window.history && window.history.pushState) {
             window.history.pushState(null, '', hash);
         } else {
@@ -358,136 +612,170 @@ export class SmartWizard implements WizardInterface {
         }
     }
 
-    #isStepClickable(idx: number): boolean {
-        const step = this.steps[idx];
-        if (!step) return false;
-
-        // Check if step is disabled or hidden
-        if (hasClass(this.options.style.anchorDisabledCss, step) ||
-            hasClass(this.options.style.anchorHiddenCss, step)) {
-            return false;
-        }
-
-        // Check navigation settings
-        if (!this.options.anchor.enableNavigation) {
-            return false;
-        }
-
-        if (this.options.anchor.enableNavigationAlways) {
-            return true;
-        }
-
-        // Check if step is done or active
-        if (hasClass(this.options.style.anchorDoneCss, step) ||
-            hasClass(this.options.style.anchorActiveCss, step)) {
-            return this.options.anchor.enableDoneStateNavigation;
-        }
-
-        // Only allow forward navigation to next step
-        return idx === this.currentIndex + 1;
+    private fixHeight(stepIdx: number): void {
+        if (!this.options.behavior.autoHeight) return;
+        const page = this.pages[stepIdx];
+        if (!page) return;
+        const h = getElementHeight(page);
+        if (h) setElementHeight(this.container, h);
     }
 
-    // Public methods
+    private changeState(stepArray: number[], state: string, addOrRemove: boolean): void {
+        let css = '';
+        const { anchorStates: states } = this.options.styles;
+        if (state === 'default') css = states.default;
+        else if (state === 'active') css = states.active;
+        else if (state === 'completed') css = states.completed;
+        else if (state === 'disable') css = states.disabled;
+        else if (state === 'hidden') css = states.hidden;
+        else if (state === 'error') css = states.error;
+        else if (state === 'warning') css = states.warning;
+
+        stepArray.forEach(n => {
+            if (this.steps[n]) {
+                if (addOrRemove) {
+                    addClass(css, this.steps[n]);
+                } else {
+                    removeClass(css, this.steps[n]);
+                }
+            }
+        });
+    }
+
+    // ─── Nav Scroll ──────────────────────────────────────────────────────────
+
+    private createAnchorScroll(): void {
+        const { scroll, scrollNext, scrollPrevious } = this.options.styles.buttons;
+
+        // Remove existing scroll buttons
+        getAllDescendants(`.${scroll}`, this.nav).forEach(btn => btn.parentNode?.removeChild(btn));
+
+        // Create left scroll button
+        const leftBtn = document.createElement('button');
+        leftBtn.type = 'button';
+        leftBtn.className = `${scroll} ${scrollPrevious}`;
+        leftBtn.setAttribute('aria-label', 'Scroll left');
+
+        // Create right scroll button
+        const rightBtn = document.createElement('button');
+        rightBtn.type = 'button';
+        rightBtn.className = `${scroll} ${scrollNext}`;
+        rightBtn.setAttribute('aria-label', 'Scroll right');
+
+        this.nav.appendChild(leftBtn);
+        this.nav.appendChild(rightBtn);
+
+        // Initial check
+        this.scrollCheck();
+    }
+
+    private scrollCheck(): void {
+        const { scroll } = this.options.styles.buttons;
+        const scrollBtns = getAllDescendants(`.${scroll}`, this.nav);
+        const canScroll = this.nav.scrollWidth > this.nav.clientWidth;
+        scrollBtns.forEach(btn => {
+            btn.style.display = canScroll ? '' : 'none';
+        });
+    }
+
+    private scrollAnchor(direction: 'left' | 'right'): void {
+        const scrollAmount = this.nav.clientWidth / 2;
+        this.nav.scrollBy({
+            left: direction === 'right' ? scrollAmount : -scrollAmount,
+            behavior: 'smooth'
+        });
+    }
+
+    // ─── Public Methods ───────────────────────────────────────────────────────
+
     public next(): void {
-        this.#showStep(this.currentIndex + 1);
+        this.navigate('forward');
     }
 
     public prev(): void {
-        this.#showStep(this.currentIndex - 1);
+        this.navigate('backward');
     }
 
-    public goToStep(index: number, force: boolean = false): void {
-        this.#showStep(index, force);
+    public goToStep(stepIndex: number, force: boolean = false): void {
+        if (!force && !this.isShowable(stepIndex)) return;
+
+        // Mark previous steps as completed when forced
+        if (force && stepIndex > 0 && this.options.navigation.completed.enabled
+            && this.options.navigation.completed.completeAllPreviousSteps) {
+            this.steps.slice(0, stepIndex).forEach(step => {
+                addClass(this.options.styles.anchorStates.completed, step);
+            });
+        }
+
+        this.showStep(stepIndex);
     }
 
     public reset(): void {
-        this.currentIndex = -1;
-        this.isInitialized = false;
+        const { completed, active, error, warning } = this.options.styles.anchorStates;
+        this.steps.forEach(step => removeClass(`${completed} ${active} ${error} ${warning}`, step));
 
-        // Remove all state classes
-        this.steps.forEach(step => {
-            removeClass(`${this.options.style.anchorActiveCss} ${this.options.style.anchorDoneCss}`, step);
-        });
+        if (this.options.behavior.useUrlHash && this.options.behavior.supportBrowserHistory) {
+            this.setURLHash('#');
+        }
 
         this.init();
+        this.load();
     }
 
-    public getStepInfo(): StepInfo {
-        return {
-            currentStep: this.currentIndex,
-            totalSteps: this.steps.length
-        };
+    public setState(stepArray: number[], state: string): void {
+        this.changeState(stepArray, state, true);
     }
 
-    public setState(steps: number[], state: StepState): void {
-        const stateClass = this.#getStateClass(state);
-        if (!stateClass) return;
-
-        steps.forEach(idx => {
-            if (this.steps[idx]) {
-                addClass(stateClass, this.steps[idx]);
-            }
-        });
-    }
-
-    public unsetState(steps: number[], state: StepState): void {
-        const stateClass = this.#getStateClass(state);
-        if (!stateClass) return;
-
-        steps.forEach(idx => {
-            if (this.steps[idx]) {
-                removeClass(stateClass, this.steps[idx]);
-            }
-        });
+    public unsetState(stepArray: number[], state: string): void {
+        this.changeState(stepArray, state, false);
     }
 
     public setOptions(options: Partial<WizardOptions>): void {
         this.options = deepMerge({ ...this.options }, options);
-
-        // Re-initialize if needed
-        if (this.isInitialized) {
-            this.isInitialized = false;
-            this.init();
-        }
+        this.init();
+        this.load();
     }
 
     public getOptions(): WizardOptions {
-        return { ...this.options };
+        return this.options;
     }
 
-    public loader(action: 'show' | 'hide'): void {
-        const loader = getFirstDescendant(`.${this.options.style.loaderCss}`, this.main);
+    public getContentDirection(): ContentDirection {
+        return this.contentDirection || 'ltr';
+    }
 
-        if (action === 'show') {
-            if (!loader) {
-                const loaderHtml = `<div class="${this.options.style.loaderCss}"></div>`;
-                this.main.insertAdjacentHTML('beforeend', loaderHtml);
-            } else {
-                showElement(loader);
-            }
+    public getCurrentIndex(): number {
+        return this.currentIndex;
+    }
+
+    public getStepInfo(): StepInfo {
+        return {
+            currentStep: this.currentIndex >= 0 ? this.currentIndex : 0,
+            totalSteps: this.steps.length
+        };
+    }
+
+    public loader(state: 'show' | 'hide'): void {
+        const loaderCss = this.options.styles.loader;
+        if (state === 'show') {
+            addClass(loaderCss, this.main);
         } else {
-            if (loader) {
-                hideElement(loader);
-            }
+            removeClass(loaderCss, this.main);
         }
     }
 
-    public fixHeight(): void {
-        const currentPage = this.pages[this.currentIndex];
-        if (currentPage) {
-            this.#adjustHeight(currentPage);
-        }
+    public adjustHeight(): void {
+        this.fixHeight(this.currentIndex);
     }
 
-    #getStateClass(state: StepState): string {
-        switch (state) {
-            case 'active': return this.options.style.anchorActiveCss;
-            case 'done': return this.options.style.anchorDoneCss;
-            case 'disabled': return this.options.style.anchorDisabledCss;
-            case 'hidden': return this.options.style.anchorHiddenCss;
-            case 'error': return this.options.style.anchorErrorCss;
-            case 'warning': return this.options.style.anchorWarningCss;
-            default: return this.options.style.anchorDefaultCss;
-        }
+    public resetHeight(): void {
+        const elm = this.pages[0];
+        if (!elm) return;
+        const h = getElementHeight(elm);
+        setElementHeight(this.container, h || 'auto');
+    }
+
+    public getWidth(): number {
+        return this.container.offsetWidth;
     }
 }

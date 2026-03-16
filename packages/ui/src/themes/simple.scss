@@ -1,0 +1,137 @@
+// Simple theme
+// Clean, minimal stepper: steps flow horizontally with a line connector,
+// badge numbers in circles, step title below, underline active indicator.
+// Reference: 2FA setup stepper (Step 1 of 3 style)
+
+.sw-theme-simple {
+
+    // No outer border/shadow — let content breathe
+    border: none;
+    box-shadow: none;
+    background: transparent;
+
+    >.nav {
+        position: relative;
+        justify-content: center;
+        gap: 0;
+        background: transparent;
+        padding: 0 0 0 0;
+        overflow: visible;
+
+        // Horizontal connector line that sits behind the badges
+        &::before {
+            content: '';
+            position: absolute;
+            top: calc(var(--sw-nav-badge-size) / 2);
+            left: calc(var(--sw-nav-badge-size) / 2);
+            right: calc(var(--sw-nav-badge-size) / 2);
+            height: 2px;
+            background: var(--sw-border);
+            z-index: 0;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .nav-link {
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            background: transparent;
+            color: var(--sw-nav-default-text);
+            padding: 0 8px 16px;
+            clip-path: none !important;
+            border-radius: 0;
+            border: none;
+            border-bottom: 3px solid transparent;
+            z-index: 1;
+            min-width: 80px;
+            text-align: center;
+
+            // Badge sits above the connector line
+            >.badge {
+                width: var(--sw-nav-badge-size);
+                height: var(--sw-nav-badge-size);
+                border-radius: 50%;
+                background: var(--sw-nav-default-badge-bg);
+                color: var(--sw-nav-default-badge-text);
+                border: 2px solid var(--sw-border);
+                font-weight: 600;
+                font-size: 0.85rem;
+                position: relative;
+                z-index: 2;
+                box-sizing: border-box;
+                transition: background var(--sw-transition), border-color var(--sw-transition), transform var(--sw-transition);
+            }
+
+            // Step label
+            .step-text {
+                font-size: 0.75rem;
+                font-weight: 500;
+                line-height: 1.3;
+                transition: color var(--sw-transition);
+            }
+
+            &:hover:not(.disabled) {
+                color: var(--sw-accent);
+                background: transparent;
+
+                >.badge {
+                    border-color: var(--sw-accent);
+                }
+            }
+
+            &.active {
+                color: var(--sw-accent);
+                background: transparent;
+                border-bottom-color: var(--sw-accent);
+
+                >.badge {
+                    background: var(--sw-nav-active-bg);
+                    color: var(--sw-nav-active-badge-bg);
+                    border-color: var(--sw-nav-active-bg);
+                    transform: scale(1.1);
+                }
+            }
+
+            &.completed {
+                color: var(--sw-nav-completed-bg);
+                background: transparent;
+
+                >.badge {
+                    background: var(--sw-nav-completed-bg);
+                    color: var(--sw-nav-completed-badge-bg);
+                    border-color: var(--sw-nav-completed-bg);
+                }
+            }
+
+            &.error {
+                color: var(--sw-nav-error-bg);
+                background: transparent;
+
+                >.badge {
+                    background: var(--sw-nav-error-bg);
+                    color: #fff;
+                    border-color: var(--sw-nav-error-bg);
+                }
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            flex-direction: row !important;
+
+            .nav-link {
+                padding-bottom: 12px;
+
+                .step-text {
+                    display: none;
+                }
+            }
+        }
+    }
+}

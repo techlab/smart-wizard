@@ -1,0 +1,150 @@
+// Arrows theme
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+
+.sw-theme-arrows {
+    // Arrow geometry
+    --sw-arrow-height: 56px;
+    --sw-arrow-tip: 20px;
+    --sw-arrow-gap: 0px;
+    --sw-min-step-width: 120px;
+
+    border: 1px solid var(--sw-border-color);
+
+    // Navigation style
+    &>.nav {
+
+        // Nav item
+        .nav-item {
+            flex: 1 0 var(--sw-min-step-width);
+            margin-right: calc(-1 * var(--sw-arrow-tip));
+
+            &:first-child {
+                margin-right: calc(-1 * var(--sw-arrow-tip));
+
+                &>.nav-link {
+                    @include arrow-clip-first(20px);
+
+                    @media screen and (min-width: $breakpoint-phone) {
+                        padding-left: 10px;
+                        margin-left: 0;
+                    }
+                }
+            }
+
+            &:last-child {
+                margin-right: 0;
+
+                &>.nav-link {
+                    @include arrow-clip-last(20px);
+                }
+            }
+
+            &:only-child {
+                margin-right: 0;
+
+                &>.nav-link {
+                    clip-path: none;
+                    border-radius: var(--sw-radius);
+                }
+            }
+
+            @media screen and (max-width: $breakpoint-phone) {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+
+                &>.nav-link {
+                    clip-path: none !important;
+                    padding: 10px 14px !important;
+                }
+            }
+        }
+
+        .nav-link {
+            gap: 10px;
+            min-height: var(--sw-arrow-height);
+            padding: 10px 20px 10px calc(var(--sw-arrow-tip) + 14px);
+
+            @include arrow-clip(20px);
+
+            @media screen and (max-width: $breakpoint-phone) {
+                min-height: unset;
+                overflow: hidden;
+                text-align: left !important;
+            }
+        }
+    }
+
+    // RTL Support
+    &[dir="rtl"]>.nav {
+
+        .nav-item {
+            margin-right: 0;
+            margin-left: calc(-1 * var(--sw-arrow-tip));
+
+            &:first-child {
+                margin-left: calc(-1 * var(--sw-arrow-tip));
+
+                &>.nav-link {
+                    clip-path: polygon(var(--sw-arrow-tip) 0%,
+                            100% 0%,
+                            100% 100%,
+                            var(--sw-arrow-tip) 100%,
+                            0% 50%);
+
+                    @media screen and (min-width: $breakpoint-phone) {
+                        padding-left: 20px;
+                        padding-right: 10px;
+                    }
+                }
+            }
+
+            &:last-child {
+                margin-left: 0;
+
+                &>.nav-link {
+                    clip-path: polygon(0% 0%,
+                            100% 0%,
+                            calc(100% - var(--sw-arrow-tip)) 50%,
+                            100% 100%,
+                            0% 100%);
+                }
+            }
+
+            &:only-child {
+                margin-left: 0;
+
+                &>.nav-link {
+                    clip-path: none;
+                    border-radius: var(--sw-radius);
+                }
+            }
+
+            @media screen and (max-width: $breakpoint-phone) {
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+
+                &>.nav-link {
+                    clip-path: none !important;
+                    padding: 10px 14px !important;
+                }
+            }
+        }
+
+        .nav-link {
+            padding: 10px calc(var(--sw-arrow-tip) + 14px) 10px 20px;
+            clip-path: polygon(100% 0%,
+                    var(--sw-arrow-tip) 0%,
+                    0% 50%,
+                    var(--sw-arrow-tip) 100%,
+                    100% 100%,
+                    calc(100% - var(--sw-arrow-tip)) 50%);
+
+            @media screen and (max-width: $breakpoint-phone) {
+                text-align: right !important;
+            }
+        }
+    }
+}

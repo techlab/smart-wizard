@@ -1,0 +1,58 @@
+/* ─── WIZARD ROOT ─────────────────────────────── */
+<div class="sw-wizard" data-layout="horizontal | vertical | slider" data-theme="default | dark | neon | warm"
+    role="region" aria-label="Setup Wizard">
+
+    /* ─── TOOLBAR (optional) ─── */
+    <div class="sw-toolbar">
+        <div class="sw-toolbar__start">…status badges…</div>
+        <div class="sw-toolbar__end">…action buttons…</div>
+    </div>
+
+    /* ─── NAVIGATION (swappable) ─── */
+    <nav class="sw-nav sw-nav--horizontal" role="tablist" aria-label="Wizard steps">
+
+        <div class="sw-step" /* .done .active .error .disabled */ role="tab" aria-selected="true|false"
+            aria-controls="panel-1" data-step="1">
+            <span class="sw-step__indicator">1</span>
+            <span class="sw-step__label">Account</span>
+            <span class="sw-step__sublabel">Personal info</span>
+        </div>
+
+        <div class="sw-step__connector" aria-hidden="true"></div>
+        …more steps…
+
+    </nav>
+
+    /* ─── PROGRESS (optional) ─── */
+    <div class="sw-progress" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+        <div class="sw-progress__track">
+            <div class="sw-progress__fill" style="width:40%"></div>
+        </div>
+    </div>
+
+    /* ─── CONTENT PANEL ─── */
+    <div class="sw-panels">
+        <section class="sw-panel" /* .sw-panel--active */ id="panel-1" role="tabpanel" aria-labelledby="step-1" hidden>
+            <header class="sw-panel__header">
+                <h2 class="sw-panel__title">Step Title</h2>
+                <p class="sw-panel__desc">Subtitle text</p>
+            </header>
+            <div class="sw-panel__body">
+                …form fields / content…
+            </div>
+        </section>
+    </div>
+
+    /* ─── FOOTER / ACTIONS ─── */
+    <footer class="sw-footer">
+        <div class="sw-footer__start">
+            <button class="sw-btn sw-btn--outline" data-action="prev">← Back</button>
+        </div>
+        <div class="sw-footer__center">…step counter / dots…</div>
+        <div class="sw-footer__end">
+            <button class="sw-btn sw-btn--ghost" data-action="skip">Skip</button>
+            <button class="sw-btn sw-btn--primary" data-action="next">Continue →</button>
+        </div>
+    </footer>
+
+</div>

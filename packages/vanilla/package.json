@@ -7,13 +7,15 @@
     "types": "dist/index.d.ts",
     "scripts": {
         "build": "tsup src/index.ts --format cjs,esm --dts --external @smartwizard/core",
-        "dev": "tsup src/index.ts --format cjs,esm --watch"
+        "dev": "vite"
     },
     "dependencies": {
-        "@smartwizard/core": "workspace:*"
+        "@smartwizard/core": "workspace:*",
+        "@smartwizard/ui": "workspace:*"
     },
     "devDependencies": {
         "tsup": "^8.0.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "vite": "^5.0.0"
     }
 }
