@@ -1,20 +1,33 @@
 @use '../base/variables' as *;
 
-// Navigation container
+// NAVIGATION
 .sw {
-    >.nav {
+    &>.sw-nav {
         display: flex;
         list-style: none;
         gap: 0;
         margin: 0;
         padding: 0;
         position: relative;
-        overflow: hidden;
         flex-wrap: nowrap;
+        align-items: stretch;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+        // gap: 2px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
         -webkit-overflow-scrolling: touch;
 
         &::-webkit-scrollbar {
             display: none;
+        }
+
+        &:hover {
+            &>.sw-nav-scroll-btn {
+                opacity: .8;
+            }
         }
 
         @media screen and (max-width: $breakpoint-phone) {
@@ -22,70 +35,20 @@
             flex: 1 auto;
         }
 
-        // When nav-scroll class is present
-        &.nav-scroll {
-            overflow-x: auto;
-            overflow-y: hidden;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
+        // &>.sw-nav-connector {
+        //     flex: 1;
+        //     min-width: 20px;
+        //     height: 1px;
+        //     background: var(--border);
+        //     margin: 0 4px;
+        //     align-self: center;
+        // }
 
-            &::-webkit-scrollbar {
-                display: none;
-            }
-        }
-
-        // Scroll navigation buttons
-        .nav-scroll-btn {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            width: 36px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: var(--sw-surface);
-            border: none;
-            cursor: pointer;
-            z-index: 10;
-            color: var(--sw-nav-default-text);
-            transition: color var(--sw-transition), background var(--sw-transition);
-            padding: 0;
-
-            &:hover {
-                color: var(--sw-accent);
-                background-color: rgba(0, 0, 0, 0.1);
-            }
-
-            svg {
-                width: 16px;
-                height: 16px;
-            }
-
-            &.nav-scroll-btn-visible {
-                display: flex;
-            }
-
-            &.nav-scroll-btn-left {
-                left: 0;
-                box-shadow: 4px 0 10px -2px rgba(0, 0, 0, .12);
-            }
-
-            &.nav-scroll-btn-right {
-                right: 0;
-                box-shadow: -4px 0 10px -2px rgba(0, 0, 0, .12);
-            }
-        }
-
-        // Nav item
-        .nav-item {
+        // NAV ITEM
+        &>.sw-nav-item {
             display: flex;
             position: relative;
             z-index: 1;
-        }
-
-        .nav-link {
-            display: flex;
             align-items: center;
             width: 100%;
             cursor: pointer;
@@ -96,7 +59,9 @@
             position: relative;
             padding: 14px 20px;
             gap: 10px;
-            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            transition: var(--trans);
 
             &:hover,
             &:active,
@@ -104,8 +69,43 @@
                 text-decoration: none;
             }
 
+            &:hover:not(.disabled) .badge {
+                transform: scale(1.05);
+            }
+
             &::-moz-focus-inner {
                 border: 0;
+            }
+
+            &>.badge {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: var(--sw-nav-badge-size);
+                height: var(--sw-nav-badge-size);
+                border-radius: var(--sw-nav-badge-radius);
+                pointer-events: none;
+                clear: both;
+                line-height: 1;
+                color: var(--sw-nav-default-badge-text);
+                background: var(--sw-nav-default-badge-bg);
+                transition: background var(--sw-transition), transform var(--sw-transition);
+            }
+
+            &>.info {
+                display: flex;
+                flex-direction: column;
+
+                &>.title {
+                    font-size: 1em;
+                    font-weight: 700;
+                }
+
+                &>.desc {
+                    font-size: 0.8em;
+                }
+
             }
 
             // ── State classes ──
@@ -118,6 +118,7 @@
                 .badge {
                     color: var(--sw-nav-active-badge-text);
                     background: var(--sw-nav-active-badge-bg);
+                    box-shadow: 0 0 0 4px var(--brand-light);
                 }
             }
 
@@ -165,50 +166,352 @@
                 pointer-events: none;
                 cursor: not-allowed;
             }
-
-            &>.badge {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                flex-shrink: 0;
-                width: var(--sw-nav-badge-size);
-                height: var(--sw-nav-badge-size);
-                border-radius: var(--sw-nav-badge-radius);
-                pointer-events: none;
-                clear: both;
-                line-height: 1;
-                color: var(--sw-nav-default-badge-text);
-                background: var(--sw-nav-default-badge-bg);
-                transition: background var(--sw-transition), transform var(--sw-transition);
-            }
-
-            &:hover:not(.disabled) .badge {
-                transform: scale(1.05);
-            }
         }
-    }
 
-    // Show scroll buttons on hover
-    &:hover,
-    &:focus {
-        &>.nav>.nav-scroll-btn {
-            opacity: 1;
+        // NAV SCROLL
+        &>.sw-nav-scroll-btn {
+            display: flex;
+            width: 40px;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: var(--sw-nav-default-text);
+            padding: 0;
+            flex-shrink: 0;
+            position: sticky;
+            z-index: 20;
+            opacity: .5;
+            font-size: 2em;
+            transition: opacity .5s ease-in-out;
+
+            &:before {
+                content: ' ';
+                display: inline-block;
+                transition: transform 0.2s ease;
+            }
+
+            &:first-child {
+                left: 0;
+                border-right: 1px solid var(--border);
+
+                &:before {
+                    content: '‹';
+                }
+            }
+
+            &:last-child {
+                right: 0;
+                border-left: 1px solid var(--border);
+
+                &:before {
+                    content: '›';
+                }
+            }
+
+            &:hover {
+                background: var(--border);
+                color: var(--text-1);
+                opacity: 1;
+            }
         }
     }
 
     // Justified navigation
     &.sw-justified {
-        &>.nav {
+        &>.sw-nav {
             justify-content: space-between;
         }
     }
 
     // RTL Support
-    &[dir="rtl"]>.nav {
-        .nav-link {
+    &[dir="rtl"]>.sw-nav {
+        .sw-nav-item {
             &>.badge {
                 float: right;
             }
         }
     }
+}
+
+
+/* ══════════════════════════════════════════
+   2. VERTICAL NAV — SIDEBAR
+══════════════════════════════════════════ */
+.wz-layout-v {
+    display: flex;
+}
+
+.wz-v-nav {
+    width: var(--nav-w);
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    padding: 20px 0;
+    background: var(--bg);
+}
+
+.wz-v-step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    cursor: pointer;
+    color: var(--text-3);
+    font-weight: 500;
+    transition: var(--trans);
+    position: relative;
+    border-left: 3px solid transparent;
+}
+
+.wz-v-step:hover {
+    color: var(--text-1);
+    background: var(--border);
+}
+
+.wz-v-step.active {
+    color: var(--brand);
+    background: var(--brand-light);
+    border-left-color: var(--brand);
+}
+
+.wz-v-step.done {
+    color: var(--success);
+}
+
+.wz-v-step.done .step-num {
+    background: var(--success);
+    color: #fff;
+}
+
+.wz-v-step.active .step-num {
+    background: var(--brand);
+    color: #fff;
+    box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+.v-connector {
+    width: 2px;
+    height: 16px;
+    background: var(--border);
+    margin-left: 29px;
+}
+
+/* ══════════════════════════════════════════
+   3. SCROLLABLE PILL NAV with arrows
+══════════════════════════════════════════ */
+.wz-scroll-nav-wrap {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    gap: 0;
+}
+
+.wz-pill-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    flex: 1;
+}
+
+.wz-pill-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.pill-step {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--text-3);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--trans);
+}
+
+.pill-step:hover {
+    border-color: var(--brand);
+    color: var(--brand);
+}
+
+.pill-step.active {
+    background: var(--brand);
+    border-color: var(--brand);
+    color: #fff;
+}
+
+.pill-step.done {
+    background: var(--brand-light);
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.pill-num {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, .25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* ══════════════════════════════════════════
+   4. NUMBERED STEPS (Breadcrumb / Linear)
+══════════════════════════════════════════ */
+.wz-breadcrumb-nav {
+    display: flex;
+    align-items: center;
+    padding: 16px 28px;
+    border-bottom: 1px solid var(--border);
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.wz-breadcrumb-nav::-webkit-scrollbar {
+    display: none;
+}
+
+.bc-step {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.bc-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    background: var(--surface);
+    transition: var(--trans);
+}
+
+.bc-step.active .bc-num {
+    border-color: var(--brand);
+    color: var(--brand);
+    box-shadow: 0 0 0 4px var(--brand-light);
+}
+
+.bc-step.done .bc-num {
+    border-color: var(--success);
+    background: var(--success);
+    color: #fff;
+}
+
+.bc-label {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--text-3);
+}
+
+.bc-step.active .bc-label {
+    color: var(--brand);
+}
+
+.bc-step.done .bc-label {
+    color: var(--success);
+}
+
+.bc-line {
+    flex: 1;
+    height: 2px;
+    background: var(--border);
+    min-width: 24px;
+    transition: var(--trans);
+}
+
+.bc-line.done {
+    background: var(--success);
+}
+
+/* ══════════════════════════════════════════
+   5. ICON NAV — icon + label stacked
+══════════════════════════════════════════ */
+.wz-icon-nav {
+    display: flex;
+    background: var(--bg);
+    border-bottom: 1px solid var(--border);
+}
+
+.icon-step {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 8px;
+    cursor: pointer;
+    color: var(--text-3);
+    font-size: 11.5px;
+    font-weight: 600;
+    gap: 6px;
+    border-bottom: 2.5px solid transparent;
+    transition: var(--trans);
+    position: relative;
+}
+
+.icon-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 20%;
+    bottom: 20%;
+    width: 1px;
+    background: var(--border);
+}
+
+.icon-step:hover {
+    color: var(--text-1);
+    background: rgba(0, 0, 0, .02);
+}
+
+.icon-step.active {
+    color: var(--brand);
+    border-bottom-color: var(--brand);
+    background: var(--brand-light);
+}
+
+.icon-step.done {
+    color: var(--success);
+}
+
+.icon-step svg {
+    width: 22px;
+    height: 22px;
+}
+
+.icon-step .i-badge {
+    position: absolute;
+    top: 8px;
+    right: calc(50% - 22px);
+    width: 14px;
+    height: 14px;
+    background: var(--success);
+    border-radius: 50%;
+    font-size: 8px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
 }

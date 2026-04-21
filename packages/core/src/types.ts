@@ -1,10 +1,11 @@
-// Core types for SmartWizard - aligned with jQuery SmartWizard v7
+// Types for SmartWizard
 
 export type ContentDirection = "ltr" | "rtl";
-export type DisplayMode = 'auto' | 'dark' | 'light' | 'none';
+export type ColorScheme = 'auto' | 'dark' | 'light' | 'none';
+export type WizardLayout = 'horizontal' | 'vertical';
+export type WizardColor = 'default' | 'blue' | 'violet' | string;
 export type StepDirection = 'forward' | 'backward' | 'none';
 export type StepPosition = 'first' | 'middle' | 'last';
-export type ToolbarPosition = 'none' | 'top' | 'bottom' | 'both';
 export type StepState =
     | 'default'    // Default initial state
     | 'active'     // Current step
@@ -14,18 +15,19 @@ export type StepState =
     | 'error'      // Validation failed
     | 'warning';   // Soft validation warning
 
+// skip // Skipped state <<<== upcoming
+
 // Types for the wizard options
 export interface WizardOptions {
     initialStep: number;
     theme: string;
-    displayMode: DisplayMode;
+    colorScheme: ColorScheme;
+    layout: WizardLayout;
+    color: WizardColor;
     behavior: Behavior;
     navigation: Navigation;
     transition: Transition;
-    toolbar: Toolbar;
     keyboardNavigation: KeyboardNavigation;
-    localization: Localization;
-    styles: Styles;
     stepStates: {
         completed: number[];
         disabled: number[];
@@ -72,16 +74,6 @@ export interface Transition {
     };
 }
 
-export interface Toolbar {
-    position: ToolbarPosition;
-    buttons: {
-        showNext: boolean;
-        showPrevious: boolean;
-        showReset?: boolean;
-    };
-    extraElements: string;
-}
-
 export interface KeyboardNavigation {
     enabled: boolean;
     keys: {
@@ -93,53 +85,6 @@ export interface KeyboardNavigation {
 export interface SwipeNavigation {
     enabled: boolean;
     threshold: number; // Minimum px distance to trigger a swipe
-}
-
-export interface Localization {
-    buttons: {
-        next: string;
-        previous: string;
-    };
-}
-
-export interface Styles {
-    baseClass: string;
-    navigation: {
-        container: string;
-        link: string;
-    };
-    content: {
-        container: string;
-        panel: string;
-    };
-    themePrefix: string;
-    anchorStates: {
-        default: string;
-        completed: string;
-        active: string;
-        disabled: string;
-        hidden: string;
-        error: string;
-        warning: string;
-    };
-    buttons: {
-        base: string;
-        next: string;
-        previous: string;
-        reset: string;
-        scroll: string;
-        scrollNext: string;
-        scrollPrevious: string;
-    };
-    loader: string;
-    progressBar: {
-        container: string;
-        bar: string;
-    };
-    toolbar: {
-        base: string;
-        prefix: string;
-    };
 }
 
 export type ContentLoader = (
@@ -172,10 +117,14 @@ export interface TransitionHandler {
     ): void;
 }
 
+export interface StepItem {
+    step: HTMLElement;
+    page: HTMLElement;
+}
+
 export interface WizardInterface {
     options: WizardOptions;
-    steps: HTMLElement[];
-    pages: HTMLElement[];
+    stepItems: StepItem[];
     currentIndex: number;
 }
 

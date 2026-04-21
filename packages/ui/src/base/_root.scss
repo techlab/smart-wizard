@@ -1,6 +1,33 @@
 // Root CSS variables used for theming and color customization
 
 :root {
+
+    --brand: #0066FF;
+    --brand-dark: #0044CC;
+    --brand-light: #E8F0FF;
+    --success: #00C48C;
+    --warning: #FFB020;
+    --danger: #FF4D4F;
+    --text-1: #0A0F1E;
+    --text-2: #4A5168;
+    --text-3: #8B92A9;
+    --border: #E4E7F0;
+    --surface: #FFFFFF;
+    --bg: #F4F6FB;
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
+    --font-head: 'Syne', sans-serif;
+    --font-body: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+    --step-size: 40px;
+    --nav-w: 260px;
+    --trans: all .22s cubic-bezier(.4, 0, .2, 1);
+
+
     // ─────────────────────────────────────────────
     // WIZARD
     // ─────────────────────────────────────────────
@@ -42,7 +69,7 @@
     // PROGRESS
     // ─────────────────────────────────────────────
     --sw-progress-color: #009EF7;
-    --sw-progress-background-color: #f8f9fa;
+    --sw-progress-background-color: #E4E7F0;
 
     // Progress connector line
     --sw-connector-width: 60px;

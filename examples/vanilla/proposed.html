@@ -1,15 +1,27 @@
 /* ─── WIZARD ROOT ─────────────────────────────── */
-<div class="sw-wizard" data-layout="horizontal | vertical | slider" data-theme="default | dark | neon | warm"
-    role="region" aria-label="Setup Wizard">
+<!-- <div id="wizard"
+     class="sw"
+     data-layout="horizontal"
+     data-nav="classic"
+     data-theme="dark"
+     data-color="violet"
+     data-transition="slide-left"
+     data-progress="segmented"
+     data-start-step="0"
+     role="region"
+     aria-label="Setup Wizard"> -->
+
+<div class="sw" data-layout="horizontal | vertical | slider" data-theme="default | dark | neon | warm"
+    data-color="default | blue | violet" role="region" aria-label="Setup Wizard">
 
     /* ─── TOOLBAR (optional) ─── */
     <div class="sw-toolbar">
-        <div class="sw-toolbar__start">…status badges…</div>
-        <div class="sw-toolbar__end">…action buttons…</div>
+        <div class="sw-toolbar-start">…status badges…</div>
+        <div class="sw-toolbar-end">…action buttons…</div>
     </div>
 
     /* ─── NAVIGATION (swappable) ─── */
-    <nav class="sw-nav sw-nav--horizontal" role="tablist" aria-label="Wizard steps">
+    <nav class="sw-nav sw-nav-horizontal" role="tablist" aria-label="Wizard steps">
 
         <div class="sw-step" /* .done .active .error .disabled */ role="tab" aria-selected="true|false"
             aria-controls="panel-1" data-step="1">
@@ -54,5 +66,4 @@
             <button class="sw-btn sw-btn--primary" data-action="next">Continue →</button>
         </div>
     </footer>
-
 </div>

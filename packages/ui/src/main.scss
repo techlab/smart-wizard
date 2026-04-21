@@ -22,10 +22,16 @@
 
 // Components
 @use 'components/wizard';
-@use 'components/toolbar';
 @use 'components/navigation';
+@use 'components/content';
+@use 'components/toolbar';
 @use 'components/progress';
 @use 'components/loader';
+@use 'components/buttons';
+
+// Layouts
+@use 'layouts/horizontal';
+@use 'layouts/vertical';
 
 // Themes
 @use 'themes/arrows';
@@ -33,6 +39,7 @@
 @use 'themes/glow';
 @use 'themes/pills';
 @use 'themes/simple';
-@use 'themes/vertical';
+// @use 'themes/vertical';
 @use 'themes/dots';
 @use 'themes/slide';
+@use 'themes/slider';

@@ -4,358 +4,729 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SmartWizard - Working Example</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  <title>SmartWizard - Demo</title>
+  <meta name="description" content="jQuery SmartWizard v6 demo — themes, color presets, animations, dark mode">
 
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      padding: 2rem;
-      background: #f5f5f5;
-    }
+  <!-- Demo page CSS -->
+  <link href="./css/demo.css" rel="stylesheet" type="text/css" />
 
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
+  <!-- Animate.css for CSS animation support -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet" />
 
-    h1 {
-      margin-bottom: 2rem;
-      color: #333;
-    }
-
-    /* SmartWizard Styles */
-    #smartwizard {
-      margin-bottom: 2rem;
-    }
-
-    .nav {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 2rem;
-      border-bottom: 2px solid #e0e0e0;
-      padding-bottom: 1rem;
-      list-style: none;
-    }
-
-    .nav-link {
-      padding: 0.75rem 1.5rem;
-      border: 1px solid #ddd;
-      background: #fff;
-      border-radius: 4px;
-      cursor: pointer;
-      text-decoration: none;
-      color: #666;
-      transition: all 0.3s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .nav-link:hover {
-      background: #f8f9fa;
-    }
-
-    .nav-link.active {
-      background: #007bff;
-      color: white;
-      border-color: #007bff;
-    }
-
-    .nav-link.done {
-      background: #28a745;
-      color: white;
-      border-color: #28a745;
-    }
-
-    .nav-link.disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
-
-    .num {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.1);
-      font-size: 0.875rem;
-      font-weight: bold;
-    }
-
-    .nav-link.active .num,
-    .nav-link.done .num {
-      background: rgba(255, 255, 255, 0.3);
-    }
-
-    .tab-content {
-      min-height: 200px;
-      position: relative;
-    }
-
-    .tab-pane {
-      padding: 1.5rem;
-      background: #f8f9fa;
-      border-radius: 4px;
-    }
-
-    .tab-pane h3 {
-      margin-bottom: 1rem;
-      color: #333;
-    }
-
-    .tab-pane p {
-      line-height: 1.6;
-      color: #666;
-      margin-bottom: 0.5rem;
-    }
-
-    .toolbar {
-      display: flex;
-      justify-content: space-between;
-      padding-top: 1rem;
-      border-top: 1px solid #e0e0e0;
-      margin-top: 1rem;
-    }
-
-    .sw-btn {
-      padding: 0.75rem 2rem;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    .sw-btn-prev {
-      background: #6c757d;
-      color: white;
-    }
-
-    .sw-btn-prev:hover:not(:disabled) {
-      background: #5a6268;
-    }
-
-    .sw-btn-next {
-      background: #007bff;
-      color: white;
-    }
-
-    .sw-btn-next:hover:not(:disabled) {
-      background: #0056b3;
-    }
-
-    .sw-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-
-    .progress {
-      height: 8px;
-      background: #e9ecef;
-      border-radius: 4px;
-      overflow: hidden;
-      margin-bottom: 2rem;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: linear-gradient(90deg, #007bff, #0056b3);
-      transition: width 0.3s ease;
-    }
-
-    .controls {
-      margin-top: 2rem;
-      padding-top: 2rem;
-      border-top: 2px solid #e0e0e0;
-    }
-
-    .controls h3 {
-      margin-bottom: 1rem;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 0.5rem 1rem;
-      border: 1px solid #ddd;
-      background: white;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .btn:hover {
-      background: #f8f9fa;
-    }
-
-    .info-box {
-      margin-top: 1rem;
-      padding: 1rem;
-      background: #e7f3ff;
-      border-left: 4px solid #007bff;
-      border-radius: 4px;
-    }
-
-    .info-box p {
-      margin: 0.25rem 0;
-      color: #004085;
-    }
-  </style>
+  <!-- SmartWizard CSS is imported via the module script below -->
 </head>
 
 <body>
-  <div class="container">
-    <h1>🎉 SmartWizard - Working Example</h1>
+  <!-- Header -->
+  <header class="demo-header">
+    <h1>SmartWizard - Examples</h1>
+    <div class="header-right" id="demo-nav"></div>
+    <div class="header-right">
+      <button class="header-btn" id="toggle-dark"> ⚡Auto</button>
+    </div>
+  </header>
 
-    <!-- SmartWizard HTML -->
-    <div id="smartwizard">
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="nav-link" href="#step-1">
-            <span class="num">1</span>
-            Account Info
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#step-2">
-            <span class="num">2</span>
-            Profile
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#step-3">
-            <span class="num">3</span>
-            Preferences
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#step-4">
-            <span class="num">4</span>
-            Review
-          </a>
-        </li>
-      </ul>
+  <!-- Controls bar -->
+  <div class="demo-controls">
 
-      <div class="tab-content">
-        <div id="step-1" class="tab-pane" role="tabpanel">
-          <h3>Step 1: Account Information</h3>
-          <p>Enter your basic account information to get started.</p>
-          <p>This wizard demonstrates all the features of SmartWizard including transitions, keyboard navigation, and
-            progress tracking.</p>
-        </div>
-        <div id="step-2" class="tab-pane" role="tabpanel">
-          <h3>Step 2: Profile Details</h3>
-          <p>Complete your profile by adding your personal information.</p>
-          <p>Try using the arrow keys on your keyboard to navigate between steps!</p>
-        </div>
-        <div id="step-3" class="tab-pane" role="tabpanel">
-          <h3>Step 3: Preferences</h3>
-          <p>Set your preferences and customize your experience.</p>
-          <p>Notice how the progress bar updates as you move through the steps.</p>
-        </div>
-        <div id="step-4" class="tab-pane" role="tabpanel">
-          <h3>Step 4: Review & Submit</h3>
-          <p>Review your information and submit your registration.</p>
-          <p>All previous steps are marked as "done" (green) when you reach this step.</p>
+    <div class="demo-control-wrapper">
+      <div class="control-group">
+        <label class="control-label" for="theme-select">Theme:</label>
+        <select class="ctrl-select" id="theme-select">
+        </select>
+      </div>
+
+      <div class="ctrl-divider"></div>
+
+      <div class="control-group">
+        <label class="control-label" for="transition-select">Animation:</label>
+        <select class="ctrl-select" id="transition-select">
+        </select>
+      </div>
+
+      <div class="ctrl-divider"></div>
+
+      <div class="control-group">
+        <span class="control-label">Color:</span>
+        <div class="btn-group" id="color-list">
         </div>
       </div>
 
-      <!-- Progress bar -->
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
-          aria-valuemax="100"></div>
-      </div>
     </div>
 
-    <!-- Info Box -->
-    <div class="info-box">
-      <p><strong>Current Step:</strong> <span id="current-step">-</span></p>
-      <p><strong>Total Steps:</strong> <span id="total-steps">-</span></p>
-    </div>
-
-    <!-- External Controls -->
-    <div class="controls">
-      <h3>External Controls</h3>
-      <div class="btn-group">
-        <button class="btn" onclick="wizard.goToStep(0)">Go to Step 1</button>
-        <button class="btn" onclick="wizard.goToStep(1)">Go to Step 2</button>
-        <button class="btn" onclick="wizard.goToStep(2)">Go to Step 3</button>
-        <button class="btn" onclick="wizard.goToStep(3)">Go to Step 4</button>
-        <button class="btn" onclick="wizard.reset()">Reset Wizard</button>
-        <button class="btn" onclick="updateStepInfo()">Refresh Info</button>
+    <div class="demo-control-wrapper">
+      <div class="control-group">
+        <label class="control-label" for="toolbar-select">Toolbar:</label>
+        <select class="ctrl-select" id="toolbar-select">
+          <option value="both" selected>Both</option>
+          <option value="top">Top</option>
+          <option value="bottom">Bottom</option>
+          <option value="none">None</option>
+        </select>
       </div>
+
+      <div class="ctrl-divider"></div>
+
+      <div class="control-group">
+        <label class="control-label" for="toolbar-select">External Controls:</label>
+        <!-- External controls -->
+        <div class="btn-group">
+          <button class="btn" id="btn-prev">← Prev</button>
+          <button class="btn" id="btn-next">Next →</button>
+          <button class="btn" id="btn-reset">↺ Reset</button>
+        </div>
+      </div>
+
+      <div class="ctrl-divider"></div>
+
+      <div class="control-group">
+        <label class="control-label" for="toolbar-select">Progress:</label>
+        <div>
+          <span class="step-info-pill">Step <span id="current-step">1</span> of <span id="total-steps">4</span></span>
+        </div>
+      </div>
+
     </div>
   </div>
 
+  <!-- Demo Container -->
+  <div class="demo-body">
+
+    <!-- SECTION 1 — HORIZONTAL NAV (Classic) -->
+    <div class="section-block">
+      <div class="section-label">Layout 01</div>
+      <div class="section-title">Horizontal Navigation — Classic</div>
+      <div class="section-desc">All steps visible simultaneously. Numbers + labels + connectors.</div>
+
+      <!-- WIZARD -->
+      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-nav="classic"
+        data-progress="segmented" data-start-step="0" role="region" aria-label="Setup Wizard">
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+            <div class="sw-toolbar-divider"></div>
+            <span class="sw-badge sw-badge-warn">⚠ Unsaved</span>
+          </div>
+          <div class="sw-toolbar-group">
+            <button class="sw-btn">💾 Save Draft</button>
+            <button class="sw-btn">👁 Preview</button>
+          </div>
+          <div class="sw-toolbar-group">
+            <button type="button" class="sw-btn sw-btn-danger sw-btn-reset">⟳ Reset</button>
+            <button type="button" class="sw-btn sw-btn-prev" disabled="disabled">Previous</button>
+            <button type="button" class="sw-btn sw-btn-next" disabled="disabled">Next</button>
+          </div>
+        </div>
+
+        <!-- NAVIGATION (swappable) -->
+        <nav class="sw-nav" role="tablist" aria-label="Wizard steps" aria-orientation="horizontal">
+          <div class="sw-nav-item done" data-step="1" role="tab" aria-selected="true" aria-controls="panel-1"
+            aria-selected="false" aria-disabled="false" tabindex="-1">
+            <div class="badge">✓</div>
+            <div class="info">
+              <span class="title">Account</span>
+              <span class="desc">Personal details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item active" data-step="2" role="tab" aria-selected="true" aria-controls="panel-2">
+            <div class="badge">2</div>
+            <div class="info">
+              <span class="title">Address</span>
+              <span class="desc">Location info</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-3">
+            <div class="badge">3</div>
+            <div class="info">
+              <span class="title">Payment</span>
+              <span class="desc">Billing details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-4">
+            <div class="badge">4</div>
+            <div class="info">
+              <span class="title">Review</span>
+              <span class="desc">Confirmation</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-5">
+            <div class="badge">5</div>
+            <div class="info">
+              <span class="title">Finish</span>
+              <span class="desc">Done!</span>
+            </div>
+          </div>
+
+          <!-- <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-6">
+            <div class="badge">6</div>
+            <div class="info">
+              <span class="title">Extra A</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-7">
+            <div class="badge">7</div>
+            <div class="info">
+              <span class="title">Extra B</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">8</div>
+            <div class="info">
+              <span class="title">Extra C</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">9</div>
+            <div class="info">
+              <span class="title">Extra D</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">10</div>
+            <div class="info">
+              <span class="title">Extra E</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div> -->
+        </nav>
+
+        <!-- PROGRESS BAR (optional) -->
+        <div class="sw-progress">
+          <div class="sw-progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+            aria-valuemax="100"></div>
+        </div>
+
+        <!-- CONTENT PANELS -->
+        <div class="sw-panels">
+          <section class="sw-panel active" id="panel-1" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">AA Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-2" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">BB Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-3" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">CC Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-4" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title"> DDD Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-outline sw-btn-prev" data-action="prev">← Back</button>
+          </div>
+          <div class="sw-toolbar-group">
+            <!-- PROGRESS BAR (optional) -->
+            <div class="sw-progress">
+              <div class="sw-progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+                aria-valuemax="100"></div>
+            </div>
+          </div>
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-ghost sw-btn sw-btn-skip" data-action="skip">Skip</button>
+            <button class="sw-btn sw-btn-primary sw-btn sw-btn-next" data-action="next">Next →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- SECTION 2 — VERTICAL SIDEBAR NAV-->
+    <div class="section-block">
+      <div class="section-label">Layout 02</div>
+      <div class="section-title">VERTICAL SIDEBAR NAV</div>
+      <div class="section-desc">Left sidebar lists all steps. Great for complex wizards with many steps and sub-info per
+        step.</div>
+
+      <!-- WIZARD -->
+      <div id="smartwizard-2" class="sw" data-layout="vertical" data-transition="slideVertical" role="region"
+        aria-label="Setup Wizard">
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+            <div class="sw-toolbar-divider"></div>
+            <span class="sw-badge sw-badge-warn">⚠ Unsaved</span>
+            <button class="btn-icon-only btn" title="Help">?</button>
+            <div class="tb-divider"></div>
+            <span class="tb-badge success">✓ Auto-saved</span>
+          </div>
+          <div class="sw-toolbar-group">
+            <button class="sw-btn">💾 Save Draft</button>
+            <button class="sw-btn">👁 Preview</button>
+          </div>
+          <div class="sw-toolbar-group">
+            <button type="button" class="sw-btn sw-btn-danger sw-btn-reset">⟳ Reset</button>
+            <button type="button" class="sw-btn sw-btn-prev" disabled="disabled">Previous</button>
+            <button type="button" class="sw-btn sw-btn-next" disabled="disabled">Next</button>
+          </div>
+        </div>
+
+        <!-- NAVIGATION (swappable) -->
+        <nav class="sw-nav" role="tablist" aria-label="Wizard steps" aria-orientation="horizontal">
+          <div
+            style="padding:10px 20px 12px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text-3)">
+            Onboarding</div>
+
+          <div class="sw-nav-item" data-step="1" role="tab" aria-selected="true" aria-controls="panel-1"
+            aria-selected="false" aria-disabled="false" tabindex="-1">
+            <div class="badge">✓</div>
+            <div class="info">
+              <span class="title">Account</span>
+              <span class="desc">Personal details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-2">
+            <div class="badge">2</div>
+            <div class="info">
+              <span class="title">Address</span>
+              <span class="desc">Location info</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-3">
+            <div class="badge">3</div>
+            <div class="info">
+              <span class="title">Payment</span>
+              <span class="desc">Billing details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-4">
+            <div class="badge">4</div>
+            <div class="info">
+              <span class="title">Review</span>
+              <span class="desc">Confirmation</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-connector"></div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-5">
+            <div class="badge">5</div>
+            <div class="info">
+              <span class="title">Finish</span>
+              <span class="desc">Done!</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-6">
+            <div class="badge">6</div>
+            <div class="info">
+              <span class="title">Extra A</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-7">
+            <div class="badge">7</div>
+            <div class="info">
+              <span class="title">Extra B</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">8</div>
+            <div class="info">
+              <span class="title">Extra C</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">9</div>
+            <div class="info">
+              <span class="title">Extra D</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">10</div>
+            <div class="info">
+              <span class="title">Extra E</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+        </nav>
+
+        <!-- CONTENT PANELS -->
+        <div class="sw-panels">
+          <section class="sw-panel active" id="panel-1" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">AA Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-2" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">BB Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-3" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">CC Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-4" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title"> DDD Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-outline sw-btn-prev" data-action="prev">← Back</button>
+          </div>
+          <div class="sw-toolbar-group sw-toolbar-end">
+            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+          </div>
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-ghost sw-btn sw-btn-skip" data-action="skip">Skip</button>
+            <button class="sw-btn sw-btn-primary sw-btn sw-btn-next" data-action="next">Next →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- SECTION 3 — SLIDER (ONE STEP AT A TIME) -->
+    <div class="section-block">
+      <div class="section-label">Layout 03</div>
+      <div class="section-title">Slider — One Step at a Time</div>
+      <div class="section-desc">Full-panel slide transitions. No step list shown. Best for focused, distraction-free
+        flows (surveys, onboarding, setup).</div>
+
+      <!-- WIZARD -->
+      <div id="smartwizard-3" class="sw" data-theme="slider" role="region" aria-label="Setup Wizard">
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+            <div class="sw-toolbar-divider"></div>
+            <span class="sw-badge sw-badge-warn">⚠ Unsaved</span>
+            <button class="btn-icon-only btn" title="Help">?</button>
+            <div class="tb-divider"></div>
+            <span class="tb-badge success">✓ Auto-saved</span>
+          </div>
+          <div class="sw-toolbar-group">
+            <div class="progress-dots" style="gap:6px">
+              <div class="p-dot done"></div>
+              <div class="p-dot-line done"></div>
+              <div class="p-dot done"></div>
+              <div class="p-dot-line done"></div>
+              <div class="p-dot active"></div>
+              <div class="p-dot-line"></div>
+              <div class="p-dot"></div>
+              <div class="p-dot-line"></div>
+              <div class="p-dot"></div>
+            </div>
+          </div>
+          <div class="sw-toolbar-group">
+            <button type="button" class="sw-btn sw-btn-danger sw-btn-reset">⟳ Reset</button>
+            <button type="button" class="sw-btn sw-btn-prev" disabled="disabled">Previous</button>
+            <button type="button" class="sw-btn sw-btn-next" disabled="disabled">Next</button>
+          </div>
+        </div>
+
+        <!-- NAVIGATION (swappable) -->
+        <nav class="sw-nav" role="tablist" aria-label="Wizard steps" aria-orientation="horizontal">
+          <div class="sw-nav-item" data-step="1" role="tab" aria-selected="true" aria-controls="panel-1"
+            aria-selected="false" aria-disabled="false" tabindex="-1">
+            <div class="badge">✓</div>
+            <div class="info">
+              <span class="title">Account</span>
+              <span class="desc">Personal details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-2">
+            <div class="badge">2</div>
+            <div class="info">
+              <span class="title">Address</span>
+              <span class="desc">Location info</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-3">
+            <div class="badge">3</div>
+            <div class="info">
+              <span class="title">Payment</span>
+              <span class="desc">Billing details</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-4">
+            <div class="badge">4</div>
+            <div class="info">
+              <span class="title">Review</span>
+              <span class="desc">Confirmation</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-5">
+            <div class="badge">5</div>
+            <div class="info">
+              <span class="title">Finish</span>
+              <span class="desc">Done!</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-6">
+            <div class="badge">6</div>
+            <div class="info">
+              <span class="title">Extra A</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-7">
+            <div class="badge">7</div>
+            <div class="info">
+              <span class="title">Extra B</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">8</div>
+            <div class="info">
+              <span class="title">Extra C</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">9</div>
+            <div class="info">
+              <span class="title">Extra D</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="badge">10</div>
+            <div class="info">
+              <span class="title">Extra E</span>
+              <span class="desc">This is extra for testing!</span>
+            </div>
+          </div>
+        </nav>
+
+        <!-- CONTENT PANELS -->
+        <div class="sw-panels">
+          <section class="sw-panel active" id="panel-1" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">AA Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-2" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">BB Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-3" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title">CC Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+
+          <section class="sw-panel" id="panel-4" role="tabpanel" aria-labelledby="step-1" hidden>
+            <div class="sw-content-title"> DDD Address</div>
+            <div class="sw-content-desc">Enter the address where you'd like your order delivered.</div>
+            <div class="field-row">
+              <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
+              <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
+            </div>
+            <div class="field-row">
+              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
+              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
+            </div>
+          </section>
+        </div>
+
+        <!-- TOOLBAR (optional, can be multiple) -->
+        <div class="sw-toolbar">
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-outline sw-btn-prev" data-action="prev">← Back</button>
+          </div>
+          <div class="sw-toolbar-group sw-toolbar-end">
+            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+          </div>
+          <div class="sw-toolbar-group">
+            <button class="sw-btn sw-btn-ghost sw-btn sw-btn-skip" data-action="skip">Skip</button>
+            <button class="sw-btn sw-btn-primary sw-btn sw-btn-next" data-action="next">Next →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+
+  <script src="./js/demo.js"></script>
+
   <script type="module">
+    // Import SmartWizard CSS (resolved by Vite alias to packages/ui/src/main.scss)
+    import '@smartwizard/ui';
     // Import SmartWizard (resolved by Vite alias to live source in dev)
     import { SmartWizard } from '@smartwizard/core';
 
     // Initialize SmartWizard
-    const wizard = new SmartWizard('#smartwizard', {
-      theme: 'default',
+    const wizard1 = new SmartWizard('#smartwizard-1', {
       transition: {
-        animation: 'slideHorizontal',
-        speed: '400'
-      },
-      toolbar: {
-        position: 'bottom',
-        showNextButton: true,
-        showPreviousButton: true
-      },
-      keyboard: {
-        keyNavigation: true,
-        keyLeft: [37],
-        keyRight: [39]
+        effect: 'css', // Transition type: default|fade|slideHorizontal|slideVertical|slideSwing|css
+        speed: 400, // Animation speed
+        easing: '', // Animation easing
+        css: { prefix: 'animate__animated animate__faster', forward: { show: 'animate__lightSpeedInLeft', hide: 'animate__lightSpeedOutRight' }, backward: { show: 'animate__lightSpeedInRight', hide: 'animate__lightSpeedOutLeft' } }
       }
     });
 
+    const wizard2 = new SmartWizard('#smartwizard-2');
+    const wizard3 = new SmartWizard('#smartwizard-3');
+
     // Make wizard available globally for button onclick handlers
-    window.wizard = wizard;
+    // window.wizard = wizard;
 
-    // Update step info display
-    function updateStepInfo() {
-      const info = wizard.getStepInfo();
-      document.getElementById('current-step').textContent = info.currentStep + 1;
-      document.getElementById('total-steps').textContent = info.totalSteps;
-    }
-    window.updateStepInfo = updateStepInfo;
+    // // Update step info display
+    // function updateStepInfo() {
+    //   const info = wizard.getStepInfo();
+    //   document.getElementById('current-step').textContent = info.currentStep + 1;
+    //   document.getElementById('total-steps').textContent = info.totalSteps;
+    // }
+    // window.updateStepInfo = updateStepInfo;
 
-    // Listen to wizard events
-    const wizardElement = document.getElementById('smartwizard');
+    // // Listen to wizard events
+    // const wizardElement = document.getElementById('smartwizard-1');
 
-    wizardElement.addEventListener('initialized', () => {
-      console.log('Wizard initialized!');
-      updateStepInfo();
-    });
+    // wizardElement.addEventListener('initialized', () => {
+    //   console.log('Wizard initialized!');
+    //   updateStepInfo();
+    // });
 
-    wizardElement.addEventListener('showStep', (e) => {
-      console.log('Step changed:', e.detail);
-      updateStepInfo();
-    });
+    // wizardElement.addEventListener('showStep', (e) => {
+    //   console.log('Step changed:', e.detail);
+    //   updateStepInfo();
+    // });
 
-    // Initial update
-    updateStepInfo();
+    // // Initial update
+    // updateStepInfo();
 
     console.log('✅ SmartWizard loaded successfully!');
     console.log('Try using arrow keys to navigate!');
+
+
   </script>
+
 </body>
 
 </html>

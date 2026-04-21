@@ -7,18 +7,4 @@
     overflow: hidden;
     background: var(--sw-surface);
     position: relative;
-
-    // CONTENT AREA
-    &>.tab-content {
-        position: relative;
-        padding: var(--sw-content-pad);
-        background: var(--sw-content-bg);
-        color: var(--sw-content-text);
-        min-height: 140px;
-        margin-top: 1rem;
-
-        &>.tab-pane {
-            padding: .8rem;
-        }
-    }
 }

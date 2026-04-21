@@ -3,7 +3,9 @@ import { WizardOptions } from './types';
 export const defaultOptions: WizardOptions = {
     initialStep: 0, // Initial selected step (0 = first step)
     theme: 'default', // Theme name, ensure related CSS is included
-    displayMode: 'auto', // Display mode: auto (system preference) | dark | light | none (no class applied)
+    colorScheme: 'auto', // Display mode: auto (system preference) | dark | light | none (no class applied)
+    layout: 'horizontal', // Layout direction: horizontal | vertical
+    color: 'default', // Color preset: default | blue | violet | any custom string
     behavior: {
         autoHeight: true, // Auto-adjust content height
         useUrlHash: false, // Enable step selection via URL hash
@@ -29,64 +31,11 @@ export const defaultOptions: WizardOptions = {
             backward: { show: '', hide: '' } // Backward animation classes
         }
     },
-    toolbar: {
-        position: 'bottom', // Toolbar position: none|top|bottom|both
-        buttons: {
-            showNext: true, // Show/hide Next button
-            showPrevious: true // Show/hide Previous button
-        },
-        extraElements: '' // Additional HTML for toolbar
-    },
     keyboardNavigation: {
         enabled: true, // Enable/Disable keyboard navigation (left/right keys)
         keys: {
             left: [37], // Left key codes
             right: [39] // Right key codes
-        }
-    },
-    localization: {
-        buttons: {
-            next: 'Next',
-            previous: 'Previous'
-        }
-    },
-    styles: {
-        baseClass: 'sw',
-        navigation: {
-            container: 'nav',
-            link: 'nav-link',
-        },
-        content: {
-            container: 'tab-content',
-            panel: 'tab-pane'
-        },
-        themePrefix: 'sw-theme-',
-        anchorStates: {
-            default: 'default',
-            completed: 'completed',
-            active: 'active',
-            disabled: 'disabled',
-            hidden: 'hidden',
-            error: 'error',
-            warning: 'warning'
-        },
-        buttons: {
-            base: 'sw-btn',
-            next: 'sw-btn-next',
-            previous: 'sw-btn-prev',
-            reset: 'sw-btn-reset',
-            scroll: 'nav-scroll-btn',
-            scrollNext: 'nav-scroll-btn-right',
-            scrollPrevious: 'nav-scroll-btn-left',
-        },
-        loader: 'sw-loading',
-        progressBar: {
-            container: 'progress',
-            bar: 'progress-bar'
-        },
-        toolbar: {
-            base: 'toolbar',
-            prefix: 'toolbar-'
         }
     },
     stepStates: {
@@ -100,6 +49,6 @@ export const defaultOptions: WizardOptions = {
         enabled: false, // Enable/Disable swipe navigation on touch devices
         threshold: 50, // Minimum swipe distance in pixels to trigger navigation
     },
-    scrollToView: false, // Scroll the active step anchor into view on step change
+    scrollToView: true, // Scroll the active step anchor into view on step change
     contentLoader: null // Callback function for dynamically loading content
 };

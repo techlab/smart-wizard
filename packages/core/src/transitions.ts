@@ -1,6 +1,6 @@
 import { TransitionHandler, TransitionCallback, StepDirection, WizardInterface } from './types';
 import {
-    showElement, hideElement, getElementHeight, setElementHeight, setElementWidth, getElementWidth
+    showElement, hideElement, getElementHeight, setElementHeight
 } from './util';
 
 export const transitions: Record<string, TransitionHandler> = {
@@ -56,7 +56,7 @@ export const transitions: Record<string, TransitionHandler> = {
             requestAnimationFrame(tick);
         };
 
-        const show = () => fadeIn(next, speed, callback);
+        const show = () => { if (next) { fadeIn(next, speed, callback) } };
         if (current) {
             fadeOut(current, speed, show);
         } else {
@@ -74,30 +74,70 @@ export const transitions: Record<string, TransitionHandler> = {
         wizard: WizardInterface,
         callback: TransitionCallback
     ): void => {
+        if (!next) {
+            transitions.default(next, current, stepDirection, wizard, callback);
+            return;
+        }
         const { speed } = wizard.options.transition;
-        const containerWidth = wizard.options ? getElementWidth(wizard.pages[0]?.parentElement ?? document.body) : 400;
+        const container = next.parentElement;
+        const containerOffsetWidth = container ? container.offsetWidth : 400;
 
+        // Read the container's padding so we can position pages exactly where they
+        // appear in normal flow (left = padL, width = content area width).
+        const cs = container ? getComputedStyle(container) : null;
+        const padL = cs ? parseFloat(cs.paddingLeft) || 0 : 0;
+        const padR = cs ? parseFloat(cs.paddingRight) || 0 : 0;
+        const padT = cs ? parseFloat(cs.paddingTop) || 0 : 0;
+        const contentWidth = container ? container.clientWidth - padL - padR : containerOffsetWidth;
+
+        // Pin the container so it doesn't collapse when children become position:absolute
+        if (container) {
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
+            container.style.width = `${containerOffsetWidth}px`;
+        }
+
+        let pending = current ? 2 : 1;
+        const cleanup = () => {
+            if (--pending > 0) return;
+            if (container) {
+                container.style.position = '';
+                container.style.overflow = '';
+                container.style.width = '';
+            }
+            callback();
+        };
+
+        // 'from' and 'to' are relative offsets from the natural resting position (padL).
         const animate = (el: HTMLElement, from: number, to: number, dur: number, done: () => void) => {
             el.style.position = 'absolute';
-            el.style.left = `${from}px`;
+            el.style.top = `${padT}px`;
+            el.style.width = `${contentWidth}px`;
+            el.style.left = `${padL + from}px`;
             showElement(el);
             const start = performance.now();
             const tick = (now: number) => {
                 const p = Math.min((now - start) / dur, 1);
-                el.style.left = `${from + (to - from) * p}px`;
+                el.style.left = `${padL + from + (to - from) * p}px`;
                 if (p < 1) requestAnimationFrame(tick);
-                else { el.style.left = ''; el.style.position = ''; done(); }
+                else {
+                    el.style.left = '';
+                    el.style.top = '';
+                    el.style.width = '';
+                    el.style.position = '';
+                    done();
+                }
             };
             requestAnimationFrame(tick);
         };
 
         if (current) {
-            const finalCurrent = containerWidth * (stepDirection === 'backward' ? 1 : -1);
-            animate(current, 0, finalCurrent, speed, () => hideElement(current));
+            const finalCurrent = contentWidth * (stepDirection === 'backward' ? 1 : -1);
+            animate(current, 0, finalCurrent, speed, () => { hideElement(current); cleanup(); });
         }
 
-        const initialNext = containerWidth * (stepDirection === 'backward' ? -1 : 1);
-        animate(next, initialNext, 0, speed, callback);
+        const initialNext = contentWidth * (stepDirection === 'backward' ? -1 : 1);
+        animate(next, initialNext, 0, speed, cleanup);
     },
 
     /**
@@ -110,30 +150,75 @@ export const transitions: Record<string, TransitionHandler> = {
         wizard: WizardInterface,
         callback: TransitionCallback
     ): void => {
+        if (!next) {
+            transitions.default(next, current, stepDirection, wizard, callback);
+            return;
+        }
         const { speed } = wizard.options.transition;
-        const containerHeight = wizard.pages[0]?.parentElement?.offsetHeight ?? 400;
+        const container = next.parentElement;
+        const containerOffsetWidth = container ? container.offsetWidth : 400;
+        const containerOffsetHeight = container ? container.offsetHeight : 400;
 
+        // Read the container's padding so we can position pages exactly where they
+        // appear in normal flow (top = padT, left = padL, size = content area).
+        const cs = container ? getComputedStyle(container) : null;
+        const padL = cs ? parseFloat(cs.paddingLeft) || 0 : 0;
+        const padR = cs ? parseFloat(cs.paddingRight) || 0 : 0;
+        const padT = cs ? parseFloat(cs.paddingTop) || 0 : 0;
+        const padB = cs ? parseFloat(cs.paddingBottom) || 0 : 0;
+        const contentWidth = container ? container.clientWidth - padL - padR : containerOffsetWidth;
+        const contentHeight = container ? container.clientHeight - padT - padB : containerOffsetHeight;
+
+        // Pin the container so it doesn't collapse when children become position:absolute
+        if (container) {
+            container.style.position = 'relative';
+            container.style.overflow = 'hidden';
+            container.style.width = `${containerOffsetWidth}px`;
+            container.style.height = `${containerOffsetHeight}px`;
+        }
+
+        let pending = current ? 2 : 1;
+        const cleanup = () => {
+            if (--pending > 0) return;
+            if (container) {
+                container.style.position = '';
+                container.style.overflow = '';
+                container.style.width = '';
+                container.style.height = '';
+            }
+            callback();
+        };
+
+        // 'from' and 'to' are relative offsets from the natural resting position (padT).
         const animate = (el: HTMLElement, from: number, to: number, dur: number, done: () => void) => {
             el.style.position = 'absolute';
-            el.style.top = `${from}px`;
+            el.style.left = `${padL}px`;
+            el.style.width = `${contentWidth}px`;
+            el.style.top = `${padT + from}px`;
             showElement(el);
             const start = performance.now();
             const tick = (now: number) => {
                 const p = Math.min((now - start) / dur, 1);
-                el.style.top = `${from + (to - from) * p}px`;
+                el.style.top = `${padT + from + (to - from) * p}px`;
                 if (p < 1) requestAnimationFrame(tick);
-                else { el.style.top = ''; el.style.position = ''; done(); }
+                else {
+                    el.style.top = '';
+                    el.style.left = '';
+                    el.style.width = '';
+                    el.style.position = '';
+                    done();
+                }
             };
             requestAnimationFrame(tick);
         };
 
         if (current) {
-            const finalCurrent = containerHeight * (stepDirection === 'backward' ? 1 : -1);
-            animate(current, 0, finalCurrent, speed, () => hideElement(current));
+            const finalCurrent = contentHeight * (stepDirection === 'backward' ? 1 : -1);
+            animate(current, 0, finalCurrent, speed, () => { hideElement(current); cleanup(); });
         }
 
-        const initialNext = containerHeight * (stepDirection === 'backward' ? -1 : 1);
-        animate(next, initialNext, 0, speed, callback);
+        const initialNext = contentHeight * (stepDirection === 'backward' ? -1 : 1);
+        animate(next, initialNext, 0, speed, cleanup);
     },
 
     /**
@@ -146,6 +231,10 @@ export const transitions: Record<string, TransitionHandler> = {
         wizard: WizardInterface,
         callback: TransitionCallback
     ): void => {
+        if (!next) {
+            transitions.default(next, current, stepDirection, wizard, callback);
+            return;
+        }
         const { speed } = wizard.options.transition;
 
         const slideUp = (el: HTMLElement, dur: number, done: () => void) => {
@@ -194,6 +283,10 @@ export const transitions: Record<string, TransitionHandler> = {
         wizard: WizardInterface,
         callback: TransitionCallback
     ): void => {
+        if (!next) {
+            transitions.default(next, current, stepDirection, wizard, callback);
+            return;
+        }
         const { css, speed } = wizard.options.transition;
         const { prefix, forward, backward } = css;
         const isForward = stepDirection === 'forward';
