@@ -1,7 +1,6 @@
+import { STEP_DIRECTION } from './constants';
 import { TransitionHandler, TransitionCallback, StepDirection, WizardInterface } from './types';
-import {
-    showElement, hideElement, getElementHeight, setElementHeight
-} from './util';
+import { showElement, hideElement } from './util';
 
 export const transitions: Record<string, TransitionHandler> = {
     /**
@@ -289,7 +288,7 @@ export const transitions: Record<string, TransitionHandler> = {
         }
         const { css, speed } = wizard.options.transition;
         const { prefix, forward, backward } = css;
-        const isForward = stepDirection === 'forward';
+        const isForward = stepDirection === STEP_DIRECTION.FORWARD;
         const showClass = (prefix ? prefix + ' ' : '') + (isForward ? forward.show : backward.show);
         const hideClass = (prefix ? prefix + ' ' : '') + (isForward ? forward.hide : backward.hide);
 

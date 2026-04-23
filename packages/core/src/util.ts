@@ -160,7 +160,6 @@ export const deepMerge = <T extends Record<string, any>>(target: T, ...sources: 
 
             if (sourceValue && typeof sourceValue === 'object' && !Array.isArray(sourceValue)) {
                 // Always create a fresh object so we never mutate shared references
-                // (e.g. nested objects from a singleton defaultOptions).
                 const base = (targetValue && typeof targetValue === 'object' && !Array.isArray(targetValue))
                     ? targetValue
                     : {} as T[Extract<keyof T, string>];

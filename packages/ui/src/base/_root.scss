@@ -1,37 +1,74 @@
 // Root CSS variables used for theming and color customization
 
 :root {
+    // ─────────────────────────────────────────────
+    // BASE COLORS
+    // ─────────────────────────────────────────────
+    --sw-white: #fff;
+    --sw-black: #000;
 
+    --sw-primary-color: #3498db;
+    --sw-primary-bg-color: var(--sw-white);
+    --sw-primary-text-color: #222222;
+    --sw-primary-border-color: #eeeeee;
+
+    --sw-secondary-color: #2ecc71;
+    --sw-secondary-bg-color: var(--sw-white);
+    --sw-secondary-text-color: #222222;
+    --sw-secondary-border-color: #eeeeee;
+
+    --sw-success-color: #198754;
+    --sw-warning-color: #ffc107;
+    --sw-info-color: #0dcaf0;
+    --sw-error-color: #dc3545;
+
+
+    --brand-primary: var(--color-blue-500);
+    --main-bg-color: brown;
+    --bg-color: #ffffff;
     --brand: #0066FF;
     --brand-dark: #0044CC;
     --brand-light: #E8F0FF;
     --success: #00C48C;
     --warning: #FFB020;
     --danger: #FF4D4F;
+    --error: #ce0606;
+    --success: #009070;
+
     --text-1: #0A0F1E;
     --text-2: #4A5168;
     --text-3: #8B92A9;
     --border: #E4E7F0;
     --surface: #FFFFFF;
     --bg: #F4F6FB;
-    --radius-sm: 6px;
-    --radius-md: 12px;
-    --radius-lg: 20px;
+
+
+    // ─────────────────────────────────────────────
+    // PROPERTIES
+    // ─────────────────────────────────────────────
+    --sw-button-radius: 0.5rem;
+    --sw-radius-md: 12px;
+    --sw-radius-lg: 20px;
+    --sw-radius-nav-badge: 50%;
+    --sw-size-nav-badge: 32px;
+    --sw-button-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+    --sw-trans: all .22s cubic-bezier(.4, 0, .2, 1);
+
+
     --shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
     --shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
     --shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
-    --font-head: 'Syne', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'DM Mono', monospace;
-    --step-size: 40px;
-    --nav-w: 260px;
-    --trans: all .22s cubic-bezier(.4, 0, .2, 1);
 
+    // Button
+    --sw-button-text-color: #4A5168;
+    --sw-button-background: #FFFFFF;
+    --sw-button-border-color: #E4E7F0;
+    --sw-button-hover-text-color: #0066FF;
+    --sw-button-hover-background: #E8F0FF;
+    --sw-button-hover-border-color: #dee2e6;
 
-    // ─────────────────────────────────────────────
-    // WIZARD
-    // ─────────────────────────────────────────────
-    // Surface
+    // WIZARD 
     --sw-border-color: #eeeeee;
     --sw-surface: #ffffff;
     --sw-border: #e0e0e0;
@@ -86,8 +123,7 @@
     // NAVIGATION
     // ─────────────────────────────────────────────
     // Badge
-    --sw-nav-badge-size: 32px;
-    --sw-nav-badge-radius: 50%;
+
 
     // Steps
     --sw-nav-default-text: #9e9e9e;

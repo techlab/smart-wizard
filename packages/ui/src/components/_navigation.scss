@@ -35,19 +35,11 @@
             flex: 1 auto;
         }
 
-        // &>.sw-nav-connector {
-        //     flex: 1;
-        //     min-width: 20px;
-        //     height: 1px;
-        //     background: var(--border);
-        //     margin: 0 4px;
-        //     align-self: center;
-        // }
-
         // NAV ITEM
         &>.sw-nav-item {
             display: flex;
             position: relative;
+            list-style: none;
             z-index: 1;
             align-items: center;
             width: 100%;
@@ -61,7 +53,7 @@
             gap: 10px;
             border-bottom: 2px solid transparent;
             white-space: nowrap;
-            transition: var(--trans);
+            transition: var(--sw-trans);
 
             &:hover,
             &:active,
@@ -82,9 +74,9 @@
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
-                width: var(--sw-nav-badge-size);
-                height: var(--sw-nav-badge-size);
-                border-radius: var(--sw-nav-badge-radius);
+                width: var(--sw-size-nav-badge);
+                height: var(--sw-size-nav-badge);
+                border-radius: var(--sw-radius-nav-badge) !important;
                 pointer-events: none;
                 clear: both;
                 line-height: 1;
@@ -232,286 +224,4 @@
             }
         }
     }
-}
-
-
-/* ══════════════════════════════════════════
-   2. VERTICAL NAV — SIDEBAR
-══════════════════════════════════════════ */
-.wz-layout-v {
-    display: flex;
-}
-
-.wz-v-nav {
-    width: var(--nav-w);
-    flex-shrink: 0;
-    border-right: 1px solid var(--border);
-    padding: 20px 0;
-    background: var(--bg);
-}
-
-.wz-v-step {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 20px;
-    cursor: pointer;
-    color: var(--text-3);
-    font-weight: 500;
-    transition: var(--trans);
-    position: relative;
-    border-left: 3px solid transparent;
-}
-
-.wz-v-step:hover {
-    color: var(--text-1);
-    background: var(--border);
-}
-
-.wz-v-step.active {
-    color: var(--brand);
-    background: var(--brand-light);
-    border-left-color: var(--brand);
-}
-
-.wz-v-step.done {
-    color: var(--success);
-}
-
-.wz-v-step.done .step-num {
-    background: var(--success);
-    color: #fff;
-}
-
-.wz-v-step.active .step-num {
-    background: var(--brand);
-    color: #fff;
-    box-shadow: 0 0 0 3px var(--brand-light);
-}
-
-.v-connector {
-    width: 2px;
-    height: 16px;
-    background: var(--border);
-    margin-left: 29px;
-}
-
-/* ══════════════════════════════════════════
-   3. SCROLLABLE PILL NAV with arrows
-══════════════════════════════════════════ */
-.wz-scroll-nav-wrap {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid var(--border);
-    background: var(--bg);
-    gap: 0;
-}
-
-.wz-pill-nav {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 12px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    flex: 1;
-}
-
-.wz-pill-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.pill-step {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    padding: 6px 14px;
-    border-radius: 20px;
-    background: none;
-    border: 1.5px solid var(--border);
-    color: var(--text-3);
-    font-size: 12.5px;
-    font-weight: 600;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: var(--trans);
-}
-
-.pill-step:hover {
-    border-color: var(--brand);
-    color: var(--brand);
-}
-
-.pill-step.active {
-    background: var(--brand);
-    border-color: var(--brand);
-    color: #fff;
-}
-
-.pill-step.done {
-    background: var(--brand-light);
-    border-color: var(--success);
-    color: var(--success);
-}
-
-.pill-num {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, .25);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: 700;
-}
-
-/* ══════════════════════════════════════════
-   4. NUMBERED STEPS (Breadcrumb / Linear)
-══════════════════════════════════════════ */
-.wz-breadcrumb-nav {
-    display: flex;
-    align-items: center;
-    padding: 16px 28px;
-    border-bottom: 1px solid var(--border);
-    gap: 0;
-    overflow-x: auto;
-    scrollbar-width: none;
-}
-
-.wz-breadcrumb-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.bc-step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    flex-shrink: 0;
-}
-
-.bc-num {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--text-3);
-    background: var(--surface);
-    transition: var(--trans);
-}
-
-.bc-step.active .bc-num {
-    border-color: var(--brand);
-    color: var(--brand);
-    box-shadow: 0 0 0 4px var(--brand-light);
-}
-
-.bc-step.done .bc-num {
-    border-color: var(--success);
-    background: var(--success);
-    color: #fff;
-}
-
-.bc-label {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text-3);
-}
-
-.bc-step.active .bc-label {
-    color: var(--brand);
-}
-
-.bc-step.done .bc-label {
-    color: var(--success);
-}
-
-.bc-line {
-    flex: 1;
-    height: 2px;
-    background: var(--border);
-    min-width: 24px;
-    transition: var(--trans);
-}
-
-.bc-line.done {
-    background: var(--success);
-}
-
-/* ══════════════════════════════════════════
-   5. ICON NAV — icon + label stacked
-══════════════════════════════════════════ */
-.wz-icon-nav {
-    display: flex;
-    background: var(--bg);
-    border-bottom: 1px solid var(--border);
-}
-
-.icon-step {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 8px;
-    cursor: pointer;
-    color: var(--text-3);
-    font-size: 11.5px;
-    font-weight: 600;
-    gap: 6px;
-    border-bottom: 2.5px solid transparent;
-    transition: var(--trans);
-    position: relative;
-}
-
-.icon-step:not(:last-child)::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 20%;
-    bottom: 20%;
-    width: 1px;
-    background: var(--border);
-}
-
-.icon-step:hover {
-    color: var(--text-1);
-    background: rgba(0, 0, 0, .02);
-}
-
-.icon-step.active {
-    color: var(--brand);
-    border-bottom-color: var(--brand);
-    background: var(--brand-light);
-}
-
-.icon-step.done {
-    color: var(--success);
-}
-
-.icon-step svg {
-    width: 22px;
-    height: 22px;
-}
-
-.icon-step .i-badge {
-    position: absolute;
-    top: 8px;
-    right: calc(50% - 22px);
-    width: 14px;
-    height: 14px;
-    background: var(--success);
-    border-radius: 50%;
-    font-size: 8px;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
 }

@@ -15,8 +15,6 @@ export type StepState =
     | 'error'      // Validation failed
     | 'warning';   // Soft validation warning
 
-// skip // Skipped state <<<== upcoming
-
 // Types for the wizard options
 export interface WizardOptions {
     initialStep: number;

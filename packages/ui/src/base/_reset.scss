@@ -1,5 +1,4 @@
 // CSS Reset for SmartWizard elements
-
 .sw {
     box-sizing: border-box;
 
@@ -9,27 +8,5 @@
         box-sizing: border-box;
         margin: 0;
         padding: 0;
-    }
-
-    // Reset list styles used in nav
-    ul,
-    ol {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-    }
-
-    // Reset link styles
-    a {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    // Reset button styles
-    button {
-        font-family: inherit;
-        font-size: inherit;
-        line-height: inherit;
-        cursor: pointer;
     }
 }

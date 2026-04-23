@@ -50,13 +50,6 @@ export const CSS_PROPERTIES = {
 };
 
 /**
- * Selectors used
- */
-export const SELECTORS = {
-    TOOLBAR_ELM: '.sw-toolbar-elm',
-};
-
-/**
  * Data attributes used
  */
 export const DATA_ATTRIBUTES = {

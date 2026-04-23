@@ -3,8 +3,8 @@ import { WizardOptions } from './types';
 export const defaultOptions: WizardOptions = {
     initialStep: 0, // Initial selected step (0 = first step)
     theme: 'default', // Theme name, ensure related CSS is included
-    colorScheme: 'auto', // Display mode: auto (system preference) | dark | light | none (no class applied)
-    layout: 'horizontal', // Layout direction: horizontal | vertical
+    colorScheme: 'auto', // auto (system preference) | dark | light | none (no class applied)
+    layout: 'horizontal', // Layout: horizontal | vertical
     color: 'default', // Color preset: default | blue | violet | any custom string
     behavior: {
         autoHeight: true, // Auto-adjust content height

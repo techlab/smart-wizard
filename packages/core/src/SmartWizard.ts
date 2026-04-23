@@ -596,15 +596,15 @@ export class SmartWizard implements WizardInterface {
     }
 
     private getStepDirection(stepIdx: number): StepDirection {
-        if (this.currentIndex < stepIdx) return 'forward';
-        if (this.currentIndex > stepIdx) return 'backward';
+        if (this.currentIndex < stepIdx) return STEP_DIRECTION.FORWARD;
+        if (this.currentIndex > stepIdx) return STEP_DIRECTION.BACKWARD;
         return 'none';
     }
 
     private getStepPosition(idx: number): StepPosition {
-        if (idx === 0) return 'first';
-        if (idx === this.stepItems.length - 1) return 'last';
-        return 'middle';
+        if (idx === 0) return STEP_POSITION.FIRST;
+        if (idx === this.stepItems.length - 1) return STEP_POSITION.LAST;
+        return STEP_POSITION.MIDDLE;
     }
 
     private getStepByAnchor(hash: string): number | null {
