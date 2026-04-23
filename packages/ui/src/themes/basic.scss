@@ -2,10 +2,10 @@
 .sw-theme-basic {
 
     // Navigation style
-    &>.nav {
+    &>.sw-nav {
         box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .1) !important;
 
-        .nav-item {
+        .sw-nav-item {
             margin-right: 0 !important;
             border-right: 1px solid var(--sw-border);
 
@@ -14,31 +14,31 @@
             }
         }
 
-        .nav-link {
+        .sw-nav-item {
             clip-path: none !important;
             border-radius: 0;
             justify-content: flex-start;
             padding: 14px 20px !important;
             background: transparent;
-            color: var(--sw-nav-default-text);
+            color: var(--sw-nav-item-default-text);
 
             &.completed {
                 background: transparent;
-                color: var(--sw-nav-completed-bg);
+                color: var(--sw-nav-item-completed-bg);
 
                 .badge {
-                    color: var(--sw-nav-completed-badge-text);
-                    background: var(--sw-nav-completed-badge-bg);
+                    color: var(--sw-badge-completed-text);
+                    background: var(--sw-badge-completed-bg);
                 }
             }
 
             &.active {
                 background: transparent;
-                color: var(--sw-nav-active-bg);
+                color: var(--sw-nav-item-active-bg);
 
                 .badge {
-                    color: var(--sw-nav-active-badge-bg);
-                    background: var(--sw-nav-active-badge-text);
+                    color: var(--sw-badge-active-bg);
+                    background: var(--sw-badge-active-text);
                 }
             }
         }

@@ -1,10 +1,11 @@
 // Wizard container component
 
 .sw {
-    border: 1px solid var(--sw-border);
-    border-radius: var(--sw-radius);
-    box-shadow: var(--sw-shadow);
+    border: var(--sw-border-width) solid var(--sw-wizard-border);
+    border-radius: var(--sw-wizard-radius);
+    box-shadow: var(--sw-wizard-shadow);
     overflow: hidden;
-    background: var(--sw-surface);
+    background: var(--sw-wizard-bg);
     position: relative;
+    font-family: inherit;
 }

@@ -1,70 +1,80 @@
 .sw {
+    .sw-panel {
+        padding: var(--sw-panel-padding);
+        background: var(--sw-panel-bg);
+        color: var(--sw-panel-text);
+        width: 100%;
+        display: none;
 
-    // CONTENT PANELS
-    &>.sw-panels {
-        position: relative;
-        padding: var(--sw-content-pad);
-        background: var(--sw-content-bg);
-        color: var(--sw-content-text);
-        min-height: 140px;
-        margin-top: 1rem;
+        &.active {
+            display: block;
+        }
 
-        &>.sw-panel {
-            padding: .8rem;
+        .sw-content-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--sw-text-primary);
+        }
 
+        .sw-content-desc {
+            font-size: 1rem;
+            color: var(--sw-text-secondary);
+            margin-bottom: 1.5rem;
+        }
 
-            .content-head {
-                font-family: var(--font-head);
-                font-size: 18px;
-                font-weight: 700;
-                margin-bottom: 6px;
-                color: var(--text-1);
+        // --- Standard Form Styles ---
+        label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--sw-text-secondary);
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="password"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="number"],
+        select,
+        textarea {
+            font-family: inherit;
+            font-size: 1rem;
+            width: 100%;
+            padding: 0.625rem 0.875rem;
+            border: var(--sw-border-width) solid var(--sw-border);
+            border-radius: var(--sw-border-radius);
+            background: var(--sw-bg);
+            color: var(--sw-text-primary);
+            margin-bottom: 1.25rem;
+            outline: none;
+            transition: var(--sw-transition);
+
+            &:focus {
+                border-color: var(--sw-primary);
+                box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-focus-ring-color);
             }
 
-            .content-sub {
-                font-size: 13px;
-                color: var(--text-2);
-                margin-bottom: 20px;
+            &::placeholder {
+                color: var(--sw-text-tertiary);
             }
+        }
 
-            .field-row {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 14px;
-                margin-bottom: 14px;
-            }
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0 1.5rem;
 
-            .field {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
+            @media screen and (max-width: 640px) {
+                grid-template-columns: 1fr;
             }
+        }
 
-            .field label {
-                font-size: 12px;
-                font-weight: 600;
-                color: var(--text-2);
-            }
-
-            .field input,
-            .field select {
-                height: 38px;
-                padding: 0 12px;
-                border-radius: var(--radius-sm);
-                border: 1.5px solid var(--border);
-                background: var(--surface);
-                color: var(--text-1);
-                font-size: 13.5px;
-                font-family: var(--font-body);
-                transition: var(--trans);
-                outline: none;
-            }
-
-            .field input:focus,
-            .field select:focus {
-                border-color: var(--brand);
-                box-shadow: 0 0 0 3px var(--brand-light);
-            }
+        .field {
+            display: flex;
+            flex-direction: column;
         }
     }
 }

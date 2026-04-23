@@ -2,225 +2,173 @@
 
 :root {
     // ─────────────────────────────────────────────
-    // BASE COLORS
+    // 1. BRAND COLORS
     // ─────────────────────────────────────────────
-    --sw-white: #fff;
-    --sw-black: #000;
+    --sw-primary: #3498db;
+    --sw-primary-light: #e8f0ff;
+    --sw-primary-dark: #2980b9;
+    --sw-primary-contrast: #ffffff;
 
-    --sw-primary-color: #3498db;
-    --sw-primary-bg-color: var(--sw-white);
-    --sw-primary-text-color: #222222;
-    --sw-primary-border-color: #eeeeee;
-
-    --sw-secondary-color: #2ecc71;
-    --sw-secondary-bg-color: var(--sw-white);
-    --sw-secondary-text-color: #222222;
-    --sw-secondary-border-color: #eeeeee;
-
-    --sw-success-color: #198754;
-    --sw-warning-color: #ffc107;
-    --sw-info-color: #0dcaf0;
-    --sw-error-color: #dc3545;
-
-
-    --brand-primary: var(--color-blue-500);
-    --main-bg-color: brown;
-    --bg-color: #ffffff;
-    --brand: #0066FF;
-    --brand-dark: #0044CC;
-    --brand-light: #E8F0FF;
-    --success: #00C48C;
-    --warning: #FFB020;
-    --danger: #FF4D4F;
-    --error: #ce0606;
-    --success: #009070;
-
-    --text-1: #0A0F1E;
-    --text-2: #4A5168;
-    --text-3: #8B92A9;
-    --border: #E4E7F0;
-    --surface: #FFFFFF;
-    --bg: #F4F6FB;
-
+    --sw-secondary: #2ecc71;
+    --sw-secondary-light: #e8f5e9;
+    --sw-secondary-dark: #27ae60;
+    --sw-secondary-contrast: #ffffff;
 
     // ─────────────────────────────────────────────
-    // PROPERTIES
+    // 2. FUNCTIONAL COLORS
     // ─────────────────────────────────────────────
-    --sw-button-radius: 0.5rem;
-    --sw-radius-md: 12px;
-    --sw-radius-lg: 20px;
-    --sw-radius-nav-badge: 50%;
-    --sw-size-nav-badge: 32px;
-    --sw-button-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    --sw-success: #198754;
+    --sw-success-light: #d1e7dd;
+    --sw-warning: #ffc107;
+    --sw-warning-light: #fff3cd;
+    --sw-info: #0dcaf0;
+    --sw-info-light: #cff4fc;
+    --sw-error: #dc3545;
+    --sw-error-light: #f8d7da;
 
-    --sw-trans: all .22s cubic-bezier(.4, 0, .2, 1);
+    // ─────────────────────────────────────────────
+    // 3. NEUTRALS & SURFACES
+    // ─────────────────────────────────────────────
+    --sw-white: #ffffff;
+    --sw-black: #000000;
 
+    --sw-gray-100: #f8f9fa;
+    --sw-gray-200: #e9ecef;
+    --sw-gray-300: #dee2e6;
+    --sw-gray-400: #ced4da;
+    --sw-gray-500: #adb5bd;
+    --sw-gray-600: #6c757d;
+    --sw-gray-700: #495057;
+    --sw-gray-800: #343a40;
+    --sw-gray-900: #212529;
 
-    --shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
-
-    // Button
-    --sw-button-text-color: #4A5168;
-    --sw-button-background: #FFFFFF;
-    --sw-button-border-color: #E4E7F0;
-    --sw-button-hover-text-color: #0066FF;
-    --sw-button-hover-background: #E8F0FF;
-    --sw-button-hover-border-color: #dee2e6;
-
-    // WIZARD 
-    --sw-border-color: #eeeeee;
+    --sw-bg: #f4f6fb;
     --sw-surface: #ffffff;
-    --sw-border: #e0e0e0;
-    --sw-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-    --sw-radius: 8px;
+    --sw-border: #e4e7f0;
 
-    // Content
-    --sw-content-pad: 8px;
-    --sw-content-bg: var(--sw-surface);
-    --sw-content-text: #333333;
+    // ─────────────────────────────────────────────
+    // 4. TEXT COLORS
+    // ─────────────────────────────────────────────
+    --sw-text-primary: #0a0f1e;
+    --sw-text-secondary: #4a5168;
+    --sw-text-tertiary: #8b92a9;
+    --sw-text-disabled: #adb5bd;
+    --sw-text-on-primary: var(--sw-white);
 
-    // Brand
-    --sw-accent: #2196f3;
-    --sw-accent-dark: #1565c0;
-    --sw-accent-light: #64b5f6;
-    --sw-accent-text: #ffffff;
+    // ─────────────────────────────────────────────
+    // 5. GLOBAL PROPERTIES
+    // ─────────────────────────────────────────────
+    --sw-border-radius: 0.5rem;
+    --sw-border-radius-lg: 0.75rem;
+    --sw-border-width: 1px;
+
+    --sw-shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
+
+    --sw-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Focus Ring
+    --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
+    --sw-focus-ring-width: 3px;
+
+    // ─────────────────────────────────────────────
+    // 6. COMPONENT TOKENS (Mappings)
+    // ─────────────────────────────────────────────
+
+    // Wizard Container
+    --sw-wizard-bg: var(--sw-surface);
+    --sw-wizard-border: var(--sw-border);
+    --sw-wizard-shadow: var(--sw-shadow-md);
+    --sw-wizard-radius: var(--sw-border-radius);
+
+    // Navigation
+    --sw-nav-bg: var(--sw-bg);
+    --sw-nav-border: var(--sw-border);
+    --sw-nav-item-padding: 14px 20px;
+    --sw-nav-item-gap: 10px;
+
+    --sw-nav-item-default-bg: transparent;
+    --sw-nav-item-default-text: var(--sw-text-secondary);
+    --sw-nav-item-active-bg: var(--sw-primary);
+    --sw-nav-item-active-text: var(--sw-primary-contrast);
+    --sw-nav-item-completed-bg: var(--sw-primary-light);
+    --sw-nav-item-completed-text: var(--sw-primary);
+
+    // Badge
+    --sw-badge-size: 32px;
+    --sw-badge-radius: 50%;
+    --sw-badge-default-bg: var(--sw-gray-200);
+    --sw-badge-default-text: var(--sw-text-tertiary);
+    --sw-badge-active-bg: var(--sw-white);
+    --sw-badge-active-text: var(--sw-primary);
+    --sw-badge-completed-bg: var(--sw-white);
+    --sw-badge-completed-text: var(--sw-primary);
+
+    // Toolbar
+    --sw-toolbar-bg: var(--sw-surface);
+    --sw-toolbar-border: var(--sw-border);
 
     // Buttons
-    --sw-btn-primary-bg: var(--sw-accent);
-    --sw-btn-primary-text: var(--sw-accent-text);
-    --sw-btn-secondary-bg: #eeeeee;
-    --sw-btn-secondary-text: #333333;
+    --sw-btn-padding: 8px 18px;
+    --sw-btn-radius: var(--sw-border-radius);
+    --sw-btn-font-weight: 600;
+    --sw-btn-transition: var(--sw-transition);
 
-    // Transition
-    --sw-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --sw-btn-default-bg: var(--sw-white);
+    --sw-btn-default-text: var(--sw-text-secondary);
+    --sw-btn-default-border: var(--sw-border);
 
-    // ─────────────────────────────────────────────
-    // LOADER
-    // ─────────────────────────────────────────────
-    --sw-loader-color: #009EF7;
-    --sw-loader-background-color: #f8f9fa;
-    --sw-loader-background-wrapper-color: rgba(255, 255, 255, 0.7);
+    --sw-btn-hover-bg: var(--sw-primary-light);
+    --sw-btn-hover-text: var(--sw-primary);
+    --sw-btn-hover-border: var(--sw-primary-light);
 
-    // ─────────────────────────────────────────────
-    // PROGRESS
-    // ─────────────────────────────────────────────
-    --sw-progress-color: #009EF7;
-    --sw-progress-background-color: #E4E7F0;
+    // Content Panels
+    --sw-panel-padding: 24px;
+    --sw-panel-bg: var(--sw-surface);
+    --sw-panel-text: var(--sw-text-primary);
 
-    // Progress connector line
-    --sw-connector-width: 60px;
+    // Loader
+    --sw-loader-color: var(--sw-primary);
+    --sw-loader-bg: rgba(255, 255, 255, 0.7);
+
+    // Progress
+    --sw-progress-bg: var(--sw-gray-200);
+    --sw-progress-fill: var(--sw-primary);
+
+    // Connector Line
+    --sw-connector-color: var(--sw-border);
     --sw-connector-height: 2px;
-    --sw-connector-color: var(--sw-inactive-border);
-
-    // ─────────────────────────────────────────────
-    // TOOLBAR
-    // ─────────────────────────────────────────────
-    --sw-toolbar-btn-color: #ffffff;
-    --sw-toolbar-btn-background-color: #009EF7;
-
-    // ─────────────────────────────────────────────
-    // NAVIGATION
-    // ─────────────────────────────────────────────
-    // Badge
-
-
-    // Steps
-    --sw-nav-default-text: #9e9e9e;
-    --sw-nav-default-bg: #eeeeee;
-    --sw-nav-default-badge-text: #999999;
-    --sw-nav-default-badge-bg: #dddddd;
-
-    --sw-nav-active-text: #ffffff;
-    --sw-nav-active-bg: #2196f3;
-    --sw-nav-active-badge-text: #2196f3;
-    --sw-nav-active-badge-bg: #ffffff;
-
-    --sw-nav-completed-text: #eeeeee;
-    --sw-nav-completed-bg: #59b0f6;
-    --sw-nav-completed-badge-text: #59b0f6;
-    --sw-nav-completed-badge-bg: #eeeeee;
-
-    --sw-nav-error-text: #ffffff;
-    --sw-nav-error-bg: #f44336;
-    --sw-nav-error-badge-text: #f44336;
-    --sw-nav-error-badge-bg: #dddddd;
-
-    --sw-nav-warning-text: #ffffff;
-    --sw-nav-warning-bg: #ff9800;
-    --sw-nav-warning-badge-text: #ff9800;
-    --sw-nav-warning-badge-bg: #dddddd;
 }
 
 // ─────────────────────────────────────────────
 // DARK MODE
 // ─────────────────────────────────────────────
 [data-theme="dark"] {
-    // Surface
-    --sw-border-color: #2e2e2e;
-    --sw-surface: #181818;
+    --sw-bg: #121212;
+    --sw-surface: #1e1e1e;
     --sw-border: #2e2e2e;
-    --sw-shadow: 0 2px 14px rgba(0, 0, 0, .6);
 
-    // Content
-    --sw-content-bg: #1e1e1e;
-    --sw-content-text: #d8d8d8;
+    --sw-text-primary: #f8f9fa;
+    --sw-text-secondary: #dee2e6;
+    --sw-text-tertiary: #adb5bd;
 
-    // Brand
-    --sw-accent: #42a5f5;
-    --sw-accent-dark: #1e88e5;
-    --sw-accent-light: #64b5f6;
-    --sw-accent-text: #ffffff;
+    --sw-primary-light: rgba(52, 152, 219, 0.15);
 
-    // Loader
-    --sw-loader-color: #42a5f5;
-    --sw-loader-background-color: #1e1e1e;
-    --sw-loader-background-wrapper-color: rgba(24, 24, 24, 0.7);
+    --sw-gray-100: #1e1e1e;
+    --sw-gray-200: #2e2e2e;
+    --sw-gray-300: #3e3e3e;
 
-    // Progress
-    --sw-progress-color: #42a5f5;
-    --sw-progress-background-color: #2a2a2a;
+    --sw-nav-bg: #181818;
 
-    // Progress connector line
-    --sw-connector-color: #3a3a3a;
+    --sw-badge-default-bg: var(--sw-gray-300);
+    --sw-badge-default-text: var(--sw-text-tertiary);
 
-    // Toolbar
-    --sw-toolbar-btn-color: #ffffff;
-    --sw-toolbar-btn-background-color: #1e88e5;
+    --sw-btn-default-bg: var(--sw-gray-200);
+    --sw-btn-default-text: var(--sw-text-secondary);
+    --sw-btn-default-border: var(--sw-border);
 
-    // Buttons
-    --sw-btn-primary-bg: var(--sw-accent);
-    --sw-btn-primary-text: var(--sw-accent-text);
-    --sw-btn-secondary-bg: #2a2a2a;
-    --sw-btn-secondary-text: #d8d8d8;
+    --sw-loader-bg: rgba(18, 18, 18, 0.7);
 
-    // Navigation — default steps
-    --sw-nav-default-text: #666666;
-    --sw-nav-default-bg: #2a2a2a;
-    --sw-nav-default-badge-text: #777777;
-    --sw-nav-default-badge-bg: #383838;
-
-    // Navigation — active step
-    --sw-nav-active-text: #ffffff;
-    --sw-nav-active-bg: #1e88e5;
-    --sw-nav-active-badge-text: #1e88e5;
-    --sw-nav-active-badge-bg: #ffffff;
-
-    // Navigation — completed steps
-    --sw-nav-completed-text: #bbbbbb;
-    --sw-nav-completed-bg: #2d4a6b;
-    --sw-nav-completed-badge-text: #64b5f6;
-    --sw-nav-completed-badge-bg: #1e2e3e;
-
-    // Navigation — error steps
-    --sw-nav-error-text: #ffffff;
-    --sw-nav-error-bg: #c62828;
-    --sw-nav-error-badge-text: #ef5350;
-    --sw-nav-error-badge-bg: #2a1a1a;
-
-    // Navigation — warning steps
-    --sw-nav-warning-text: #ffffff;
-    --sw-nav-warning-bg: #e65100;
-    --sw-nav-warning-badge-text: #ffa726;
-    --sw-nav-warning-badge-bg: #2a1f10;
+    --sw-focus-ring-color: rgba(52, 152, 219, 0.6);
 }

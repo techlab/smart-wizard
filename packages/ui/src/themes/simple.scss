@@ -10,7 +10,7 @@
     box-shadow: none;
     background: transparent;
 
-    >.nav {
+    >.sw-nav {
         position: relative;
         justify-content: center;
         gap: 0;
@@ -22,28 +22,28 @@
         &::before {
             content: '';
             position: absolute;
-            top: calc(var(--sw-nav-badge-size) / 2);
-            left: calc(var(--sw-nav-badge-size) / 2);
-            right: calc(var(--sw-nav-badge-size) / 2);
+            top: calc(var(--sw-badge-size) / 2);
+            left: calc(var(--sw-badge-size) / 2);
+            right: calc(var(--sw-badge-size) / 2);
             height: 2px;
             background: var(--sw-border);
             z-index: 0;
         }
 
-        .nav-item {
+        .sw-nav-item {
             flex: 1;
             display: flex;
             justify-content: center;
             position: relative;
         }
 
-        .nav-link {
+        .sw-nav-item {
             flex-direction: column;
             align-items: center;
             justify-content: flex-start;
             gap: 8px;
             background: transparent;
-            color: var(--sw-nav-default-text);
+            color: var(--sw-nav-item-default-text);
             padding: 0 8px 16px;
             clip-path: none !important;
             border-radius: 0;
@@ -55,11 +55,11 @@
 
             // Badge sits above the connector line
             >.badge {
-                width: var(--sw-nav-badge-size);
-                height: var(--sw-nav-badge-size);
+                width: var(--sw-badge-size);
+                height: var(--sw-badge-size);
                 border-radius: 50%;
-                background: var(--sw-nav-default-badge-bg);
-                color: var(--sw-nav-default-badge-text);
+                background: var(--sw-badge-default-bg);
+                color: var(--sw-badge-default-text);
                 border: 2px solid var(--sw-border);
                 font-weight: 600;
                 font-size: 0.85rem;
@@ -92,32 +92,32 @@
                 border-bottom-color: var(--sw-accent);
 
                 >.badge {
-                    background: var(--sw-nav-active-bg);
-                    color: var(--sw-nav-active-badge-bg);
-                    border-color: var(--sw-nav-active-bg);
+                    background: var(--sw-nav-item-active-bg);
+                    color: var(--sw-badge-active-bg);
+                    border-color: var(--sw-nav-item-active-bg);
                     transform: scale(1.1);
                 }
             }
 
             &.completed {
-                color: var(--sw-nav-completed-bg);
+                color: var(--sw-nav-item-completed-bg);
                 background: transparent;
 
                 >.badge {
-                    background: var(--sw-nav-completed-bg);
-                    color: var(--sw-nav-completed-badge-bg);
-                    border-color: var(--sw-nav-completed-bg);
+                    background: var(--sw-nav-item-completed-bg);
+                    color: var(--sw-badge-completed-bg);
+                    border-color: var(--sw-nav-item-completed-bg);
                 }
             }
 
             &.error {
-                color: var(--sw-nav-error-bg);
+                color: var(--sw-error);
                 background: transparent;
 
                 >.badge {
-                    background: var(--sw-nav-error-bg);
+                    background: var(--sw-error);
                     color: #fff;
-                    border-color: var(--sw-nav-error-bg);
+                    border-color: var(--sw-error);
                 }
             }
         }
@@ -125,7 +125,7 @@
         @media screen and (max-width: 480px) {
             flex-direction: row !important;
 
-            .nav-link {
+            .sw-nav-item {
                 padding-bottom: 12px;
 
                 .step-text {
