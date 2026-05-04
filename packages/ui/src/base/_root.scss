@@ -2,160 +2,107 @@
 
 :root {
     // ─────────────────────────────────────────────
-    // BASE COLORS
+    // 1. BRAND COLORS
     // ─────────────────────────────────────────────
-    --sw-white: #fff;
-    --sw-black: #000;
+    --sw-primary: #51a2ff;
+    --sw-primary-light: #eff6ff;
+    --sw-primary-dark: #1447e6;
+    --sw-primary-contrast: #ffffff;
 
-    --sw-primary-color: #3498db;
-    --sw-primary-bg-color: var(--sw-white);
-    --sw-primary-text-color: #222222;
-    --sw-primary-border-color: #eeeeee;
-
-    --sw-secondary-color: #2ecc71;
-    --sw-secondary-bg-color: var(--sw-white);
-    --sw-secondary-text-color: #222222;
-    --sw-secondary-border-color: #eeeeee;
-
-    --sw-success-color: #198754;
-    --sw-warning-color: #ffc107;
-    --sw-info-color: #0dcaf0;
-    --sw-error-color: #dc3545;
-
-
-    --brand-primary: var(--color-blue-500);
-    --main-bg-color: brown;
-    --bg-color: #ffffff;
-    --brand: #0066FF;
-    --brand-dark: #0044CC;
-    --brand-light: #E8F0FF;
-    --success: #00C48C;
-    --warning: #FFB020;
-    --danger: #FF4D4F;
-    --error: #ce0606;
-    --success: #009070;
-
-    --text-1: #0A0F1E;
-    --text-2: #4A5168;
-    --text-3: #8B92A9;
-    --border: #E4E7F0;
-    --surface: #FFFFFF;
-    --bg: #F4F6FB;
-
+    --sw-secondary: #2ecc71;
+    --sw-secondary-light: #e8f5e9;
+    --sw-secondary-dark: #27ae60;
+    --sw-secondary-contrast: #ffffff;
 
     // ─────────────────────────────────────────────
-    // PROPERTIES
+    // 2. FUNCTIONAL COLORS
     // ─────────────────────────────────────────────
-    --sw-button-radius: 0.5rem;
-    --sw-radius-md: 12px;
-    --sw-radius-lg: 20px;
-    --sw-radius-nav-badge: 50%;
-    --sw-size-nav-badge: 32px;
-    --sw-button-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    --sw-success: #00c951;
+    --sw-success-light: #f0fdf4;
+    --sw-success-dark: #008236;
+    --sw-warning: #ffc107;
+    --sw-warning-light: #fefce8;
+    --sw-warning-dark: #d08700;
+    --sw-info: #c27aff;
+    --sw-info-light: #faf5ff;
+    --sw-info-dark: #8200db;
+    --sw-error: #e7000b;
+    --sw-error-light: #f8d7da;
+    --sw-error-dark: #c10007;
 
-    --sw-trans: all .22s cubic-bezier(.4, 0, .2, 1);
+    // ─────────────────────────────────────────────
+    // 3. NEUTRALS & SURFACES
+    // ─────────────────────────────────────────────
+    --sw-white: #ffffff;
+    --sw-black: #000000;
 
+    --sw-gray-100: #f8f9fa;
+    --sw-gray-200: #e9ecef;
+    --sw-gray-300: #dee2e6;
+    --sw-gray-400: #ced4da;
+    --sw-gray-500: #adb5bd;
+    --sw-gray-600: #6c757d;
+    --sw-gray-700: #495057;
+    --sw-gray-800: #343a40;
+    --sw-gray-900: #212529;
 
-    --shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
-    --shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
-    --shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
-
-    // Button
-    --sw-button-text-color: #4A5168;
-    --sw-button-background: #FFFFFF;
-    --sw-button-border-color: #E4E7F0;
-    --sw-button-hover-text-color: #0066FF;
-    --sw-button-hover-background: #E8F0FF;
-    --sw-button-hover-border-color: #dee2e6;
-
-    // WIZARD 
-    --sw-border-color: #eeeeee;
+    --sw-bg: #f4f6fb;
     --sw-surface: #ffffff;
-    --sw-border: #e0e0e0;
-    --sw-shadow: 0 2px 10px rgba(0, 0, 0, .08);
-    --sw-radius: 8px;
-
-    // Content
-    --sw-content-pad: 8px;
-    --sw-content-bg: var(--sw-surface);
-    --sw-content-text: #333333;
-
-    // Brand
-    --sw-accent: #2196f3;
-    --sw-accent-dark: #1565c0;
-    --sw-accent-light: #64b5f6;
-    --sw-accent-text: #ffffff;
-
-    // Buttons
-    --sw-btn-primary-bg: var(--sw-accent);
-    --sw-btn-primary-text: var(--sw-accent-text);
-    --sw-btn-secondary-bg: #eeeeee;
-    --sw-btn-secondary-text: #333333;
-
-    // Transition
-    --sw-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    --sw-border: #e4e7f0;
 
     // ─────────────────────────────────────────────
-    // LOADER
+    // 4. TEXT COLORS
     // ─────────────────────────────────────────────
-    --sw-loader-color: #009EF7;
-    --sw-loader-background-color: #f8f9fa;
-    --sw-loader-background-wrapper-color: rgba(255, 255, 255, 0.7);
-
-    // ─────────────────────────────────────────────
-    // PROGRESS
-    // ─────────────────────────────────────────────
-    --sw-progress-color: #009EF7;
-    --sw-progress-background-color: #E4E7F0;
-
-    // Progress connector line
-    --sw-connector-width: 60px;
-    --sw-connector-height: 2px;
-    --sw-connector-color: var(--sw-inactive-border);
+    --sw-text-primary: #0a0f1e;
+    --sw-text-secondary: #4a5168;
+    --sw-text-tertiary: #8b92a9;
+    --sw-text-disabled: #adb5bd;
 
     // ─────────────────────────────────────────────
-    // TOOLBAR
+    // 5. GLOBAL PROPERTIES
     // ─────────────────────────────────────────────
-    --sw-toolbar-btn-color: #ffffff;
-    --sw-toolbar-btn-background-color: #009EF7;
+    --sw-border-radius: 0.5rem;
+    --sw-border-radius-lg: 0.75rem;
+    --sw-border-width: 1px;
 
-    // ─────────────────────────────────────────────
-    // NAVIGATION
-    // ─────────────────────────────────────────────
-    // Badge
+    --sw-shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
 
+    --sw-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-    // Steps
-    --sw-nav-default-text: #9e9e9e;
-    --sw-nav-default-bg: #eeeeee;
-    --sw-nav-default-badge-text: #999999;
-    --sw-nav-default-badge-bg: #dddddd;
+    // Focus Ring
+    --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
+    --sw-focus-ring-width: 3px;
 
-    --sw-nav-active-text: #ffffff;
-    --sw-nav-active-bg: #2196f3;
-    --sw-nav-active-badge-text: #2196f3;
-    --sw-nav-active-badge-bg: #ffffff;
+    --sw-badge-default-bg: var(--sw-gray-200);
+    --sw-btn-default-bg: var(--sw-white);
 
-    --sw-nav-completed-text: #eeeeee;
-    --sw-nav-completed-bg: #59b0f6;
-    --sw-nav-completed-badge-text: #59b0f6;
-    --sw-nav-completed-badge-bg: #eeeeee;
-
-    --sw-nav-error-text: #ffffff;
-    --sw-nav-error-bg: #f44336;
-    --sw-nav-error-badge-text: #f44336;
-    --sw-nav-error-badge-bg: #dddddd;
-
-    --sw-nav-warning-text: #ffffff;
-    --sw-nav-warning-bg: #ff9800;
-    --sw-nav-warning-badge-text: #ff9800;
-    --sw-nav-warning-badge-bg: #dddddd;
 }
 
 // ─────────────────────────────────────────────
 // DARK MODE
 // ─────────────────────────────────────────────
-[data-theme="dark"] {
+[data-color-scheme="dark"] {
+    --sw-bg: #121212;
+    --sw-surface: #1e1e1e;
+    --sw-border: #2e2e2e;
+
+    --sw-text-primary: #f8f9fa;
+    --sw-text-secondary: #dee2e6;
+    --sw-text-tertiary: #adb5bd;
+
+    --sw-gray-100: #1e1e1e;
+    --sw-gray-200: #2e2e2e;
+    --sw-gray-300: #3e3e3e;
+
+    --sw-nav-bg: #181818;
+
+    --sw-loader-bg: rgba(18, 18, 18, 0.7);
+
+    --sw-focus-ring-color: rgba(52, 152, 219, 0.6);
+
+    //---------------------------------------------
     // Surface
     --sw-border-color: #2e2e2e;
     --sw-surface: #181818;
@@ -189,10 +136,9 @@
     --sw-toolbar-btn-background-color: #1e88e5;
 
     // Buttons
-    --sw-btn-primary-bg: var(--sw-accent);
-    --sw-btn-primary-text: var(--sw-accent-text);
     --sw-btn-secondary-bg: #2a2a2a;
     --sw-btn-secondary-text: #d8d8d8;
+    --sw-btn-default-bg: var(--sw-gray-200);
 
     // Navigation — default steps
     --sw-nav-default-text: #666666;
@@ -205,6 +151,7 @@
     --sw-nav-active-bg: #1e88e5;
     --sw-nav-active-badge-text: #1e88e5;
     --sw-nav-active-badge-bg: #ffffff;
+    --sw-badge-default-bg: var(--sw-gray-300);
 
     // Navigation — completed steps
     --sw-nav-completed-text: #bbbbbb;
@@ -223,4 +170,75 @@
     --sw-nav-warning-bg: #e65100;
     --sw-nav-warning-badge-text: #ffa726;
     --sw-nav-warning-badge-bg: #2a1f10;
+}
+
+/* Apply the relationship here so it's dynamic */
+.sw {
+    --sw-text-on-primary: var(--sw-white);
+
+    // ─────────────────────────────────────────────
+    // 6. COMPONENT TOKENS (Mappings)
+    // ─────────────────────────────────────────────
+
+    // Wizard Container
+    --sw-wizard-bg: var(--sw-surface);
+    --sw-wizard-border: var(--sw-border);
+    --sw-wizard-shadow: var(--sw-shadow-md);
+    --sw-wizard-radius: var(--sw-border-radius);
+
+    // Navigation
+    --sw-nav-bg: var(--sw-bg);
+    --sw-nav-border: var(--sw-border);
+    --sw-nav-item-padding: 14px 20px;
+    --sw-nav-item-gap: 10px;
+
+    --sw-nav-item-default-bg: transparent;
+    --sw-nav-item-default-text: var(--sw-text-tertiary);
+    --sw-nav-item-active-bg: var(--sw-primary);
+    --sw-nav-item-active-text: var(--sw-primary-contrast);
+    --sw-nav-item-completed-bg: var(--sw-primary-light);
+    --sw-nav-item-completed-text: var(--sw-primary);
+
+    // Badge
+    --sw-badge-padding: 4px 8px;
+    --sw-badge-radius: 20px;
+    --sw-badge-font-size: 11px;
+    --sw-badge-default-text: var(--sw-text-tertiary);
+    --sw-badge-default-border: var(--sw-border);
+
+    // Toolbar
+    --sw-toolbar-bg: var(--sw-surface);
+    --sw-toolbar-border: var(--sw-border);
+
+    // Buttons
+    --sw-btn-primary-bg: var(--sw-accent);
+    --sw-btn-primary-text: var(--sw-accent-text);
+    --sw-btn-padding: 8px 18px;
+    --sw-btn-radius: var(--sw-border-radius);
+    --sw-btn-font-weight: 600;
+    --sw-btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+    --sw-btn-default-text: var(--sw-text-secondary);
+    --sw-btn-default-border: var(--sw-border);
+
+    --sw-btn-hover-bg: var(--sw-primary-light);
+    --sw-btn-hover-text: var(--sw-primary);
+    --sw-btn-hover-border: var(--sw-primary-light);
+
+    // Content Panels
+    --sw-panel-padding: 24px;
+    --sw-panel-bg: var(--sw-surface);
+    --sw-panel-text: var(--sw-text-primary);
+
+    // Loader
+    --sw-loader-color: var(--sw-primary);
+    --sw-loader-bg: rgba(255, 255, 255, 0.7);
+
+    // Progress
+    --sw-progress-bg: var(--sw-gray-200);
+    --sw-progress-fill: var(--sw-primary);
+
+    // Connector Line
+    --sw-connector-color: var(--sw-border);
+    --sw-connector-height: 2px;
 }

@@ -28,6 +28,7 @@
 @use 'components/progress';
 @use 'components/loader';
 @use 'components/buttons';
+@use 'components/badges';
 
 // Layouts
 @use 'layouts/horizontal';
@@ -39,7 +40,6 @@
 @use 'themes/glow';
 @use 'themes/pills';
 @use 'themes/simple';
-// @use 'themes/vertical';
 @use 'themes/dots';
 @use 'themes/slide';
 @use 'themes/slider';

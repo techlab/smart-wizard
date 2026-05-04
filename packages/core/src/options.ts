@@ -34,8 +34,8 @@ export const defaultOptions: WizardOptions = {
     keyboardNavigation: {
         enabled: true, // Enable/Disable keyboard navigation (left/right keys)
         keys: {
-            left: [37], // Left key codes
-            right: [39] // Right key codes
+            left: ['ArrowLeft', 'Left', '37'], // Left key codes
+            right: ['ArrowRight', 'Right', '39'] // Right key codes
         }
     },
     stepStates: {

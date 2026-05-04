@@ -1,6 +1,6 @@
 import { STEP_DIRECTION } from './constants';
 import { TransitionHandler, TransitionCallback, StepDirection, WizardInterface } from './types';
-import { showElement, hideElement } from './util';
+import { showElement, hideElement, isSafeCssClass } from './util';
 
 export const transitions: Record<string, TransitionHandler> = {
     /**
@@ -289,10 +289,14 @@ export const transitions: Record<string, TransitionHandler> = {
         const { css, speed } = wizard.options.transition;
         const { prefix, forward, backward } = css;
         const isForward = stepDirection === STEP_DIRECTION.FORWARD;
-        const showClass = (prefix ? prefix + ' ' : '') + (isForward ? forward.show : backward.show);
-        const hideClass = (prefix ? prefix + ' ' : '') + (isForward ? forward.hide : backward.hide);
+        const rawShow = (prefix ? prefix + ' ' : '') + (isForward ? forward.show : backward.show);
+        const rawHide = (prefix ? prefix + ' ' : '') + (isForward ? forward.hide : backward.hide);
 
-        if (!showClass.trim()) {
+        // Guard against CSS class name injection
+        const safeShow = rawShow.split(' ').filter(isSafeCssClass).join(' ');
+        const safeHide = rawHide.split(' ').filter(isSafeCssClass).join(' ');
+
+        if (!safeShow.trim()) {
             transitions.default(next, current, stepDirection, wizard, callback);
             return;
         }
@@ -315,11 +319,11 @@ export const transitions: Record<string, TransitionHandler> = {
         };
 
         const show = () => {
-            animateCss(next, showClass, () => callback());
+            animateCss(next, safeShow, () => callback());
         };
 
-        if (current && hideClass.trim()) {
-            animateCss(current, hideClass, () => {
+        if (current && safeHide.trim()) {
+            animateCss(current, safeHide, () => {
                 hideElement(current);
                 show();
             });
@@ -329,3 +333,32 @@ export const transitions: Record<string, TransitionHandler> = {
         }
     }
 };
+
+/**
+ * Register a custom transition effect.
+ *
+ * @param name    - Unique transition name used in `options.transition.effect`.
+ * @param handler - The transition function to execute.
+ *
+ * @example
+ * import { registerTransition } from '@smartwizard/core';
+ *
+ * registerTransition('myFlip', (next, current, direction, wizard, done) => {
+ *   // your animation logic
+ *   done();
+ * });
+ *
+ * new SmartWizard('#wz', { transition: { effect: 'myFlip' } });
+ */
+export function registerTransition(name: string, handler: TransitionHandler): void {
+    if (typeof name !== 'string' || !name.trim()) {
+        throw new Error('SmartWizard: transition name must be a non-empty string');
+    }
+    if (typeof handler !== 'function') {
+        throw new Error(`SmartWizard: transition handler for "${name}" must be a function`);
+    }
+    if (transitions[name]) {
+        console.warn(`SmartWizard: overwriting existing transition "${name}"`);
+    }
+    transitions[name] = handler;
+}

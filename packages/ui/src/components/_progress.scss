@@ -1,25 +1,23 @@
 // PROGRESS BAR
 .sw {
-    & .sw-progress {
+    .sw-progress {
         padding: 0;
         margin: 0;
         border: 0;
         width: 100%;
-        background: var(--sw-progress-background-color);
+        background: var(--sw-progress-bg);
         overflow: hidden;
-        border-bottom: 1px solid var(--border);
-        height: 6px;
-        border-radius: 20px;
+        height: 4px;
 
-        &>.sw-progress-bar {
+        .sw-progress-bar {
             height: 100%;
             width: 0%;
-            // background: linear-gradient(90deg, var(--sw-accent-dark), var(--sw-accent));
-            background: linear-gradient(90deg, var(--brand), #60a5fa);
-            // transition: width var(--sw-transition);
-            transition: width .5s cubic-bezier(.4, 0, .2, 1);
-            box-shadow: 0 0 8px var(--sw-accent-light);
-            border-radius: 20px;
+            background: var(--sw-progress-fill);
+            transition: width var(--sw-transition);
         }
+    }
+
+    .sw-progress-round {
+        border-radius: var(--sw-border-radius);
     }
 }

@@ -4,28 +4,34 @@ A modern, framework-agnostic wizard/stepper component library built with TypeScr
 
 ## 🚀 Features
 
-- ✅ **Framework Agnostic Core** - Use with any framework or vanilla JavaScript
-- ✅ **Multiple Framework Adapters** - React, Vue 3, and Vanilla JS implementations
-- ✅ **Rich Transitions** - Built-in animations (none, fade, slideHorizontal, slideVertical, CSS-based)
-- ✅ **Keyboard Navigation** - Arrow keys support for easy navigation
-- ✅ **URL Hash Support** - Browser back/forward button support
-- ✅ **Progress Tracking** - Built-in progress bar
-- ✅ **Customizable Toolbar** - Flexible toolbar positioning (top, bottom, both, none)
-- ✅ **Step States** - Active, done, disabled, hidden, error, warning states
-- ✅ **Auto Height Adjustment** - Smooth content height transitions
-- ✅ **TypeScript** - Full TypeScript support with comprehensive type definitions
-- ✅ **Monorepo Structure** - Organized with pnpm workspaces and Turborepo
+- ✅ **Framework Agnostic Core** — Use with any framework or vanilla JavaScript
+- ✅ **Extension System** — Hook into any lifecycle point with `WizardExtension` objects
+- ✅ **Custom Transitions** — Register your own transitions via `registerTransition()`
+- ✅ **Rich Built-in Transitions** — `default`, `fade`, `slideHorizontal`, `slideVertical`, `slideSwing`, `css`
+- ✅ **Async Navigation Guards** — Cancel step navigation with `async onBeforeShow()`
+- ✅ **Keyboard Navigation** — Arrow key support out of the box
+- ✅ **URL Hash & Browser History** — Back/forward button support
+- ✅ **Progress Bars** — Built-in progress bar support
+- ✅ **Step States** — `active`, `completed`, `disabled`, `hidden`, `error`, `warning`
+- ✅ **Auto Height** — Smooth content height transitions
+- ✅ **RTL Support** — Right-to-left layout via `dir="rtl"`
+- ✅ **Touch / Swipe** — Optional swipe navigation for touch devices
+- ✅ **TypeScript** — Full type definitions included
+- ✅ **Monorepo** — Organized with pnpm workspaces and Turborepo
 
 ## 📦 Packages
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| `@smartwizard/core` | Core logic (framework-agnostic) | 0.1.0 |
+| `@smartwizard/core` | Framework-agnostic core logic | 0.1.0 |
 | `@smartwizard/vanilla` | Vanilla JavaScript implementation | 0.1.0 |
 | `@smartwizard/react` | React bindings | 0.1.0 |
 | `@smartwizard/vue` | Vue 3 bindings | 0.1.0 |
-| `@smartwizard/ui-bootstrap` | Bootstrap theme | 0.1.0 |
-| `@smartwizard/ui-tailwind` | Tailwind CSS utilities | 0.1.0 |
+| `@smartwizard/extension-url-hash` | URL hash + browser history navigation | 0.1.0 |
+| `@smartwizard/extension-keyboard` | Keyboard arrow-key navigation | 0.1.0 |
+| `@smartwizard/extension-swipe` | Touch swipe navigation | 0.1.0 |
+| `@smartwizard/extension-auto-height` | Auto content-height adjustment | 0.1.0 |
+
 
 ## 🛠️ Development Setup
 
@@ -52,228 +58,454 @@ pnpm dev
 ```
 smart-wizard/
 ├── packages/
-│   ├── core/                    # Framework-agnostic core logic
-│   ├── vanilla/                 # Vanilla JavaScript implementation
-│   ├── react/                   # React bindings
-│   ├── vue/                     # Vue bindings
-│   ├── ui-bootstrap/            # Bootstrap theme
-│   └── ui-tailwind/             # Tailwind utilities
-├── examples/                    # Example applications
+│   ├── core/               # Framework-agnostic core logic
+│   ├── ui/                 # Themes and styles
+│   ├── vanilla/            # Vanilla JavaScript implementation
+│   ├── react/              # React bindings
+│   ├── vue/                # Vue 3 bindings
+│   └── extensions/         # Official opt-in extensions
+│       ├── url-hash/       # @smartwizard/extension-url-hash
+│       ├── keyboard/       # @smartwizard/extension-keyboard
+│       ├── swipe/          # @smartwizard/extension-swipe
+│       └── auto-height/    # @smartwizard/extension-auto-height
+├── examples/
 │   ├── vanilla/
 │   ├── react/
 │   └── vue/
-├── pnpm-workspace.yaml          # pnpm workspace config
-├── turbo.json                   # Turborepo config
-└── tsconfig.base.json           # Base TypeScript config
+├── pnpm-workspace.yaml
+├── turbo.json
+└── tsconfig.base.json
 ```
 
+---
+
 ## 📖 Usage
+
+### HTML Structure
+
+Every SmartWizard instance requires this base structure. Class names are used to locate elements — IDs connect each nav item to its panel via `aria-controls`.
+
+```html
+<div id="wizard">
+  <!-- Navigation -->
+  <nav class="sw-nav">
+    <a class="sw-nav-item" href="#step-1" aria-controls="step-1">
+      <span>1</span> Step 1
+    </a>
+    <a class="sw-nav-item" href="#step-2" aria-controls="step-2">
+      <span>2</span> Step 2
+    </a>
+    <a class="sw-nav-item" href="#step-3" aria-controls="step-3">
+      <span>3</span> Step 3
+    </a>
+  </nav>
+
+  <!-- Content panels -->
+  <div class="sw-panels">
+    <div id="step-1" class="sw-panel">Step 1 content</div>
+    <div id="step-2" class="sw-panel">Step 2 content</div>
+    <div id="step-3" class="sw-panel">Step 3 content</div>
+  </div>
+
+  <!-- Optional: progress bar -->
+  <div class="sw-progress">
+    <div class="sw-progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <!-- Optional: navigation buttons -->
+  <div class="sw-toolbar sw-toolbar-bottom">
+    <button class="sw-btn sw-btn-prev" type="button">Previous</button>
+    <button class="sw-btn sw-btn-next" type="button">Next</button>
+  </div>
+</div>
+```
 
 ### Vanilla JavaScript
 
 ```html
-<!DOCTYPE html>
-<html>
-<head>
-  <link rel="stylesheet" href="path/to/smartwizard.css">
-</head>
-<body>
-  <div id="smartwizard">
-    <ul class="nav">
-      <li class="nav-item">
-        <a class="nav-link" href="#step-1">
-          <span class="num">1</span> Step 1
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#step-2">
-          <span class="num">2</span> Step 2
-        </a>
-      </li>
-    </ul>
-    
-    <div class="tab-content">
-      <div id="step-1" class="tab-pane">Step 1 Content</div>
-      <div id="step-2" class="tab-pane">Step 2 Content</div>
-    </div>
-    
-    <div class="progress">
-      <div class="progress-bar"></div>
-    </div>
-  </div>
+<link rel="stylesheet" href="path/to/smartwizard.css">
+<script type="module">
+  import { SmartWizard } from '@smartwizard/core';
 
-  <script type="module">
-    import { SmartWizard } from '@smartwizard/vanilla';
-
-    const wizard = new SmartWizard('#smartwizard', {
-      theme: 'default',
-      transition: {
-        animation: 'slideHorizontal',
-        speed: '400'
-      },
-      toolbar: {
-        position: 'bottom',
-        showNextButton: true,
-        showPreviousButton: true
-      }
-    });
-
-    // Public methods
-    wizard.next();
-    wizard.prev();
-    wizard.goToStep(2);
-    wizard.reset();
-    wizard.getStepInfo();
-  </script>
-</body>
-</html>
-```
-
-### React
-
-```tsx
-import { useRef } from 'react';
-import { useSmartWizard } from '@smartwizard/react';
-
-function MyWizard() {
-  const wizardRef = useRef<HTMLDivElement>(null);
-  const { stepInfo, next, prev } = useSmartWizard(wizardRef, {
+  const wizard = new SmartWizard('#wizard', {
+    theme: 'default',
+    layout: 'horizontal',
     transition: {
-      animation: 'fade'
-    }
+      effect: 'slideHorizontal',
+      speed: 400,
+    },
   });
 
-  return (
-    <div ref={wizardRef}>
-      {/* Wizard HTML structure */}
-    </div>
-  );
-}
-```
-
-### Vue 3
-
-```vue
-<template>
-  <div ref="wizardRef">
-    <!-- Wizard HTML structure -->
-  </div>
-</template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useSmartWizard } from '@smartwizard/vue';
-
-const wizardRef = ref<HTMLElement | null>(null);
-const { stepInfo, next, prev } = useSmartWizard(wizardRef, {
-  transition: {
-    animation: 'slideHorizontal'
-  }
-});
+  // Programmatic navigation
+  wizard.next();
+  wizard.prev();
+  wizard.goToStep(2);
+  wizard.reset();
 </script>
 ```
 
-## ⚙️ Configuration Options
+### Data Attributes
 
-### Core Options
+Options can also be set directly on the wizard element and will override any JavaScript options:
 
-```typescript
-{
-  selected: 0,                    // Initial step index
-  theme: 'default',               // Theme name
-  justified: true,                // Justify step buttons
-  autoAdjustHeight: true,         // Auto adjust content height
-  backButtonSupport: true,        // Browser back button support
-  enableUrlHash: true,            // Enable URL hash updates
-  
-  transition: {
-    animation: 'none',            // none | fade | slideHorizontal | slideVertical | slideSwing | css
-    speed: '400',                 // Animation speed in ms
-    easing: '',                   // CSS easing function
-    fwdShowCss: '',              // Forward show CSS class
-    fwdHideCss: '',              // Forward hide CSS class
-    bckShowCss: '',              // Backward show CSS class
-    bckHideCss: ''               // Backward hide CSS class
-  },
-  
-  toolbar: {
-    position: 'bottom',           // none | top | bottom | both
-    showNextButton: true,
-    showPreviousButton: true,
-    extraHtml: ''                 // Additional toolbar HTML
-  },
-  
-  anchor: {
-    enableNavigation: true,
-    enableNavigationAlways: false,
-    enableDoneState: true,
-    markPreviousStepsAsDone: true,
-    unDoneOnBackNavigation: false,
-    enableDoneStateNavigation: true
-  },
-  
-  keyboard: {
-    keyNavigation: true,
-    keyLeft: [37],                // Left arrow key code
-    keyRight: [39]                // Right arrow key code
-  },
-  
-  lang: {
-    next: 'Next',
-    previous: 'Previous'
-  },
-  
-  disabledSteps: [],              // Array of step indices to disable
-  errorSteps: [],                 // Array of step indices to mark as error
-  warningSteps: [],               // Array of step indices to mark as warning
-  hiddenSteps: []                 // Array of step indices to hide
-}
+```html
+<div id="wizard"
+  data-theme="arrows"
+  data-layout="vertical"
+  data-transition="fade">
+  ...
+</div>
 ```
 
-## 🎯 Public Methods
+| Attribute | Values |
+|-----------|--------|
+| `data-theme` | any theme name string |
+| `data-layout` | `horizontal` \| `vertical` |
+| `data-transition` | any transition effect name |
+| `data-color` | any color preset string |
 
-| Method | Description |
-|--------|-------------|
-| `next()` | Navigate to next step |
-| `prev()` | Navigate to previous step |
-| `goToStep(index, force?)` | Navigate to specific step |
-| `reset()` | Reset wizard to initial state |
-| `getStepInfo()` | Get current step information |
-| `setState(steps[], state)` | Set state for specific steps |
-| `unsetState(steps[], state)` | Unset state for specific steps |
-| `setOptions(options)` | Update wizard options |
-| `getOptions()` | Get current options |
-| `loader('show' \| 'hide')` | Show/hide loader |
-| `fixHeight()` | Manually adjust content height |
+---
 
-## 🎨 Events
+## ⚙️ Configuration Options
 
-The wizard emits the following custom events:
+```typescript
+const wizard = new SmartWizard('#wizard', {
+  // ── General ───────────────────────────────────────────────────────────
+  initialStep: 0,          // Step index to start on (0-based)
+  theme: 'default',        // Theme name — requires matching CSS to be loaded
+  colorScheme: 'auto',     // 'auto' | 'dark' | 'light' | 'none'
+  layout: 'horizontal',    // 'horizontal' | 'vertical'
+  color: 'default',        // Color preset: 'default' | 'blue' | 'violet' | any string
+  scrollToView: true,      // Scroll the active nav item into view on change
 
-- `initialized` - Fired when wizard is initialized
-- `leaveStep` - Fired before leaving a step (cancelable)
-- `showStep` - Fired after showing a step
+  // ── Behaviour ─────────────────────────────────────────────────────────
+  behavior: {
+    autoHeight: true,               // Animate content area height on step change
+    useUrlHash: false,              // Select step from URL hash on load
+    supportBrowserHistory: false,   // Push hash to browser history on step change
+  },
 
-```javascript
-const wizardElement = document.getElementById('smartwizard');
+  // ── Navigation ────────────────────────────────────────────────────────
+  navigation: {
+    enabled: true,          // Allow clicking nav items to jump steps
+    alwaysClickable: false, // If true, all steps are always clickable
+    completed: {
+      enabled: true,                    // Mark visited steps as 'completed'
+      completeAllPreviousSteps: true,   // Also mark all steps before initial as completed
+      clearOnBack: false,               // Remove 'completed' when navigating backward
+      clickable: true,                  // Allow clicking completed steps
+    },
+  },
 
-wizardElement.addEventListener('showStep', (e) => {
-  console.log('Step changed:', e.detail);
+  // ── Transition ────────────────────────────────────────────────────────
+  transition: {
+    effect: 'default',   // 'default' | 'fade' | 'slideHorizontal' | 'slideVertical' | 'slideSwing' | 'css' | custom
+    speed: 400,          // Duration in milliseconds
+    easing: '',          // CSS easing (used by css transition)
+    css: {               // Class-based CSS transition settings
+      prefix: '',
+      forward:  { show: '', hide: '' },
+      backward: { show: '', hide: '' },
+    },
+  },
+
+  // ── Keyboard ──────────────────────────────────────────────────────────
+  keyboardNavigation: {
+    enabled: true,
+    keys: {
+      left:  [37],  // Key codes that navigate backward
+      right: [39],  // Key codes that navigate forward
+    },
+  },
+
+  // ── Swipe ─────────────────────────────────────────────────────────────
+  swipeNavigation: {
+    enabled: false,   // Enable swipe navigation on touch devices
+    threshold: 50,    // Minimum px distance to count as a swipe
+  },
+
+  // ── Initial Step States ───────────────────────────────────────────────
+  stepStates: {
+    completed: [],  // Step indices to mark as completed on load
+    disabled:  [],  // Step indices to disable on load
+    hidden:    [],  // Step indices to hide on load
+    error:     [],  // Step indices to mark as error on load
+    warning:   [],  // Step indices to mark as warning on load
+  },
+
+  // ── Dynamic Content ───────────────────────────────────────────────────
+  contentLoader: null,
+  // A function called before each step is shown. Use to load remote content.
+  // contentLoader: (stepIndex, direction, position, stepElement, callback) => {
+  //   fetch(`/step/${stepIndex}`).then(r => r.text()).then(html => callback(html));
+  // }
 });
 ```
 
+---
+
+## 🎯 Public Methods
+
+| Method | Returns | Description |
+|--------|---------|-------------|
+| `next()` | `void` | Navigate to the next visible step |
+| `prev()` | `void` | Navigate to the previous visible step |
+| `goToStep(index, force?)` | `void` | Jump to a specific step; `force` skips showability checks |
+| `reset()` | `void` | Reset the wizard to its initial state |
+| `extend(...extensions)` | `this` | Register one or more extensions (fluent) |
+| `destroy()` | `void` | Fire `onDestroy` on all extensions and clean up |
+| `setState(steps[], state)` | `void` | Add a state class to given step indices |
+| `unsetState(steps[], state)` | `void` | Remove a state class from given step indices |
+| `setOptions(options)` | `void` | Merge new options and re-initialize |
+| `getOptions()` | `WizardOptions` | Return the current resolved options |
+| `getStepInfo()` | `StepInfo` | Return `{ currentStep, totalSteps }` |
+| `getCurrentIndex()` | `number` | Return the current step index |
+| `getContentDirection()` | `'ltr' \| 'rtl'` | Return the content direction |
+| `getWidth()` | `number` | Return the content container width in px |
+| `loader('show' \| 'hide')` | `void` | Toggle the loading state class |
+| `adjustHeight()` | `void` | Manually recalculate and set the content height |
+| `resetHeight()` | `void` | Reset the content height to `auto` |
+
+### Step States
+
+Valid values for `setState` / `unsetState`:
+
+| State | CSS class applied | Effect |
+|-------|-------------------|--------|
+| `'active'` | `active` | Current step (managed automatically) |
+| `'completed'` | `completed` | Marks step as visited |
+| `'disabled'` | `disabled` | Prevents navigation to this step |
+| `'hidden'` | `hidden` | Hides the step from the nav |
+| `'error'` | `error` | Marks step with an error indicator |
+| `'warning'` | `warning` | Marks step with a warning indicator |
+
+```javascript
+wizard.setState([1, 2], 'error');     // mark steps 1 and 2 as error
+wizard.unsetState([1], 'error');      // clear error on step 1
+wizard.setState([0], 'disabled');     // disable step 0
+```
+
+---
+
+## 🎨 Events
+
+All events are dispatched on the wizard root element and bubble up the DOM.
+
+| Event | Cancelable | `event.detail` |
+|-------|-----------|----------------|
+| `initialized` | No | `{ wizard }` |
+| `loaded` | No | `{ wizard }` |
+| `leaveStep` | **Yes** | `{ stepIndex, nextStepIndex, stepElement, stepDirection, stepPosition }` |
+| `showStep` | No | `{ stepIndex, stepElement, stepDirection, stepPosition }` |
+
+```javascript
+const el = document.getElementById('wizard');
+
+// Fired after every step change
+el.addEventListener('showStep', (e) => {
+  const { stepIndex, stepDirection, stepPosition } = e.detail;
+  console.log(`Now on step ${stepIndex} (${stepPosition})`);
+});
+
+// Cancelable — return false to block navigation
+el.addEventListener('leaveStep', (e) => {
+  const isValid = validateStep(e.detail.stepIndex);
+  if (!isValid) e.preventDefault();
+});
+```
+
+---
+
+## 🔌 Extension System
+
+Extensions are plain objects that hook into the wizard lifecycle. Register them with `wizard.extend()`.
+Official extensions live in `packages/extensions/` and are published as separate opt-in packages —
+install only what you need.
+
+### Official Extensions
+
+| Package | What it does |
+|---------|-------------|
+| `@smartwizard/extension-url-hash` | Syncs steps with `window.location.hash`; handles browser back/forward |
+| `@smartwizard/extension-keyboard` | Left / right arrow key navigation |
+| `@smartwizard/extension-swipe` | Horizontal touch swipe navigation |
+| `@smartwizard/extension-auto-height` | Adjusts content container height on step change and window resize |
+
+```ts
+import { SmartWizard } from '@smartwizard/core';
+import { createUrlHashExtension }   from '@smartwizard/extension-url-hash';
+import { createKeyboardExtension }  from '@smartwizard/extension-keyboard';
+import { createSwipeExtension }     from '@smartwizard/extension-swipe';
+import { createAutoHeightExtension } from '@smartwizard/extension-auto-height';
+
+const wizard = new SmartWizard('#wizard', options)
+  .extend(
+    createUrlHashExtension({ supportHistory: true }),
+    createKeyboardExtension(),
+    createSwipeExtension({ threshold: 60 }),
+    createAutoHeightExtension(),
+  );
+```
+
+### `WizardExtension` Interface
+
+```typescript
+import type { WizardExtension } from '@smartwizard/core';
+
+const myExtension: WizardExtension = {
+  name: 'my-extension',   // Required: unique identifier
+
+  onInstall(wizard) {},   // Called once when registered
+  onInit(wizard) {},      // Called on init() — construction, reset, setOptions
+  onLoad(wizard) {},      // Called after the first step is shown
+  onDestroy(wizard) {},   // Called when destroy() is invoked
+
+  // Sync or async — return false to cancel navigation
+  onBeforeShow(wizard, { stepIdx, currentIdx, direction }) {},
+  onAfterShow(wizard, { stepIdx, direction }) {},
+};
+```
+
+### Registration
+
+```javascript
+import { SmartWizard } from '@smartwizard/core';
+
+const wizard = new SmartWizard('#wizard', options)
+  .extend(myExtension, anotherExtension);
+
+// Or after construction:
+wizard.extend(lateExtension);
+```
+
+### Example: Async Validation Extension
+
+```javascript
+const validationExtension = {
+  name: 'validation',
+
+  async onBeforeShow(wizard, { stepIdx, currentIdx, direction }) {
+    // Only validate when moving forward
+    if (direction !== 'forward') return;
+
+    const form = wizard.stepItems[currentIdx]?.page.querySelector('form');
+    if (!form) return;
+
+    const isValid = await validateForm(form);
+    if (!isValid) {
+      wizard.setState([currentIdx], 'error');
+      return false;   // ← cancels the navigation
+    }
+
+    wizard.unsetState([currentIdx], 'error');
+    wizard.setState([currentIdx], 'completed');
+  },
+};
+
+wizard.extend(validationExtension);
+```
+
+### Example: Analytics Extension
+
+```javascript
+const analyticsExtension = {
+  name: 'analytics',
+
+  onAfterShow(wizard, { stepIdx }) {
+    gtag('event', 'wizard_step_view', {
+      step_index: stepIdx,
+      total_steps: wizard.stepItems.length,
+    });
+  },
+
+  onDestroy(wizard) {
+    console.log('Wizard destroyed after reaching step', wizard.currentIndex);
+  },
+};
+```
+
+### Safety Guarantees
+
+- A crashing extension **never breaks** the wizard — each hook call is wrapped in `try/catch`.
+- Registering the same `name` twice is silently **skipped** (no override).
+- Invalid names (`__proto__`, empty string, non-string) are **rejected** with a console warning.
+- All hooks fire in **registration order**.
+
+---
+
+## 🎬 Custom Transitions
+
+Register your own transition effect with `registerTransition()`. Use it by setting `transition.effect` to your chosen name.
+
+```javascript
+import { SmartWizard, registerTransition } from '@smartwizard/core';
+
+registerTransition('flipX', (next, current, direction, wizard, done) => {
+  const speed = wizard.options.transition.speed;
+  // ... your animation logic ...
+  done();  // ← always call done() when the animation completes
+});
+
+const wizard = new SmartWizard('#wizard', {
+  transition: { effect: 'flipX', speed: 500 },
+});
+```
+
+### Built-in Transition Effects
+
+| Effect | Description |
+|--------|-------------|
+| `default` | Instant show/hide |
+| `fade` | Cross-fade between steps |
+| `slideHorizontal` | Slide left/right |
+| `slideVertical` | Slide up/down |
+| `slideSwing` | Collapse current, expand next |
+| `css` | Fully CSS-driven — supply your own animation class names via `transition.css` |
+
+### CSS Transition Example
+
+```javascript
+const wizard = new SmartWizard('#wizard', {
+  transition: {
+    effect: 'css',
+    speed: 500,
+    css: {
+      prefix: 'animate__animated',
+      forward:  { show: 'animate__fadeInRight', hide: 'animate__fadeOutLeft' },
+      backward: { show: 'animate__fadeInLeft',  hide: 'animate__fadeOutRight' },
+    },
+  },
+});
+```
+
+---
+
 ## 🎨 Themes
 
-SmartWizard comes with built-in themes and supports custom themes:
+Set via `theme` option or `data-theme` attribute. Requires matching CSS to be loaded.
 
-- `default` - Clean, modern design
-- `arrows` - Arrow-style navigation
-- `dots` - Dot-style indicators
-- Custom themes via CSS
+| Theme | Description |
+|-------|-------------|
+| `default` | Clean, minimal design |
+| `arrows` | Arrow-chevron step connectors |
+| `dots` | Dot-style step indicators |
+| `progress` | Progress-bar style |
+
+Custom themes can be created by targeting the `sw-theme-{name}` class on the root element.
+
+---
+
+## 🔐 Security Notes
+
+- **XSS** — The extension API never accepts raw HTML. Use `setContent(el, string | Node)` (exported from `@smartwizard/core`) instead of `innerHTML` in your extensions.
+- **CSP** — The core uses no `eval` or dynamic script injection. Transition animations mutate inline `style` properties, so `style-src 'self'` is required in strict CSP environments.
+- **Prototype Pollution** — All internal merge operations guard against `__proto__`, `constructor`, and `prototype` keys.
+
+---
 
 ## 📝 License
 
-MIT License - see LICENSE file for details
+MIT License — see [LICENSE](LICENSE) for details.
 
 ## 🤝 Contributing
 
@@ -281,7 +513,7 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📚 Documentation
 
-For more detailed documentation, visit [https://techlaboratory.net/smartwizard](https://techlaboratory.net/smartwizard)
+Full documentation: [https://techlaboratory.net/smartwizard](https://techlaboratory.net/smartwizard)
 
 ## 🙏 Credits
 

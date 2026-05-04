@@ -1,0 +1,44 @@
+.sw {
+    .sw-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+        font-size: var(--sw-badge-font-size);
+        padding: var(--sw-badge-padding);
+        border-radius: var(--sw-badge-radius);
+        background: var(--sw-badge-default-bg);
+        color: var(--sw-badge-default-text);
+        border: 1px solid var(--sw-badge-default-border);
+    }
+
+    .sw-badge-primary {
+        --sw-badge-default-bg: var(--sw-primary);
+        --sw-badge-default-text: var(--sw-primary-light);
+        --sw-badge-default-border: var(--sw-primary-dark);
+    }
+
+    .sw-badge-success {
+        --sw-badge-default-bg: var(--sw-success);
+        --sw-badge-default-text: var(--sw-success-light);
+        --sw-badge-default-border: var(--sw-success-dark, var(--sw-success));
+    }
+
+    .sw-badge-danger {
+        --sw-badge-default-bg: var(--sw-error);
+        --sw-badge-default-text: var(--sw-error-light);
+        --sw-badge-default-border: var(--sw-error-dark, var(--sw-error));
+    }
+
+    .sw-badge-warning {
+        --sw-badge-default-bg: var(--sw-warning);
+        --sw-badge-default-text: var(--sw-warning-light);
+        --sw-badge-default-border: var(--sw-warning-dark, var(--sw-warning));
+    }
+
+    .sw-badge-info {
+        --sw-badge-default-bg: var(--sw-info);
+        --sw-badge-default-text: var(--sw-info-light);
+        --sw-badge-default-border: var(--sw-info-dark, var(--sw-info));
+    }
+}

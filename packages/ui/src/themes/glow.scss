@@ -8,7 +8,7 @@
     --sw-primary-glow: rgba(99, 102, 241, 0.5);
 }
 
-[data-theme="dark"] .sw-theme-glow {
+[data-color-scheme="dark"] .sw-theme-glow {
     --glass-bg: rgba(30, 41, 59, 0.5);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
@@ -42,7 +42,7 @@
         }
     }
 
-    .nav {
+    .sw-nav {
         gap: 1rem;
         padding: 1rem 1.5rem;
 
@@ -60,7 +60,7 @@
             display: none;
         }
 
-        .nav-link {
+        .sw-nav-item {
             border-radius: 16px;
 
             &.active {

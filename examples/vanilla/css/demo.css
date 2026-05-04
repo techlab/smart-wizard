@@ -434,3 +434,41 @@ body[data-ui-theme="dark"] .step-info-pill {
     background: #334155;
     color: #94a3b8;
 }
+
+.theme-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 0px;
+    cursor: pointer;
+    transition: var(--trans);
+    position: relative;
+}
+
+.theme-btn:hover,
+.theme-btn.active {
+    border-color: var(--text-1);
+    transform: scale(1.1);
+    border: 1px solid #222;
+}
+
+body[data-ui-theme="dark"] .theme-btn:hover,
+body[data-ui-theme="dark"] .theme-btn.active {
+    border: 1px solid #ddd;
+}
+
+.theme-btn[data-theme="default"] {
+    background: linear-gradient(135deg, #0066FF, #E8F0FF);
+}
+
+.theme-btn[data-theme="dark"] {
+    background: linear-gradient(135deg, #0D1120, #252B40);
+}
+
+.theme-btn[data-theme="neon"] {
+    background: linear-gradient(135deg, #A855F7, #0A0514);
+}
+
+.theme-btn[data-theme="warm"] {
+    background: linear-gradient(135deg, #E85D04, #FFF3EC);
+}

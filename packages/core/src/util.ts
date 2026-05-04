@@ -125,17 +125,43 @@ export const getElementWidth = (element: HTMLElement): number => {
     return element.offsetWidth;
 };
 
+/**
+ * Sets content on an element safely.
+ * - `string` → assigned to `textContent` (XSS-safe for plain text)
+ * - `Node`   → replaces children via `appendChild`
+ * Use this instead of `setHtml` when the content is not trusted HTML.
+ */
+export const setContent = (element: HTMLElement, content: string | Node): void => {
+    if (typeof content === 'string') {
+        element.textContent = content;
+    } else {
+        element.innerHTML = '';
+        element.appendChild(content);
+    }
+};
+
+/** @deprecated Use `setContent()` for safe content assignment. Direct innerHTML usage is an XSS risk. */
 export const setHtml = (element: HTMLElement, content: string): void => {
     element.innerHTML = content;
 };
 
+/** @deprecated Use DOM APIs directly. Direct innerHTML concatenation is an XSS risk. */
 export const appendHTML = (element: HTMLElement, content: string): void => {
     element.innerHTML = element.innerHTML + content;
 };
 
+/** @deprecated Use DOM APIs directly. Direct innerHTML concatenation is an XSS risk. */
 export const prependHTML = (element: HTMLElement, content: string): void => {
     element.innerHTML = content + element.innerHTML;
 };
+
+/**
+ * Returns true only if `cls` is a safe, plain CSS class name.
+ * Prevents CSS injection attacks in dynamic class assignment.
+ * Allows: letters, digits, hyphens, underscores. Must start with a letter or underscore.
+ */
+export const isSafeCssClass = (cls: string): boolean =>
+    /^[a-zA-Z_][-\w]*$/.test(cls.trim());
 
 export const appendElement = (element: HTMLElement, content: HTMLElement): void => {
     element.insertAdjacentElement('beforebegin', content);
@@ -149,12 +175,16 @@ export const triggerEvent = (el: HTMLElement, eventName: string, data = {}): boo
     return el.dispatchEvent(new CustomEvent(eventName, data));
 };
 
+/** Keys that must never be merged to prevent prototype pollution attacks. */
+const UNSAFE_KEYS = new Set(['__proto__', 'constructor', 'prototype']);
+
 export const deepMerge = <T extends Record<string, any>>(target: T, ...sources: Partial<T>[]): T => {
     if (!sources.length) return target;
     const source = sources.shift();
 
     if (source) {
         for (const key in source) {
+            if (UNSAFE_KEYS.has(key)) continue; // prototype pollution guard
             const sourceValue = source[key];
             const targetValue = target[key];
 
@@ -179,6 +209,7 @@ export const mergeOptions = (target: WizardOptions, ...sources: Partial<WizardOp
 
     if (source) {
         for (const key in source) {
+            if (UNSAFE_KEYS.has(key)) continue; // prototype pollution guard
             const k = key as keyof WizardOptions;
             const sourceValue = source[k];
             const targetValue = target[k];

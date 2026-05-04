@@ -12,7 +12,7 @@
     background: transparent;
 
     // Hide the regular nav entirely — we render dot indicators instead
-    >.nav {
+    >.sw-nav {
         order: 2; // Move nav below content
         justify-content: center;
         align-items: center;
@@ -21,11 +21,11 @@
         background: transparent;
         overflow: visible;
 
-        .nav-item {
+        .sw-nav-item {
             flex: 0 0 auto;
         }
 
-        .nav-link {
+        .sw-nav-item {
             width: 10px;
             height: 10px;
             padding: 0;
@@ -54,20 +54,20 @@
             }
 
             &.active {
-                background: var(--sw-nav-active-bg);
+                background: var(--sw-nav-item-active-bg);
                 border-color: transparent;
                 width: 28px;
                 border-radius: 5px;
                 cursor: default;
-                box-shadow: 0 2px 8px color-mix(in srgb, var(--sw-nav-active-bg) 45%, transparent);
+                box-shadow: 0 2px 8px color-mix(in srgb, var(--sw-nav-item-active-bg) 45%, transparent);
             }
 
             &.completed {
-                background: var(--sw-nav-completed-bg);
+                background: var(--sw-nav-item-completed-bg);
             }
 
             &.error {
-                background: var(--sw-nav-error-bg);
+                background: var(--sw-error);
             }
         }
 

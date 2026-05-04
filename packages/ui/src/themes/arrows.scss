@@ -9,131 +9,68 @@
     --sw-arrow-gap: 0px;
     --sw-min-step-width: 120px;
 
-    border: 1px solid var(--sw-border-color);
+    border: 1px solid var(--sw-border);
 
     // Navigation style
-    &>.nav {
+    &>.sw-nav {
 
-        // Nav item
-        .nav-item {
-            flex: 1 0 var(--sw-min-step-width);
-            margin-right: calc(-1 * var(--sw-arrow-tip));
+        &>.sw-nav-item-group {
+            padding: 0 20px;
 
-            &:first-child {
-                margin-right: calc(-1 * var(--sw-arrow-tip));
-
-                &>.nav-link {
-                    @include arrow-clip-first(20px);
-
-                    @media screen and (min-width: $breakpoint-phone) {
-                        padding-left: 10px;
-                        margin-left: 0;
-                    }
-                }
-            }
-
-            &:last-child {
-                margin-right: 0;
-
-                &>.nav-link {
-                    @include arrow-clip-last(20px);
-                }
-            }
-
-            &:only-child {
-                margin-right: 0;
-
-                &>.nav-link {
-                    clip-path: none;
-                    border-radius: var(--sw-radius);
-                }
-            }
-
-            @media screen and (max-width: $breakpoint-phone) {
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-                flex: 1 0 auto;
-
-                &>.nav-link {
-                    clip-path: none !important;
-                    padding: 10px 14px !important;
-                }
+            &:last-of-type {
+                padding-right: 0;
             }
         }
 
-        .nav-link {
+        // Nav item
+        .sw-nav-item {
+            flex: 1 0 var(--sw-min-step-width);
+            margin-right: calc(-1 * var(--sw-arrow-tip));
             gap: 10px;
             min-height: var(--sw-arrow-height);
             padding: 10px 20px 10px calc(var(--sw-arrow-tip) + 14px);
-
             @include arrow-clip(20px);
 
             @media screen and (max-width: $breakpoint-phone) {
                 min-height: unset;
                 overflow: hidden;
                 text-align: left !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+
+                clip-path: none !important;
+                padding: 10px 14px !important;
+            }
+
+            // First item: no left chevron indent
+            &:first-of-type {
+                margin-right: calc(-1 * var(--sw-arrow-tip));
+                padding-left: 14px;
+                @include arrow-clip-first(20px);
+            }
+
+            // Last item: no right arrow point
+            &:last-of-type {
+                margin-right: 0;
+                @include arrow-clip-last(20px);
+            }
+
+            &:only-of-type {
+                margin-right: 0;
+
+                clip-path: none;
+                border-radius: var(--sw-radius);
             }
         }
     }
 
     // RTL Support
-    &[dir="rtl"]>.nav {
+    &[dir="rtl"]>.sw-nav {
 
-        .nav-item {
+        .sw-nav-item {
             margin-right: 0;
             margin-left: calc(-1 * var(--sw-arrow-tip));
-
-            &:first-child {
-                margin-left: calc(-1 * var(--sw-arrow-tip));
-
-                &>.nav-link {
-                    clip-path: polygon(var(--sw-arrow-tip) 0%,
-                            100% 0%,
-                            100% 100%,
-                            var(--sw-arrow-tip) 100%,
-                            0% 50%);
-
-                    @media screen and (min-width: $breakpoint-phone) {
-                        padding-left: 20px;
-                        padding-right: 10px;
-                    }
-                }
-            }
-
-            &:last-child {
-                margin-left: 0;
-
-                &>.nav-link {
-                    clip-path: polygon(0% 0%,
-                            100% 0%,
-                            calc(100% - var(--sw-arrow-tip)) 50%,
-                            100% 100%,
-                            0% 100%);
-                }
-            }
-
-            &:only-child {
-                margin-left: 0;
-
-                &>.nav-link {
-                    clip-path: none;
-                    border-radius: var(--sw-radius);
-                }
-            }
-
-            @media screen and (max-width: $breakpoint-phone) {
-                margin-right: 0 !important;
-                margin-left: 0 !important;
-                flex: 1 0 auto;
-
-                &>.nav-link {
-                    clip-path: none !important;
-                    padding: 10px 14px !important;
-                }
-            }
-        }
-
-        .nav-link {
             padding: 10px calc(var(--sw-arrow-tip) + 14px) 10px 20px;
             clip-path: polygon(100% 0%,
                     var(--sw-arrow-tip) 0%,
@@ -144,6 +81,38 @@
 
             @media screen and (max-width: $breakpoint-phone) {
                 text-align: right !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+                clip-path: none !important;
+                padding: 10px 14px !important;
+            }
+
+            // First item (RTL): no right chevron indent
+            &:first-of-type {
+                margin-left: calc(-1 * var(--sw-arrow-tip));
+                padding-right: 14px;
+                clip-path: polygon(var(--sw-arrow-tip) 0%,
+                        100% 0%,
+                        100% 100%,
+                        var(--sw-arrow-tip) 100%,
+                        0% 50%);
+            }
+
+            // Last item (RTL): no left arrow point
+            &:last-of-type {
+                margin-left: 0;
+                clip-path: polygon(0% 0%,
+                        100% 0%,
+                        calc(100% - var(--sw-arrow-tip)) 50%,
+                        100% 100%,
+                        0% 100%);
+            }
+
+            &:only-of-type {
+                margin-left: 0;
+                clip-path: none;
+                border-radius: var(--sw-radius);
             }
         }
     }

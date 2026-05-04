@@ -49,20 +49,11 @@
       <div class="control-group">
         <span class="control-label">Color:</span>
         <div class="btn-group" id="color-list">
+          <div class="theme-btn active" data-theme="default" title="Blue (Default)" onclick="setTheme(this, '')"></div>
+          <div class="theme-btn" data-theme="dark" title="Dark" onclick="setTheme(this, 'theme-dark')"></div>
+          <div class="theme-btn" data-theme="neon" title="Neon Purple" onclick="setTheme(this, 'theme-neon')"></div>
+          <div class="theme-btn" data-theme="warm" title="Warm Earthy" onclick="setTheme(this, 'theme-warm')"></div>
         </div>
-      </div>
-
-    </div>
-
-    <div class="demo-control-wrapper">
-      <div class="control-group">
-        <label class="control-label" for="toolbar-select">Toolbar:</label>
-        <select class="ctrl-select" id="toolbar-select">
-          <option value="both" selected>Both</option>
-          <option value="top">Top</option>
-          <option value="bottom">Bottom</option>
-          <option value="none">None</option>
-        </select>
       </div>
 
       <div class="ctrl-divider"></div>
@@ -76,16 +67,6 @@
           <button class="btn" id="btn-reset">↺ Reset</button>
         </div>
       </div>
-
-      <div class="ctrl-divider"></div>
-
-      <div class="control-group">
-        <label class="control-label" for="toolbar-select">Progress:</label>
-        <div>
-          <span class="step-info-pill">Step <span id="current-step">1</span> of <span id="total-steps">4</span></span>
-        </div>
-      </div>
-
     </div>
   </div>
 
@@ -103,7 +84,7 @@
         data-progress="segmented" data-start-step="0" role="region" aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
-        <div class="sw-toolbar">
+        <div class="sw-toolbar sw-toolbar-top">
           <div class="sw-toolbar-group">
             <span class="sw-badge sw-badge-info">Step 2 of 5</span>
             <div class="sw-toolbar-divider"></div>
@@ -167,7 +148,9 @@
             </div>
           </div>
 
-          <!-- <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-6">
+
+          <!-- 
+          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-6">
             <div class="badge">6</div>
             <div class="info">
               <span class="title">Extra A</span>
@@ -203,13 +186,32 @@
               <span class="desc">This is extra for testing!</span>
             </div>
           </div> -->
+
+          <!-- Nexted Steps -->
+          <div class="sw-nav-item-group">
+            <div class="sw-group-header">Organization</div>
+            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+              <div class="badge">10</div>
+              <div class="info">
+                <span class="title">Extra E</span>
+                <span class="desc">This is extra for testing!</span>
+              </div>
+            </div>
+            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+              <div class="badge">11</div>
+              <div class="info">
+                <span class="title">Extra F</span>
+                <span class="desc">This is extra for testing!</span>
+              </div>
+            </div>
+          </div>
         </nav>
 
         <!-- PROGRESS BAR (optional) -->
-        <div class="sw-progress">
+        <!-- <div class="sw-progress">
           <div class="sw-progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
             aria-valuemax="100"></div>
-        </div>
+        </div> -->
 
         <!-- CONTENT PANELS -->
         <div class="sw-panels">
@@ -232,10 +234,6 @@
             <div class="field-row">
               <div class="field"><label>First Name</label><input type="text" placeholder="Jane"></div>
               <div class="field"><label>Last Name</label><input type="text" placeholder="Doe"></div>
-            </div>
-            <div class="field-row">
-              <div class="field"><label>Street Address</label><input type="text" placeholder="123 Main St"></div>
-              <div class="field"><label>City</label><input type="text" placeholder="New York"></div>
             </div>
           </section>
 
@@ -267,7 +265,7 @@
         </div>
 
         <!-- TOOLBAR (optional, can be multiple) -->
-        <div class="sw-toolbar">
+        <div class="sw-toolbar sw-toolbar-bottom">
           <div class="sw-toolbar-group">
             <button class="sw-btn sw-btn-outline sw-btn-prev" data-action="prev">← Back</button>
           </div>
@@ -301,14 +299,19 @@
         aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
-        <div class="sw-toolbar">
+        <div class="sw-toolbar sw-toolbar-top">
           <div class="sw-toolbar-group">
             <span class="sw-badge sw-badge-info">Step 2 of 5</span>
             <div class="sw-toolbar-divider"></div>
-            <span class="sw-badge sw-badge-warn">⚠ Unsaved</span>
+            <span class="sw-badge sw-badge-warning">⚠ Unsaved</span>
             <button class="btn-icon-only btn" title="Help">?</button>
             <div class="tb-divider"></div>
-            <span class="tb-badge success">✓ Auto-saved</span>
+            <span class="sw-badge sw-badge-success">✓ Auto-saved</span>
+
+            <span class="sw-badge sw-badge-danger">Danger</span>
+            <span class="sw-badge">✓ Auto-saved</span>
+            <span class="sw-badge sw-badge-primary">✓ Auto-saved</span>
+
           </div>
           <div class="sw-toolbar-group">
             <button class="sw-btn">💾 Save Draft</button>
@@ -464,7 +467,7 @@
         </div>
 
         <!-- TOOLBAR (optional, can be multiple) -->
-        <div class="sw-toolbar">
+        <div class="sw-toolbar sw-toolbar-bottom">
           <div class="sw-toolbar-group">
             <button class="sw-btn sw-btn-outline sw-btn-prev" data-action="prev">← Back</button>
           </div>
@@ -677,7 +680,6 @@
 
   </div>
 
-  <script src="./js/demo.js"></script>
 
   <script type="module">
     // Import SmartWizard CSS (resolved by Vite alias to packages/ui/src/main.scss)
@@ -694,9 +696,12 @@
         css: { prefix: 'animate__animated animate__faster', forward: { show: 'animate__lightSpeedInLeft', hide: 'animate__lightSpeedOutRight' }, backward: { show: 'animate__lightSpeedInRight', hide: 'animate__lightSpeedOutLeft' } }
       }
     });
+    window.wizard1 = wizard1;
 
     const wizard2 = new SmartWizard('#smartwizard-2');
+    window.wizard2 = wizard2;
     const wizard3 = new SmartWizard('#smartwizard-3');
+    window.wizard3 = wizard3;
 
     // Make wizard available globally for button onclick handlers
     // window.wizard = wizard;
@@ -730,6 +735,9 @@
 
 
   </script>
+
+  <script src="./js/demo.js"></script>
+
 
 </body>
 

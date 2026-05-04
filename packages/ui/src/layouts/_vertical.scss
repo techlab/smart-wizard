@@ -1,12 +1,18 @@
+@use '../base/variables' as *;
+
 .sw-layout-vertical {
     display: grid;
     grid-template-columns: 280px 1fr; // nav | content
     grid-auto-rows: auto;
     gap: 0;
 
+    @media screen and (max-width: $breakpoint-phone) {
+        grid-template-columns: 1fr;
+    }
+
     &>.sw-nav {
         flex-shrink: 0;
-        border-right: 1px solid var(--border);
+        border-right: var(--sw-border-width) solid var(--sw-nav-border);
         flex-direction: column;
         grid-column: 1;
         overflow-y: auto;
@@ -14,6 +20,34 @@
         top: 0;
         height: fit-content;
         // height: 400px;
+
+        @media screen and (max-width: $breakpoint-phone) {
+            border-right: none;
+            border-bottom: var(--sw-border-width) solid var(--sw-nav-border);
+            position: relative;
+        }
+
+        & .sw-nav-item-group {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+
+            &>.sw-group-header {
+                justify-content: flex-start;
+                padding: 15px 20px 5px;
+                font-size: 0.75em;
+                color: var(--sw-text-secondary, #6c757d);
+                background: transparent;
+                border-right: none;
+                border-bottom: none;
+            }
+
+            &>.sw-nav-item {
+                padding-left: 35px; // Indent nested items
+                border-bottom: none;
+            }
+        }
 
         &>.sw-nav-scroll-btn {
             width: 100%;
@@ -24,14 +58,14 @@
 
             &:first-child {
                 top: 0;
-                border-bottom: 1px solid var(--border);
+                border-bottom: var(--sw-border-width) solid var(--sw-nav-border);
                 left: auto;
                 border-right: none;
             }
 
             &:last-child {
                 bottom: 0;
-                border-top: 1px solid var(--border);
+                border-top: var(--sw-border-width) solid var(--sw-nav-border);
                 right: auto;
                 border-left: none;
             }
@@ -41,6 +75,10 @@
     &>.sw-panels {
         grid-column: 2;
         min-width: 0;
+
+        @media screen and (max-width: $breakpoint-phone) {
+            grid-column: 1;
+        }
     }
 
     &>*:not(.sw-nav):not(.sw-panels) {

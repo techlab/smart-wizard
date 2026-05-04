@@ -1,7 +1,7 @@
 import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
     ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, TransitionHandler, StepItem,
-    WizardLayout
+    WizardLayout, WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs
 } from './types';
 import { transitions } from './transitions';
 import { defaultOptions } from './options';
@@ -19,7 +19,7 @@ export class SmartWizard implements WizardInterface {
     public options: WizardOptions;
     public readonly main: HTMLElement;
     public container!: HTMLElement;
-    private nav!: HTMLElement;
+    protected nav!: HTMLElement;
     public stepItems!: StepItem[];
     private progressbars: HTMLElement[] = [];
     private contentDirection!: ContentDirection;
@@ -27,6 +27,7 @@ export class SmartWizard implements WizardInterface {
     public currentIndex: number = -1;
     private touchStartX: number = 0;
     private touchStartY: number = 0;
+    private extensions: WizardExtension[] = [];
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
         const el = typeof element === 'string'
@@ -58,7 +59,7 @@ export class SmartWizard implements WizardInterface {
         const overrides: Partial<WizardOptions> = {};
 
         const layout = el.getAttribute(DATA_ATTRIBUTES.LAYOUT);
-        if (layout !== null) overrides.layout = layout as WizardLayout;
+        if (layout !== null && (Object.values(LAYOUT) as string[]).includes(layout)) overrides.layout = layout as WizardLayout;
 
         const theme = el.getAttribute(DATA_ATTRIBUTES.THEME);
         if (theme !== null) overrides.theme = theme;
@@ -127,6 +128,9 @@ export class SmartWizard implements WizardInterface {
         });
 
         this.isInitialized = true;
+
+        // Fire onInit hook on all extensions
+        this.runHookSync('onInit');
     }
 
     private load(): void {
@@ -154,6 +158,9 @@ export class SmartWizard implements WizardInterface {
             detail: { wizard: this },
             bubbles: true
         });
+
+        // Fire onLoad hook on all extensions
+        this.runHookSync('onLoad');
     }
 
     private getInitialStep(): number {
@@ -190,7 +197,7 @@ export class SmartWizard implements WizardInterface {
     private setColorScheme(): void {
         const mode = this.options.colorScheme;
 
-        // Remove existing data-theme attribute
+        // Remove existing data-color-scheme attribute
         this.main.removeAttribute(DATA_ATTRIBUTES.COLOR_SCHEME);
 
         if (mode === 'none') {
@@ -300,10 +307,16 @@ export class SmartWizard implements WizardInterface {
         // Keyboard navigation
         if (this.options.keyboardNavigation.enabled) {
             addEvent(document, EVENTS.KEYUP, (e: Event) => {
+                if (!(e instanceof KeyboardEvent)) return;
+
+                // Ignore key events when focus is inside an input/textarea/select
+                const tag = (e.target as HTMLElement)?.tagName;
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
                 const key = e as KeyboardEvent;
-                if (this.options.keyboardNavigation.keys.left.includes(key.keyCode)) {
+                if (this.options.keyboardNavigation.keys.left.includes(key.key)) {
                     this.navigate(STEP_DIRECTION.BACKWARD);
-                } else if (this.options.keyboardNavigation.keys.right.includes(key.keyCode)) {
+                } else if (this.options.keyboardNavigation.keys.right.includes(key.key)) {
                     this.navigate(STEP_DIRECTION.FORWARD);
                 }
             });
@@ -419,7 +432,7 @@ export class SmartWizard implements WizardInterface {
         });
     }
 
-    private showStep(stepIdx: number): void {
+    private async showStep(stepIdx: number): Promise<void> {
         if (stepIdx === -1 || stepIdx === null) return;
         if (stepIdx === this.currentIndex) return;
         const selItem = this.stepItems[stepIdx];
@@ -427,6 +440,14 @@ export class SmartWizard implements WizardInterface {
         if (!this.isEnabled(selItem.step)) return;
 
         const stepDirection = this.getStepDirection(stepIdx);
+
+        // Run onBeforeShow hooks — any extension can cancel by returning false
+        const allowed = await this.runBeforeShow({
+            stepIdx,
+            currentIdx: this.currentIndex,
+            direction: stepDirection,
+        });
+        if (!allowed) return;
 
         if (this.currentIndex !== -1) {
             const leaveArgs: LeaveStepEventArgs = {
@@ -484,6 +505,9 @@ export class SmartWizard implements WizardInterface {
                     detail: stepArgs,
                     bubbles: true
                 });
+
+                // Fire onAfterShow hooks
+                this.runHookSync('onAfterShow', { stepIdx, direction: stepDirection });
             });
 
             // Update current index
@@ -715,6 +739,91 @@ export class SmartWizard implements WizardInterface {
         });
     }
 
+    // ─── Extension System ─────────────────────────────────────────────────────
+
+    /**
+     * Register one or more extensions. Safe to call before or after init().
+     * Returns `this` for fluent chaining.
+     *
+     * @example
+     * const wz = new SmartWizard('#wizard', options);
+     * wz.extend(validationExtension, analyticsExtension);
+     *
+     * // Or fluently:
+     * const wz = new SmartWizard('#wizard', options)
+     *   .extend(validationExtension);
+     */
+    public extend(...exts: WizardExtension[]): this {
+        for (const ext of exts) {
+            // Validate: must be a non-null object
+            if (typeof ext !== 'object' || ext === null) {
+                console.warn('SmartWizard: extension must be a plain object — skipping');
+                continue;
+            }
+            // Validate: name must be a safe non-empty string
+            const name = ext.name;
+            if (
+                typeof name !== 'string' || !name.trim() ||
+                ['__proto__', 'constructor', 'prototype'].includes(name)
+            ) {
+                console.warn('SmartWizard: extension must have a valid non-empty name — skipping');
+                continue;
+            }
+            // Deduplicate: skip if already registered
+            if (this.extensions.find(x => x.name === name)) {
+                console.warn(`SmartWizard: extension "${name}" is already registered — skipping`);
+                continue;
+            }
+            this.extensions.push(ext);
+            // onInstall fires immediately and synchronously on registration
+            if (typeof ext.onInstall === 'function') {
+                try {
+                    ext.onInstall(this);
+                } catch (err) {
+                    console.error(`SmartWizard: extension "${name}" threw in onInstall:`, err);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Run a synchronous hook across all registered extensions, in registration order.
+     * Any exception from an individual extension is caught and logged — it will not
+     * interrupt the remaining extensions or the wizard itself.
+     */
+    private runHookSync(hook: 'onInit' | 'onLoad' | 'onDestroy'): void;
+    private runHookSync(hook: 'onAfterShow', args: ExtensionAfterShowArgs): void;
+    private runHookSync(hook: string, args?: unknown): void {
+        for (const ext of this.extensions) {
+            const fn = (ext as any)[hook];
+            if (typeof fn !== 'function') continue;
+            try {
+                fn.call(ext, this, args);
+            } catch (err) {
+                console.error(`SmartWizard: extension "${ext.name}" threw in ${hook}:`, err);
+            }
+        }
+    }
+
+    /**
+     * Run `onBeforeShow` across all extensions in registration order.
+     * Supports both synchronous and async (Promise-returning) handlers.
+     * Returns `false` if any extension cancels the navigation.
+     */
+    private async runBeforeShow(args: ExtensionBeforeShowArgs): Promise<boolean> {
+        for (const ext of this.extensions) {
+            if (typeof ext.onBeforeShow !== 'function') continue;
+            try {
+                const result = await ext.onBeforeShow(this, args);
+                if (result === false) return false;
+            } catch (err) {
+                console.error(`SmartWizard: extension "${ext.name}" threw in onBeforeShow:`, err);
+            }
+        }
+        return true;
+    }
+
     // ─── Public Methods ───────────────────────────────────────────────────────
 
     public next(): void {
@@ -805,5 +914,14 @@ export class SmartWizard implements WizardInterface {
 
     public getWidth(): number {
         return this.container.offsetWidth;
+    }
+
+    /**
+     * Tear down the wizard: fires `onDestroy` on all extensions, then clears
+     * the extension registry. Future: event listener cleanup will go here too.
+     */
+    public destroy(): void {
+        this.runHookSync('onDestroy');
+        this.extensions = [];
     }
 }

@@ -11,8 +11,16 @@ var displayMode;
  */
 function applyTheme(isDark) {
     document.body.dataset.uiTheme = isDark ? 'dark' : 'light';
-    if (typeof wizardElement !== 'undefined') {
-        wizardElement.smartWizard('setOptions', { displayMode: isDark ? 'dark' : 'light' });
+    if (typeof wizard1 !== 'undefined') {
+        wizard1.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
+    }
+
+    if (typeof wizard2 !== 'undefined') {
+        wizard2.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
+    }
+
+    if (typeof wizard3 !== 'undefined') {
+        wizard3.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
     }
 }
 
@@ -88,13 +96,4 @@ if (darkToggle) {
     });
 }
 
-// ── More Settings panel toggle ──
-const toggleBtn = document.getElementById('moreSettingsToggle');
-const panel = document.getElementById('advancedSettings');
-if (toggleBtn && panel) {
-    toggleBtn.addEventListener('click', () => {
-        const isOpen = panel.classList.toggle('active');
-        toggleBtn.classList.toggle('active', isOpen);
-        toggleBtn.textContent = isOpen ? '⚙️ Less Settings' : '⚙️ More Settings';
-    });
-}
+window.addEventListener("load", initTheme);

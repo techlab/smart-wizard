@@ -5,17 +5,22 @@
         gap: 6px;
         font-weight: 600;
         cursor: pointer;
-        padding: 8px 18px;
-        border-radius: var(--sw-button-radius);
-        border: 1.5px solid var(--sw-button-border-color);
-        background: var(--sw-button-background);
-        color: var(--sw-button-text-color);
-        transition: var(--sw-button-transition);
+        padding: var(--sw-btn-padding);
+        border-radius: var(--sw-btn-radius);
+        border: var(--sw-border-width) solid var(--sw-btn-default-border);
+        background: var(--sw-btn-default-bg);
+        color: var(--sw-btn-default-text);
+        transition: var(--sw-btn-transition);
 
         &:hover {
-            border-color: var(--sw-button-hover-border-color);
-            color: var(--sw-button-hover-text-color);
-            background: var(--sw-button-hover-background);
+            border-color: var(--sw-btn-hover-border);
+            color: var(--sw-btn-hover-text);
+            background: var(--sw-btn-hover-bg);
+        }
+
+        &:focus-visible {
+            outline: none;
+            box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-focus-ring-color);
         }
 
         &:disabled,
@@ -27,52 +32,62 @@
     }
 
     .sw-btn-primary {
-        --sw-button-background: var(--sw-primary-color);
-        --sw-button-hover-background: var(--sw-primary-color);
-        --sw-button-hover-border-color: var(--sw-primary-color);
-        --sw-button-text-color: var(--sw-white);
-        --sw-button-hover-text-color: var(--sw-white);
+        --sw-btn-default-bg: var(--sw-primary);
+        --sw-btn-default-border: var(--sw-primary);
+        --sw-btn-default-text: var(--sw-primary-contrast);
+
+        --sw-btn-hover-bg: var(--sw-primary-dark);
+        --sw-btn-hover-border: var(--sw-primary-dark);
+        --sw-btn-hover-text: var(--sw-primary-contrast);
     }
 
     .sw-btn-success {
-        --sw-button-background: var(--sw-success-color);
-        --sw-button-hover-background: var(--sw-success-color);
-        --sw-button-hover-border-color: var(--sw-success-color);
-        --sw-button-text-color: var(--sw-white);
-        --sw-button-hover-text-color: var(--sw-white);
+        --sw-btn-default-bg: var(--sw-success);
+        --sw-btn-default-border: var(--sw-success);
+        --sw-btn-default-text: var(--sw-white);
+
+        --sw-btn-hover-bg: var(--sw-success-dark, var(--sw-success)); // Fallback if dark not defined
+        --sw-btn-hover-border: var(--sw-success-dark, var(--sw-success));
+        --sw-btn-hover-text: var(--sw-white);
     }
 
     .sw-btn-danger {
-        --sw-button-background: var(--sw-error-color);
-        --sw-button-hover-background: var(--sw-error-color);
-        --sw-button-hover-border-color: var(--sw-error-color);
-        --sw-button-text-color: var(--sw-white);
-        --sw-button-hover-text-color: var(--sw-white);
+        --sw-btn-default-bg: var(--sw-error);
+        --sw-btn-default-border: var(--sw-error);
+        --sw-btn-default-text: var(--sw-white);
+
+        --sw-btn-hover-bg: var(--sw-error-dark, var(--sw-error));
+        --sw-btn-hover-border: var(--sw-error-dark, var(--sw-error));
+        --sw-btn-hover-text: var(--sw-white);
     }
 
     .sw-btn-warning {
-        --sw-button-background: var(--sw-warning-color);
-        --sw-button-hover-background: var(--sw-warning-color);
-        --sw-button-hover-border-color: var(--sw-warning-color);
-        --sw-button-text-color: var(--sw-white);
-        --sw-button-hover-text-color: var(--sw-white);
+        --sw-btn-default-bg: var(--sw-warning);
+        --sw-btn-default-border: var(--sw-warning);
+        --sw-btn-default-text: var(--sw-white);
+
+        --sw-btn-hover-bg: var(--sw-warning-dark, var(--sw-warning));
+        --sw-btn-hover-border: var(--sw-warning-dark, var(--sw-warning));
+        --sw-btn-hover-text: var(--sw-white);
     }
 
     .sw-btn-info {
-        --sw-button-background: var(--sw-info-color);
-        --sw-button-hover-background: var(--sw-info-color);
-        --sw-button-hover-border-color: var(--sw-info-color);
-        --sw-button-text-color: var(--sw-white);
-        --sw-button-hover-text-color: var(--sw-white);
+        --sw-btn-default-bg: var(--sw-info);
+        --sw-btn-default-border: var(--sw-info);
+        --sw-btn-default-text: var(--sw-white);
+
+        --sw-btn-hover-bg: var(--sw-info-dark, var(--sw-info));
+        --sw-btn-hover-border: var(--sw-info-dark, var(--sw-info));
+        --sw-btn-hover-text: var(--sw-white);
     }
 
     .sw-btn-sm {
-        padding: 5px 12px;
+        --sw-btn-padding: 5px 12px;
         font-size: 12.5px;
     }
 
     .sw-btn-lg {
-        padding: 11px 28px;
+        --sw-btn-padding: 11px 28px;
         font-size: 15px;
     }
 }
