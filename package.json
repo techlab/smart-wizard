@@ -7,7 +7,7 @@
         "start": "turbo run dev --concurrency 12",
         "dev": "turbo run dev --concurrency 12",
         "dev:react": "turbo run dev --concurrency 12 --filter=@smartwizard/react",
-        "dev:vanilla": "turbo run dev --concurrency 12 --filter=@smartwizard/vanilla --filter=@smartwizard/ui",
+        "dev:vanilla": "turbo run dev --concurrency 12 --filter=smartwizard-vanilla-example",
         "dev:vue": "turbo run dev --concurrency 12 --filter=@smartwizard/vue",
         "dev:ui": "turbo run dev --concurrency 12 --filter=@smartwizard/ui",
         "build": "turbo run build",

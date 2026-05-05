@@ -39,13 +39,7 @@ export class SmartWizard implements WizardInterface {
         }
 
         this.main = el;
-
-        // Merge data attributes from the element — they override all other options.
-        this.options = mergeOptions(deepMerge({} as WizardOptions, defaultOptions), options ?? {});
-        const dataOverrides = this.getOptionsFromAttributes(el);
-        if (Object.keys(dataOverrides).length > 0) {
-            this.options = mergeOptions(this.options, dataOverrides);
-        }
+        this.options = this.parseOptions(options);
 
         this.setup();
         this.init();
@@ -55,19 +49,30 @@ export class SmartWizard implements WizardInterface {
         });
     }
 
-    private getOptionsFromAttributes(el: HTMLElement): Partial<WizardOptions> {
+    private parseOptions(options: Partial<WizardOptions> | undefined): WizardOptions {
+        let finalOptions = mergeOptions(deepMerge({} as WizardOptions, defaultOptions), options ?? {});
+        // Merge data attributes from the element — they override all other options.
+        const dataOverrides = this.parseOptionsFromAttributes();
+        if (Object.keys(dataOverrides).length > 0) {
+            finalOptions = mergeOptions(finalOptions, dataOverrides);
+        }
+
+        return finalOptions;
+    }
+
+    private parseOptionsFromAttributes(): Partial<WizardOptions> {
         const overrides: Partial<WizardOptions> = {};
 
-        const layout = el.getAttribute(DATA_ATTRIBUTES.LAYOUT);
+        const layout = this.main.getAttribute(DATA_ATTRIBUTES.LAYOUT);
         if (layout !== null && (Object.values(LAYOUT) as string[]).includes(layout)) overrides.layout = layout as WizardLayout;
 
-        const theme = el.getAttribute(DATA_ATTRIBUTES.THEME);
+        const theme = this.main.getAttribute(DATA_ATTRIBUTES.THEME);
         if (theme !== null) overrides.theme = theme;
 
-        const color = el.getAttribute(DATA_ATTRIBUTES.COLOR);
+        const color = this.main.getAttribute(DATA_ATTRIBUTES.COLOR);
         if (color !== null) overrides.color = color;
 
-        const transition = el.getAttribute(DATA_ATTRIBUTES.TRANSITION);
+        const transition = this.main.getAttribute(DATA_ATTRIBUTES.TRANSITION);
         if (transition !== null) {
             overrides.transition = { ...this.options.transition, effect: transition };
         }
@@ -827,11 +832,11 @@ export class SmartWizard implements WizardInterface {
     // ─── Public Methods ───────────────────────────────────────────────────────
 
     public next(): void {
-        this.navigate('forward');
+        this.navigate(STEP_DIRECTION.FORWARD);
     }
 
     public prev(): void {
-        this.navigate('backward');
+        this.navigate(STEP_DIRECTION.BACKWARD);
     }
 
     public goToStep(stepIndex: number, force: boolean = false): void {

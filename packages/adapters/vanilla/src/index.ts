@@ -1,1 +1,0 @@
-export { SmartWizardDOM } from './SmartWizardDOM';

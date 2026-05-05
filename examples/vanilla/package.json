@@ -1,5 +1,5 @@
 {
-    "name": "@smartwizard/vanilla",
+    "name": "smartwizard-vanilla-example",
     "version": "0.1.0",
     "description": "Vanilla JavaScript implementation of SmartWizard",
     "main": "dist/index.js",
@@ -14,8 +14,6 @@
         "@smartwizard/ui": "workspace:*"
     },
     "devDependencies": {
-        "tsup": "^8.0.0",
-        "typescript": "^5.0.0",
         "vite": "^5.0.0"
     }
 }

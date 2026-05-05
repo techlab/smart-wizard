@@ -43,6 +43,19 @@ importers:
         specifier: ^5.0.0
         version: 5.4.21
 
+  examples/vanilla:
+    dependencies:
+      '@smartwizard/core':
+        specifier: workspace:*
+        version: link:../../packages/core
+      '@smartwizard/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
+    devDependencies:
+      vite:
+        specifier: ^5.0.0
+        version: 5.4.21
+
   examples/vue:
     dependencies:
       '@smartwizard/core':
@@ -86,25 +99,6 @@ importers:
       typescript:
         specifier: ^5.0.0
         version: 5.9.3
-
-  packages/adapters/vanilla:
-    dependencies:
-      '@smartwizard/core':
-        specifier: workspace:*
-        version: link:../../core
-      '@smartwizard/ui':
-        specifier: workspace:*
-        version: link:../../ui
-    devDependencies:
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(typescript@5.9.3)
-      typescript:
-        specifier: ^5.0.0
-        version: 5.9.3
-      vite:
-        specifier: ^5.0.0
-        version: 5.4.21
 
   packages/adapters/vue:
     dependencies:
