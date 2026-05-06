@@ -77,7 +77,6 @@
 
     --sw-badge-default-bg: var(--sw-gray-200);
     --sw-btn-default-bg: var(--sw-white);
-
 }
 
 // ─────────────────────────────────────────────
@@ -172,7 +171,7 @@
     --sw-nav-warning-badge-bg: #2a1f10;
 }
 
-/* Apply the relationship here so it's dynamic */
+/* Smart Wizard Variables */
 .sw {
     --sw-text-on-primary: var(--sw-white);
 

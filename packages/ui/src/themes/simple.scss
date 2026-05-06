@@ -2,6 +2,8 @@
 // Clean, minimal stepper: steps flow horizontally with a line connector,
 // badge numbers in circles, step title below, underline active indicator.
 // Reference: 2FA setup stepper (Step 1 of 3 style)
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
 
 .sw-theme-simple {
 

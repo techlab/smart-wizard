@@ -4,40 +4,38 @@
     "description": "Core styles for SmartWizard - framework-agnostic wizard component",
     "style": "dist/smartwizard.css",
     "main": "dist/smartwizard.css",
+    "publishConfig": {
+        "access": "public"
+    },
     "exports": {
         ".": {
-            "style": "./dist/smartwizard.css"
+            "import": "./dist/smartwizard.min.css",
+            "style": "./dist/smartwizard.min.css",
+            "default": "./dist/smartwizard.min.css"
         },
-        "./themes/basic": {
-            "style": "./dist/themes/basic.css"
+        "./full": {
+            "import": "./dist/smartwizard-full.min.css",
+            "style": "./dist/smartwizard-full.min.css",
+            "default": "./dist/smartwizard-full.min.css"
         },
-        "./themes/arrows": {
-            "style": "./dist/themes/arrows.css"
-        },
-        "./themes/pills": {
-            "style": "./dist/themes/pills.css"
-        },
-        "./themes/glow": {
-            "style": "./dist/themes/glow.css"
-        },
-        "./themes/simple": {
-            "style": "./dist/themes/simple.css"
-        },
-        "./themes/vertical": {
-            "style": "./dist/themes/vertical.css"
-        },
-        "./themes/dots": {
-            "style": "./dist/themes/dots.css"
-        },
-        "./themes/slide": {
-            "style": "./dist/themes/slide.css"
-        },
-        "./dist/*": "./dist/*"
+        "./themes/*": {
+            "import": "./dist/themes/*.css",
+            "style": "./dist/themes/*.css",
+            "default": "./dist/themes/*.css"
+        }
     },
+    "files": [
+        "dist"
+    ],
+    "sideEffects": [
+        "*.css"
+    ],
     "scripts": {
-        "build": "sass src/main.scss dist/smartwizard.css --no-source-map && sass src/main.scss dist/smartwizard.min.css --style=compressed --no-source-map && sass --load-path=src src/entries/basic.scss:dist/themes/basic.css src/entries/arrows.scss:dist/themes/arrows.css src/entries/pills.scss:dist/themes/pills.css src/entries/glow.scss:dist/themes/glow.css src/entries/simple.scss:dist/themes/simple.css src/entries/dots.scss:dist/themes/dots.css src/entries/slide.scss:dist/themes/slide.css --no-source-map",
-        "build:themes": "sass --load-path=src src/entries/basic.scss:dist/themes/basic.css src/entries/arrows.scss:dist/themes/arrows.css src/entries/pills.scss:dist/themes/pills.css src/entries/glow.scss:dist/themes/glow.css src/entries/simple.scss:dist/themes/simple.css src/entries/dots.scss:dist/themes/dots.css src/entries/slide.scss:dist/themes/slide.css --no-source-map",
-        "dev": "sass --watch src/main.scss dist/smartwizard.css"
+        "build:core": "sass src/core.scss dist/smartwizard.css && postcss dist/smartwizard.css -u autoprefixer cssnano -o dist/smartwizard.min.css --no-map",
+        "build:full": "sass src/full.scss dist/smartwizard-full.css && postcss dist/smartwizard-full.css -u autoprefixer cssnano -o dist/smartwizard-full.min.css --no-map",
+        "build:themes": "sass --load-path=src src/themes:dist/themes && postcss \"dist/themes/*.css\" !\"dist/themes/*.min.css\" -u autoprefixer cssnano --dir dist/themes --ext .min.css --no-map",
+        "build": "pnpm run build:core && pnpm run build:full && pnpm run build:themes",
+        "dev": "sass --watch src/core.scss:dist/smartwizard.css src/full.scss:dist/smartwizard-full.css src/themes:dist/themes"
     },
     "keywords": [
         "wizard",
@@ -51,6 +49,10 @@
     "author": "",
     "license": "MIT",
     "devDependencies": {
+        "autoprefixer": "^10.5.0",
+        "cssnano": "^7.1.9",
+        "postcss": "^8.5.14",
+        "postcss-cli": "^11.0.1",
         "sass": "^1.70.0"
     }
 }

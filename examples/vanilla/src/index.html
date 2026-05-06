@@ -682,9 +682,12 @@
 
 
   <script type="module">
-    // Import SmartWizard CSS (resolved by Vite alias to packages/ui/src/main.scss)
-    import '@smartwizard/ui';
-    // Import SmartWizard (resolved by Vite alias to live source in dev)
+    // Import SmartWizard CSS
+    import '@smartwizard/ui/full';
+    // Import ONLY the specific theme needed
+    import '@smartwizard/ui/themes/arrows';
+
+    // Import SmartWizard
     import { SmartWizard } from '@smartwizard/core';
 
     // Initialize SmartWizard

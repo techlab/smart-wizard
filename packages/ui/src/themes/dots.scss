@@ -2,6 +2,8 @@
 // Navigation is replaced by small indicator dots centered below the content.
 // Active dot is enlarged and filled; completed dots show a checkmark/filled state.
 // Reference: testimonial/carousel dot navigation.
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
 
 .sw-theme-dots {
 

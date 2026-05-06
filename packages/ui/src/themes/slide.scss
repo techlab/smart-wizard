@@ -3,6 +3,8 @@
 // Navigation dots sit below. No traditional step nav bar — the prev/next buttons
 // ARE the navigation, like a hero carousel.
 // Reference: testimonial slider with side arrows and dot paginators.
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
 
 .sw-theme-slide {
 

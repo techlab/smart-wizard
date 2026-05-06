@@ -52,7 +52,7 @@ export class SmartWizard implements WizardInterface {
     private parseOptions(options: Partial<WizardOptions> | undefined): WizardOptions {
         let finalOptions = mergeOptions(deepMerge({} as WizardOptions, defaultOptions), options ?? {});
         // Merge data attributes from the element — they override all other options.
-        const dataOverrides = this.parseOptionsFromAttributes();
+        const dataOverrides = this.parseOptionsFromAttributes(finalOptions);
         if (Object.keys(dataOverrides).length > 0) {
             finalOptions = mergeOptions(finalOptions, dataOverrides);
         }
@@ -60,7 +60,7 @@ export class SmartWizard implements WizardInterface {
         return finalOptions;
     }
 
-    private parseOptionsFromAttributes(): Partial<WizardOptions> {
+    private parseOptionsFromAttributes(options: WizardOptions): Partial<WizardOptions> {
         const overrides: Partial<WizardOptions> = {};
 
         const layout = this.main.getAttribute(DATA_ATTRIBUTES.LAYOUT);
@@ -74,7 +74,7 @@ export class SmartWizard implements WizardInterface {
 
         const transition = this.main.getAttribute(DATA_ATTRIBUTES.TRANSITION);
         if (transition !== null) {
-            overrides.transition = { ...this.options.transition, effect: transition };
+            overrides.transition = { ...options.transition, effect: transition };
         }
 
         return overrides;

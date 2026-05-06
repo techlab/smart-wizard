@@ -1,4 +1,7 @@
 // Basic theme
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+
 .sw-theme-basic {
 
     // Navigation style
