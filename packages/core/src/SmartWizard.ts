@@ -1,20 +1,25 @@
 import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
     ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, TransitionHandler, StepItem,
-    WizardLayout, WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
-    EventCallback
+    WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
+    EventCallback, StepState
 } from './types';
 import { transitions } from './transitions';
-import { defaultOptions } from './options';
 import {
     addClass, removeClass, hasClass, hideElement,
     getAttribute, setAttribute,
     getFirstDescendant, getAllDescendants,
-    getElementHeight, setElementHeight, deepMerge,
-    mergeOptions
+    getElementHeight, setElementHeight, deepMerge
 } from './util';
-
-import { CSS_PROPERTIES, STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, LAYOUT, CONTENT_DIRECTION } from './constants';
+import { EventEmitter } from './EventEmitter';
+import { EventBinder } from './EventBinder';
+import { NavScroll } from './NavScroll';
+import { ExtensionRegistry } from './ExtensionRegistry';
+import { StepStateManager } from './StepStateManager';
+import { OptionsParser } from './OptionsParser';
+import { ProgressBar } from './ProgressBar';
+import { StepNavigator } from './StepNavigator';
+import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION } from './constants';
 
 export class SmartWizard implements WizardInterface {
     public options: WizardOptions;
@@ -22,22 +27,20 @@ export class SmartWizard implements WizardInterface {
     public container!: HTMLElement;
     protected nav!: HTMLElement;
     public stepItems!: StepItem[];
-    private progressbars: HTMLElement[] = [];
     private contentDirection!: ContentDirection;
     private isInitialized: boolean = false;
     public currentIndex: number = -1;
     private touchStartX: number = 0;
     private touchStartY: number = 0;
-    private extensions: WizardExtension[] = [];
-    private listeners: Partial<
-        Record<keyof WizardEvents, Set<EventCallback>>
-    > = {};
-    private boundListeners: Array<{
-        target: EventTarget;
-        type: string;
-        handler: EventListenerOrEventListenerObject;
-        options?: AddEventListenerOptions;
-    }> = [];
+    // ─── Modules ─────────────────────────────────────────────────────────────
+    private readonly emitter: EventEmitter;
+    private readonly binder: EventBinder;
+    private readonly registry: ExtensionRegistry;
+    private navScroll!: NavScroll;
+    private stateManager!: StepStateManager;
+    private navigator!: StepNavigator;
+    private progressBar!: ProgressBar;
+    private navButtons!: { prev: HTMLElement[]; next: HTMLElement[] };
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
         const el = typeof element === 'string'
@@ -49,7 +52,10 @@ export class SmartWizard implements WizardInterface {
         }
 
         this.main = el;
-        this.options = this.parseOptions(options);
+        this.options = OptionsParser.parse(this.main, options);
+        this.emitter = new EventEmitter(this.main);
+        this.binder = new EventBinder();
+        this.registry = new ExtensionRegistry();
 
         this.setup();
         this.init();
@@ -57,37 +63,6 @@ export class SmartWizard implements WizardInterface {
         requestAnimationFrame(() => {
             this.load();
         });
-    }
-
-    private parseOptions(options: Partial<WizardOptions> | undefined): WizardOptions {
-        let finalOptions = mergeOptions(deepMerge({} as WizardOptions, defaultOptions), options ?? {});
-        // Merge data attributes from the element — they override all other options.
-        const dataOverrides = this.parseOptionsFromAttributes(finalOptions);
-        if (Object.keys(dataOverrides).length > 0) {
-            finalOptions = mergeOptions(finalOptions, dataOverrides);
-        }
-
-        return finalOptions;
-    }
-
-    private parseOptionsFromAttributes(options: WizardOptions): Partial<WizardOptions> {
-        const overrides: Partial<WizardOptions> = {};
-
-        const layout = this.main.getAttribute(DATA_ATTRIBUTES.LAYOUT);
-        if (layout !== null && (Object.values(LAYOUT) as string[]).includes(layout)) overrides.layout = layout as WizardLayout;
-
-        const theme = this.main.getAttribute(DATA_ATTRIBUTES.THEME);
-        if (theme !== null) overrides.theme = theme;
-
-        const color = this.main.getAttribute(DATA_ATTRIBUTES.COLOR);
-        if (color !== null) overrides.color = color;
-
-        const transition = this.main.getAttribute(DATA_ATTRIBUTES.TRANSITION);
-        if (transition !== null) {
-            overrides.transition = { ...options.transition, effect: transition };
-        }
-
-        return overrides;
     }
 
     private setup(): void {
@@ -100,6 +75,7 @@ export class SmartWizard implements WizardInterface {
         const nav = getFirstDescendant(`.${STYLES.NAVIGATION.CONTAINER}`, this.main);
         if (!nav) throw new Error('SmartWizard: Navigation element not found');
         this.nav = nav;
+        this.navScroll = new NavScroll(this.nav, () => this.options.layout, () => this.stepItems);
 
         // Step anchor elements paired with their controlled panels (via aria-controls)
         const stepAnchors = getAllDescendants(`.${STYLES.NAVIGATION.ITEM}`, this.nav);
@@ -112,8 +88,25 @@ export class SmartWizard implements WizardInterface {
             return { step, page };
         });
 
-        // Progress bars
-        this.progressbars = getAllDescendants(`.${STYLES.PROGRESSBAR.CONTAINER}`, this.main);
+        // Cache nav button elements (queried once, not on every step change)
+        this.navButtons = {
+            prev: getAllDescendants(`.${STYLES.BUTTONS.PREVIOUS}`, this.main),
+            next: getAllDescendants(`.${STYLES.BUTTONS.NEXT}`, this.main),
+        };
+
+        // Progress bar(s)
+        const bars = getAllDescendants(`.${STYLES.PROGRESSBAR.CONTAINER}`, this.main);
+        this.progressBar = new ProgressBar(bars);
+
+        // Step state manager
+        this.stateManager = new StepStateManager(this.stepItems);
+
+        // Step navigator
+        this.navigator = new StepNavigator(
+            () => this.stepItems,
+            () => this.currentIndex,
+            () => this.options
+        );
 
         // Direction, RTL/LTR
         this.contentDirection = (this.main.getAttribute('dir') ||
@@ -137,14 +130,14 @@ export class SmartWizard implements WizardInterface {
         this.setEvents();
 
         // Trigger initialized event
-        this.emit('initialized', {
+        this.emitter.emit('initialized', {
             wizard: this
         });
 
         this.isInitialized = true;
 
         // Fire onInit hook on all extensions
-        this.runHookSync('onInit');
+        this.registry.runSync('onInit', this);
     }
 
     private load(): void {
@@ -168,12 +161,12 @@ export class SmartWizard implements WizardInterface {
         this.showStep(idx);
 
         // Trigger loaded event
-        this.emit('loaded', {
+        this.emitter.emit('loaded', {
             wizard: this
         });
 
         // Fire onLoad hook on all extensions
-        this.runHookSync('onLoad');
+        this.registry.runSync('onLoad', this);
     }
 
     private getInitialStep(): number {
@@ -188,10 +181,10 @@ export class SmartWizard implements WizardInterface {
         const initialIndex = hashIndex ?? this.options.initialStep;
 
         // Find the first showable step starting from the initial index
-        const showableIndex = this.getShowable(initialIndex - 1, 'forward');
+        const showableIndex = this.navigator.nextShowable(initialIndex - 1, 'forward');
 
         // If invalid or not showable, fallback to first showable
-        return showableIndex ?? (initialIndex > 0 ? this.getShowable(-1, 'forward') ?? 0 : initialIndex);
+        return showableIndex ?? (initialIndex > 0 ? this.navigator.nextShowable(-1, 'forward') ?? 0 : initialIndex);
     }
 
     private setElements(): void {
@@ -230,57 +223,14 @@ export class SmartWizard implements WizardInterface {
                 const handleChange = (e: MediaQueryListEvent) => {
                     setAttribute(this.main, DATA_ATTRIBUTES.COLOR_SCHEME, e.matches ? 'dark' : 'light');
                 };
-                if (mediaQuery.addEventListener) {
-                    mediaQuery.addEventListener('change', handleChange);
-                } else if ((mediaQuery as any).addListener) {
-                    (mediaQuery as any).addListener(handleChange);
-                }
+                this.binder.bind(mediaQuery, 'change', handleChange as EventListener);
             }
         }
     }
 
     private setNav(): void {
-        // Clear all state classes
-        this.stepItems.forEach(({ step }) => {
-            removeClass([
-                STYLES.STATES.COMPLETED, STYLES.STATES.ACTIVE, STYLES.STATES.DEFAULT,
-                STYLES.STATES.DISABLED, STYLES.STATES.ERROR, STYLES.STATES.WARNING, STYLES.STATES.HIDDEN
-            ].join(' '), step);
-        });
-
-        // Add default class if navigation is controlled
-        if (!this.options.navigation.alwaysClickable || !this.options.navigation.enabled) {
-            this.stepItems.forEach(({ step }) => addClass(STYLES.STATES.DEFAULT, step));
-        }
-
-        // Apply step states from options
-        this.applyStepStates(this.options.stepStates.completed, STYLES.STATES.COMPLETED);
-        this.applyStepStates(this.options.stepStates.disabled, STYLES.STATES.DISABLED);
-        this.applyStepStates(this.options.stepStates.warning, STYLES.STATES.WARNING);
-        this.applyStepStates(this.options.stepStates.error, STYLES.STATES.ERROR);
-        this.applyStepStates(this.options.stepStates.hidden, STYLES.STATES.HIDDEN);
-
-        // Add scroll buttons for nav bar
-        this.createAnchorScroll();
-    }
-
-    private applyStepStates(stepIndices: number[], cssClass: string): void {
-        stepIndices.forEach(idx => {
-            const item = this.stepItems[idx];
-            if (item) {
-                addClass(cssClass, item.step);
-            }
-        });
-    }
-
-    private bindEvent(
-        target: EventTarget,
-        type: string,
-        handler: EventListenerOrEventListenerObject,
-        options?: AddEventListenerOptions
-    ): void {
-        target.addEventListener(type, handler, options);
-        this.boundListeners.push({ target, type, handler, options });
+        this.stateManager.reset(this.options);
+        this.navScroll.create();
     }
 
     private setEvents(): void {
@@ -289,11 +239,11 @@ export class SmartWizard implements WizardInterface {
             const handler = (e: Event) => {
                 e.preventDefault();
                 if (!this.options.navigation.enabled) return;
-                if (this.isShowable(idx)) {
+                if (this.navigator.isShowable(idx)) {
                     this.showStep(idx);
                 }
             };
-            this.bindEvent(step, EVENTS.CLICK, handler);
+            this.binder.bind(step, EVENTS.CLICK, handler);
         });
 
         // Next / Prev / Scroll buttons (event delegation on main)
@@ -312,15 +262,15 @@ export class SmartWizard implements WizardInterface {
             } else if (target.classList.contains(STYLES.BUTTONS.SCROLL)) {
                 e.preventDefault();
                 if (e.target && e.target instanceof HTMLElement) {
-                    this.scrollAnchor(e.target.dataset.scrollAction as 'prev' | 'next');
+                    this.navScroll.scroll(e.target.dataset.scrollAction as 'prev' | 'next');
                 }
             }
         };
-        this.bindEvent(this.main, EVENTS.CLICK, mainClickHandler);
+        this.binder.bind(this.main, EVENTS.CLICK, mainClickHandler);
 
         // Scroll end check on nav
-        const scrollEndHandler = () => this.scrollCheck();
-        this.bindEvent(this.nav, EVENTS.SCROLLEND, scrollEndHandler);
+        const scrollEndHandler = () => this.navScroll.check();
+        this.binder.bind(this.nav, EVENTS.SCROLLEND, scrollEndHandler);
 
         // Redirect vertical wheel scroll to horizontal on nav
         const wheelHandler = (e: WheelEvent) => {
@@ -329,7 +279,7 @@ export class SmartWizard implements WizardInterface {
             e.preventDefault();
             this.nav.scrollLeft += e.deltaY;
         };
-        this.bindEvent(this.nav, EVENTS.WHEEL, wheelHandler as EventListener, { passive: false });
+        this.binder.bind(this.nav, EVENTS.WHEEL, wheelHandler as EventListener, { passive: false });
 
         // Keyboard navigation
         if (this.options.keyboardNavigation.enabled) {
@@ -347,18 +297,18 @@ export class SmartWizard implements WizardInterface {
                     this.navigate(STEP_DIRECTION.FORWARD);
                 }
             };
-            this.bindEvent(document, EVENTS.KEYUP, keyupHandler);
+            this.binder.bind(document, EVENTS.KEYUP, keyupHandler);
         }
 
         // Browser back/forward
         if (this.options.behavior.useUrlHash && this.options.behavior.supportBrowserHistory) {
             const hashChangeHandler = () => {
                 const idx = this.getURLHashIndex();
-                if (idx !== null && this.isShowable(idx)) {
+                if (idx !== null && this.navigator.isShowable(idx)) {
                     this.showStep(idx);
                 }
             };
-            this.bindEvent(window, EVENTS.HASHCHANGE, hashChangeHandler);
+            this.binder.bind(window, EVENTS.HASHCHANGE, hashChangeHandler);
         }
 
         // Fix height on window resize
@@ -368,7 +318,7 @@ export class SmartWizard implements WizardInterface {
                     this.fixHeight(this.currentIndex);
                 }
             };
-            this.bindEvent(window, EVENTS.RESIZE, resizeHandler);
+            this.binder.bind(window, EVENTS.RESIZE, resizeHandler);
         }
 
         // Swipe navigation on touch
@@ -377,7 +327,7 @@ export class SmartWizard implements WizardInterface {
             this.touchStartX = touch.clientX;
             this.touchStartY = touch.clientY;
         };
-        this.bindEvent(this.container, EVENTS.TOUCHSTART, touchStartHandler);
+        this.binder.bind(this.container, EVENTS.TOUCHSTART, touchStartHandler);
 
         const touchEndHandler = (e: Event) => {
             if (!this.options.swipeNavigation.enabled) return;
@@ -393,75 +343,26 @@ export class SmartWizard implements WizardInterface {
                 this.navigate(STEP_DIRECTION.BACKWARD);
             }
         };
-        this.bindEvent(this.container, EVENTS.TOUCHEND, touchEndHandler);
+        this.binder.bind(this.container, EVENTS.TOUCHEND, touchEndHandler);
     }
 
     private setAnchor(stepIdx: number): void {
-        const states = STYLES.STATES;
-
-        if (this.currentIndex !== null && this.currentIndex >= 0) {
-            const currentStep = this.stepItems[this.currentIndex]?.step;
-            let removeCss = `${STYLES.STATES.ACTIVE} ${STYLES.STATES.DEFAULT}`;
-            let addCss = '';
-
-            if (this.options.navigation.completed.enabled) {
-                const stepDirection = this.getStepDirection(stepIdx);
-
-                if (stepDirection === STEP_DIRECTION.FORWARD && !this.options.navigation.completed.clearOnBack) {
-                    addCss = STYLES.STATES.COMPLETED;
-                } else if (stepDirection === STEP_DIRECTION.BACKWARD && this.options.navigation.completed.clearOnBack) {
-                    removeCss += ' ' + STYLES.STATES.COMPLETED;
-                } else {
-                    addCss = STYLES.STATES.COMPLETED;
-                }
-            }
-
-            if (currentStep) {
-                removeClass(removeCss, currentStep);
-                if (addCss) addClass(addCss, currentStep);
-            }
-        }
-
-        // Set target step as active
-        const targetStep = this.stepItems[stepIdx]?.step;
-        if (targetStep) {
-            removeClass(STYLES.STATES.COMPLETED + ' ' + STYLES.STATES.DEFAULT, targetStep);
-            addClass(STYLES.STATES.ACTIVE, targetStep);
-        }
+        this.stateManager.setAnchor(stepIdx, this.currentIndex, this.options);
     }
 
     private setButtons(stepPosition: StepPosition): void {
-        getAllDescendants(`.${STYLES.BUTTONS.PREVIOUS}`, this.main).forEach(btn => {
-            if (stepPosition == STEP_POSITION.FIRST) {
-                setAttribute(btn, 'disabled', 'disabled');
-            } else {
-                btn.removeAttribute('disabled');
-            }
+        this.navButtons.prev.forEach(btn => {
+            if (stepPosition === STEP_POSITION.FIRST) setAttribute(btn, 'disabled', 'disabled');
+            else btn.removeAttribute('disabled');
         });
-
-        getAllDescendants(`.${STYLES.BUTTONS.NEXT}`, this.main).forEach(btn => {
-            if (stepPosition == STEP_POSITION.LAST) {
-                setAttribute(btn, 'disabled', 'disabled');
-            } else {
-                btn.removeAttribute('disabled');
-            }
+        this.navButtons.next.forEach(btn => {
+            if (stepPosition === STEP_POSITION.LAST) setAttribute(btn, 'disabled', 'disabled');
+            else btn.removeAttribute('disabled');
         });
     }
 
     private setProgressbar(stepIdx: number): void {
-        if (this.progressbars.length === 0) return;
-        const percent = ((stepIdx + 1) / this.stepItems.length) * 100;
-
-        this.progressbars.forEach(bar => {
-            // Set CSS custom property on bar's parent (container)
-            bar.style.setProperty(CSS_PROPERTIES.PROGRESS_PERCENTAGE, `${percent}%`);
-            // Also update the inner progress bar element directly
-            const progressBar = getFirstDescendant(`.${STYLES.PROGRESSBAR.BAR}`, bar);
-            if (progressBar) {
-                progressBar.style.width = `${percent}%`;
-                setAttribute(progressBar, 'aria-valuenow', Math.round(percent).toString());
-            }
-        });
+        this.progressBar.update(stepIdx, this.stepItems.length);
     }
 
     private async showStep(stepIdx: number): Promise<void> {
@@ -469,12 +370,12 @@ export class SmartWizard implements WizardInterface {
         if (stepIdx === this.currentIndex) return;
         const selItem = this.stepItems[stepIdx];
         if (!selItem) return;
-        if (!this.isEnabled(selItem.step)) return;
+        if (!this.navigator.isEnabled(selItem.step)) return;
 
-        const stepDirection = this.getStepDirection(stepIdx);
+        const stepDirection = this.navigator.getDirection(stepIdx);
 
         // Run onBeforeShow hooks — any extension can cancel by returning false
-        const allowed = await this.runBeforeShow({
+        const allowed = await this.registry.runBeforeShow(this, {
             stepIdx,
             currentIdx: this.currentIndex,
             direction: stepDirection,
@@ -487,9 +388,9 @@ export class SmartWizard implements WizardInterface {
                 nextStepIndex: stepIdx,
                 stepElement: this.stepItems[this.currentIndex]?.step ?? null,
                 stepDirection,
-                stepPosition: this.getStepPosition(this.currentIndex),
+                stepPosition: this.navigator.getPosition(this.currentIndex),
             };
-            if (!this.emit('leaveStep', leaveArgs, { cancelable: true })) return;
+            if (!this.emitter.emit('leaveStep', leaveArgs, { cancelable: true })) return;
         }
 
         // Load content if contentLoader is set
@@ -507,7 +408,7 @@ export class SmartWizard implements WizardInterface {
 
             // Scroll step into view
             if (this.options.scrollToView) {
-                this.scrollToStep(stepIdx);
+                this.navScroll.scrollToStep(stepIdx);
             }
 
             // Get pages
@@ -517,6 +418,7 @@ export class SmartWizard implements WizardInterface {
             const transition: TransitionHandler = (transitions as any)[this.options.transition.effect]
                 || (transitions as any)['default'];
 
+            console.log('transition', this.options.transition.effect, transitions)
             transition(selPage, curPage, stepDirection, this, () => {
                 // Fix height
                 this.fixHeight(stepIdx);
@@ -526,50 +428,24 @@ export class SmartWizard implements WizardInterface {
                     stepIndex: stepIdx,
                     stepElement: selStep,
                     stepDirection,
-                    stepPosition: this.getStepPosition(stepIdx),
+                    stepPosition: this.navigator.getPosition(stepIdx),
                 };
-                this.emit('showStep', stepArgs);
+                this.emitter.emit('showStep', stepArgs);
 
                 // Fire onAfterShow hooks
-                this.runHookSync('onAfterShow', { stepIdx, direction: stepDirection });
+                this.registry.runSync('onAfterShow', this, { stepIdx, direction: stepDirection });
             });
 
             // Update current index
             this.currentIndex = stepIdx;
             // Update buttons
-            const stepPosition = this.getStepPosition(stepIdx);
+            const stepPosition = this.navigator.getPosition(stepIdx);
             this.setButtons(stepPosition);
             // Update progress bar
             this.setProgressbar(stepIdx);
         });
     }
 
-    private scrollToStep(stepIdx: number) {
-        const { step: selStep } = this.stepItems[stepIdx];
-        const isHorizontal = this.options.layout === LAYOUT.HORIZONTAL;
-
-        const itemStart = isHorizontal ? selStep.offsetLeft : selStep.offsetTop;
-        const itemSize = isHorizontal ? selStep.offsetWidth : selStep.offsetHeight;
-
-        const containerSize = isHorizontal
-            ? this.nav.clientWidth
-            : this.nav.clientHeight;
-
-        const itemCenter = itemStart + itemSize / 2;
-        const containerCenter = containerSize / 2;
-        let newScroll = itemCenter - containerCenter;
-
-        const maxScroll = isHorizontal
-            ? this.nav.scrollWidth - this.nav.clientWidth
-            : this.nav.scrollHeight - this.nav.clientHeight;
-
-        newScroll = Math.max(0, Math.min(newScroll, maxScroll));
-
-        this.nav.scrollTo({
-            [isHorizontal ? 'left' : 'top']: newScroll,
-            behavior: 'smooth'
-        });
-    }
 
     private loadContent(idx: number, callback: () => void): void {
         if (!this.options.contentLoader || typeof this.options.contentLoader !== 'function') {
@@ -581,8 +457,8 @@ export class SmartWizard implements WizardInterface {
         if (!selItem) { callback(); return; }
         const { step: selStep, page: selPage } = selItem;
 
-        const stepDirection = this.getStepDirection(idx);
-        const stepPosition = this.getStepPosition(idx);
+        const stepDirection = this.navigator.getDirection(idx);
+        const stepPosition = this.navigator.getPosition(idx);
 
         this.options.contentLoader(idx, stepDirection, stepPosition, selStep, (content) => {
             if (content) {
@@ -598,61 +474,8 @@ export class SmartWizard implements WizardInterface {
     }
 
     private navigate(direction: StepDirection): void {
-        const stepIndex = direction === STEP_DIRECTION.FORWARD
-            ? this.getShowable(this.currentIndex, STEP_DIRECTION.FORWARD)
-            : this.getShowable(this.currentIndex, STEP_DIRECTION.BACKWARD);
-
-        if (stepIndex !== null) {
-            this.showStep(stepIndex);
-        }
-    }
-
-    private getShowable(fromIndex: number, direction: StepDirection): number | null {
-        const isForward = direction === STEP_DIRECTION.FORWARD;
-        let idx = fromIndex + (isForward ? 1 : -1);
-
-        while (isForward ? idx < this.stepItems.length : idx >= 0) {
-            if (this.isEnabled(this.stepItems[idx].step)) return idx;
-            idx += isForward ? 1 : -1;
-        }
-        return null;
-    }
-
-    private isShowable(idx: number): boolean {
-        const item = this.stepItems[idx];
-        if (!item) return false;
-        if (!this.isEnabled(item.step)) return false;
-
-        const isCompleted = hasClass(STYLES.STATES.COMPLETED, item.step);
-        if (this.options.navigation.completed.enabled === false && isCompleted) {
-            return false;
-        }
-
-        if (this.options.navigation.completed.clickable === false && isCompleted) {
-            return false;
-        }
-
-        if (this.options.navigation.alwaysClickable === false && !isCompleted) {
-            return false;
-        }
-
-        return true;
-    }
-
-    private isEnabled(step: HTMLElement): boolean {
-        return !hasClass(STYLES.STATES.DISABLED, step) && !hasClass(STYLES.STATES.HIDDEN, step);
-    }
-
-    private getStepDirection(stepIdx: number): StepDirection {
-        if (this.currentIndex < stepIdx) return STEP_DIRECTION.FORWARD;
-        if (this.currentIndex > stepIdx) return STEP_DIRECTION.BACKWARD;
-        return 'none';
-    }
-
-    private getStepPosition(idx: number): StepPosition {
-        if (idx === 0) return STEP_POSITION.FIRST;
-        if (idx === this.stepItems.length - 1) return STEP_POSITION.LAST;
-        return STEP_POSITION.MIDDLE;
+        const stepIndex = this.navigator.nextShowable(this.currentIndex, direction);
+        if (stepIndex !== null) this.showStep(stepIndex);
     }
 
     private getStepByAnchor(hash: string): number | null {
@@ -683,192 +506,16 @@ export class SmartWizard implements WizardInterface {
         if (h) setElementHeight(this.container, h);
     }
 
-    private changeState(stepArray: number[], state: string, addOrRemove: boolean): void {
-        let css = '';
-        if (state === 'default') css = STYLES.STATES.DEFAULT;
-        else if (state === 'active') css = STYLES.STATES.ACTIVE;
-        else if (state === 'completed') css = STYLES.STATES.COMPLETED;
-        else if (state === 'disable') css = STYLES.STATES.DISABLED;
-        else if (state === 'hidden') css = STYLES.STATES.HIDDEN;
-        else if (state === 'error') css = STYLES.STATES.ERROR;
-        else if (state === 'warning') css = STYLES.STATES.WARNING;
-
-        stepArray.forEach(n => {
-            const item = this.stepItems[n];
-            if (item) {
-                if (addOrRemove) {
-                    addClass(css, item.step);
-                } else {
-                    removeClass(css, item.step);
-                }
-            }
-        });
-    }
-
-    // ─── Nav Scroll ──────────────────────────────────────────────────────────
-
-    private createAnchorScroll(): void {
-        // Remove existing scroll buttons
-        getAllDescendants(`.${STYLES.BUTTONS.SCROLL}`, this.nav).forEach(btn => btn.parentNode?.removeChild(btn));
-
-        // Create left scroll button
-        const scrollBtn = document.createElement('button');
-        scrollBtn.type = 'button';
-        scrollBtn.className = `${STYLES.BUTTONS.SCROLL}`;
-        scrollBtn.setAttribute('aria-label', 'Scroll left');
-        scrollBtn.dataset.scrollAction = 'prev'
-
-        // Create right scroll button
-        const rightBtn = scrollBtn.cloneNode(true) as HTMLButtonElement;
-        rightBtn.setAttribute('aria-label', 'Scroll right');
-        rightBtn.dataset.scrollAction = 'next'
-
-        this.nav.prepend(scrollBtn);
-        this.nav.append(rightBtn);
-
-        // Initial check
-        this.scrollCheck();
-    }
-
-    private scrollCheck(): void {
-        const scrollBtns = getAllDescendants(`.${STYLES.BUTTONS.SCROLL}`, this.nav);
-        const canScroll = this.options.layout === LAYOUT.VERTICAL
-            ? this.nav.scrollHeight > this.nav.clientHeight
-            : this.nav.scrollWidth > this.nav.clientWidth;
-
-        scrollBtns.forEach(btn => {
-            btn.style.display = canScroll ? '' : 'none';
-        });
-    }
-
-    private scrollAnchor(direction: 'prev' | 'next'): void {
-        const isHorizontal = this.options.layout === LAYOUT.HORIZONTAL;
-
-        const scrollAmount = isHorizontal
-            ? this.nav.clientWidth / 2
-            : this.nav.clientHeight / 2;
-
-        const maxScroll = isHorizontal
-            ? this.nav.scrollWidth - this.nav.clientWidth
-            : this.nav.scrollHeight - this.nav.clientHeight;
-
-        let targetScroll = isHorizontal ? this.nav.scrollLeft : this.nav.scrollTop;
-
-        targetScroll += direction === 'next' ? scrollAmount : -scrollAmount;
-        targetScroll = Math.max(0, Math.min(targetScroll, maxScroll));
-
-        this.nav.scrollTo({
-            [isHorizontal ? 'left' : 'top']: targetScroll,
-            behavior: 'smooth'
-        });
-    }
 
     // ─── Extension System ─────────────────────────────────────────────────────
 
     /**
      * Register one or more extensions. Safe to call before or after init().
      * Returns `this` for fluent chaining.
-     *
-     * @example
-     * const wz = new SmartWizard('#wizard', options);
-     * wz.extend(validationExtension, analyticsExtension);
-     *
-     * // Or fluently:
-     * const wz = new SmartWizard('#wizard', options)
-     *   .extend(validationExtension);
      */
     public extend(...exts: WizardExtension[]): this {
-        for (const ext of exts) {
-            // Validate: must be a non-null object
-            if (typeof ext !== 'object' || ext === null) {
-                console.warn('SmartWizard: extension must be a plain object — skipping');
-                continue;
-            }
-            // Validate: name must be a safe non-empty string
-            const name = ext.name;
-            if (
-                typeof name !== 'string' || !name.trim() ||
-                ['__proto__', 'constructor', 'prototype'].includes(name)
-            ) {
-                console.warn('SmartWizard: extension must have a valid non-empty name — skipping');
-                continue;
-            }
-            // Deduplicate: skip if already registered
-            if (this.extensions.find(x => x.name === name)) {
-                console.warn(`SmartWizard: extension "${name}" is already registered — skipping`);
-                continue;
-            }
-            this.extensions.push(ext);
-            // onInstall fires immediately and synchronously on registration
-            if (typeof ext.onInstall === 'function') {
-                try {
-                    ext.onInstall(this);
-                } catch (err) {
-                    console.error(`SmartWizard: extension "${name}" threw in onInstall:`, err);
-                }
-            }
-        }
+        this.registry.register(this, ...exts);
         return this;
-    }
-
-    /**
-     * Run a synchronous hook across all registered extensions, in registration order.
-     * Any exception from an individual extension is caught and logged — it will not
-     * interrupt the remaining extensions or the wizard itself.
-     */
-    private runHookSync(hook: 'onInit' | 'onLoad' | 'onDestroy'): void;
-    private runHookSync(hook: 'onAfterShow', args: ExtensionAfterShowArgs): void;
-    private runHookSync(hook: string, args?: unknown): void {
-        for (const ext of this.extensions) {
-            const fn = (ext as any)[hook];
-            if (typeof fn !== 'function') continue;
-            try {
-                fn.call(ext, this, args);
-            } catch (err) {
-                console.error(`SmartWizard: extension "${ext.name}" threw in ${hook}:`, err);
-            }
-        }
-    }
-
-    /**
-     * Run `onBeforeShow` across all extensions in registration order.
-     * Supports both synchronous and async (Promise-returning) handlers.
-     * Returns `false` if any extension cancels the navigation.
-     */
-    private async runBeforeShow(args: ExtensionBeforeShowArgs): Promise<boolean> {
-        for (const ext of this.extensions) {
-            if (typeof ext.onBeforeShow !== 'function') continue;
-            try {
-                const result = await ext.onBeforeShow(this, args);
-                if (result === false) return false;
-            } catch (err) {
-                console.error(`SmartWizard: extension "${ext.name}" threw in onBeforeShow:`, err);
-            }
-        }
-        return true;
-    }
-
-    private emit<K extends keyof WizardEvents>(
-        eventName: K,
-        detail?: WizardEvents[K],
-        options: EventInit = {}
-    ): boolean {
-
-        const event = new CustomEvent<WizardEvents[K]>(eventName, {
-            detail,
-            bubbles: options.bubbles ?? true,
-            cancelable: options.cancelable ?? false
-        });
-
-        // Internal listeners
-        this.listeners[eventName]?.forEach(callback => {
-            callback(event);
-        });
-
-        // DOM listeners
-        this.main.dispatchEvent(event);
-
-        return !event.defaultPrevented;
     }
 
     // ─── Public Methods ───────────────────────────────────────────────────────
@@ -882,7 +529,7 @@ export class SmartWizard implements WizardInterface {
     }
 
     public goToStep(stepIndex: number, force: boolean = false): void {
-        if (!force && !this.isShowable(stepIndex)) return;
+        if (!force && !this.navigator.isShowable(stepIndex)) return;
 
         // Mark previous steps as completed when forced
         if (force && stepIndex > 0 && this.options.navigation.completed.enabled
@@ -907,16 +554,16 @@ export class SmartWizard implements WizardInterface {
         this.load();
     }
 
-    public setState(stepArray: number[], state: string): void {
-        this.changeState(stepArray, state, true);
+    public setState(stepArray: number[], state: StepState): void {
+        this.stateManager.setState(stepArray, state);
     }
 
-    public unsetState(stepArray: number[], state: string): void {
-        this.changeState(stepArray, state, false);
+    public unsetState(stepArray: number[], state: StepState): void {
+        this.stateManager.unsetState(stepArray, state);
     }
 
     public setOptions(options: Partial<WizardOptions>): void {
-        this.options = deepMerge({ ...this.options }, options);
+        this.options = deepMerge({ ...this.options } as WizardOptions, options);
         this.init();
         this.load();
     }
@@ -967,13 +614,7 @@ export class SmartWizard implements WizardInterface {
         eventName: K,
         callback: EventCallback<WizardEvents[K]>
     ): this {
-
-        if (!this.listeners[eventName]) {
-            this.listeners[eventName] = new Set();
-        }
-
-        this.listeners[eventName]!.add(callback);
-
+        this.emitter.on(eventName, callback);
         return this;
     }
 
@@ -981,19 +622,7 @@ export class SmartWizard implements WizardInterface {
         eventName: K,
         callback?: EventCallback<WizardEvents[K]>
     ): this {
-
-        const listeners = this.listeners[eventName];
-
-        if (!listeners) {
-            return this;
-        }
-
-        if (callback) {
-            listeners.delete(callback);
-        } else {
-            listeners.clear();
-        }
-
+        this.emitter.off(eventName, callback);
         return this;
     }
 
@@ -1001,14 +630,7 @@ export class SmartWizard implements WizardInterface {
         eventName: K,
         callback: EventCallback<WizardEvents[K]>
     ): this {
-
-        const wrapper: EventCallback<WizardEvents[K]> = (event) => {
-            callback(event);
-            this.off(eventName, wrapper);
-        };
-
-        this.on(eventName, wrapper);
-
+        this.emitter.once(eventName, callback);
         return this;
     }
 
@@ -1017,21 +639,17 @@ export class SmartWizard implements WizardInterface {
      */
     public destroy(): void {
         // 1. Notify extensions before teardown
-        this.runHookSync('onDestroy');
-        this.extensions = [];
+        this.registry.runSync('onDestroy', this);
+        this.registry.clear();
 
-        // 2. Remove all tracked DOM event listeners
-        for (const { target, type, handler, options } of this.boundListeners) {
-            target.removeEventListener(type, handler, options);
-        }
-        this.boundListeners = [];
+        // 2. Remove all tracked DOM event listeners (including media-query listener)
+        this.binder.unbindAll();
 
         // 3. Clear internal event listener registry
-        this.listeners = {};
+        this.emitter.clear();
 
         // 4. Remove injected scroll-button elements from the nav bar
-        getAllDescendants(`.${STYLES.BUTTONS.SCROLL}`, this.nav)
-            .forEach(btn => btn.parentNode?.removeChild(btn));
+        this.navScroll.destroy();
 
         // 5. Restore all step and page elements to their initial visual state
         this.stepItems.forEach(({ step, page }) => {

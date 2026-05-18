@@ -1,7 +1,7 @@
 import { WizardOptions } from "./types";
 
 export type ElementCallback = (element: HTMLElement) => void;
-export type EventCallback = (event: Event) => void;
+type EventCallback = (event: Event) => void;
 
 export const applyTo = (value: Element | Element[] | NodeListOf<Element>, cb: ElementCallback): void => {
     const elements = Array.isArray(value) || value instanceof NodeList ? value : [value];
