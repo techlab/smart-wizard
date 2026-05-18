@@ -1,5 +1,7 @@
 // Types for SmartWizard
 
+import { SmartWizard } from "./SmartWizard";
+
 export type ContentDirection = "ltr" | "rtl";
 export type ColorScheme = 'auto' | 'dark' | 'light' | 'none';
 export type WizardLayout = 'horizontal' | 'vertical';
@@ -92,17 +94,6 @@ export type ContentLoader = (
     stepElement: HTMLElement,
     callback: (content: string | Node) => void
 ) => void;
-
-export interface StepEventArgs {
-    stepIndex: number;
-    stepElement: HTMLElement | null;
-    stepDirection: StepDirection;
-    stepPosition: StepPosition;
-}
-
-export interface LeaveStepEventArgs extends StepEventArgs {
-    nextStepIndex: number;
-}
 
 export type TransitionCallback = () => void;
 export interface TransitionHandler {
@@ -253,3 +244,35 @@ export interface WizardExtension {
      */
     onDestroy?(wizard: WizardInterface): void;
 }
+
+export interface StepEventArgs {
+    stepIndex: number;
+    stepElement: HTMLElement | null;
+    stepDirection: StepDirection;
+    stepPosition: StepPosition;
+}
+
+export interface LeaveStepEventArgs extends StepEventArgs {
+    nextStepIndex: number;
+}
+
+export interface WizardEvents {
+    initialized: {
+        wizard: SmartWizard;
+    };
+
+    loaded: {
+        wizard: SmartWizard;
+    };
+
+    showStep: StepEventArgs;
+
+    leaveStep: LeaveStepEventArgs;
+
+    stepChanged: {
+        currentStep: number;
+        previousStep: number;
+    };
+}
+
+export type EventCallback<T = any> = (event: CustomEvent<T>) => void;

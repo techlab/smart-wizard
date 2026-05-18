@@ -6,10 +6,10 @@ export default defineConfig({
     resolve: {
         alias: {
             '@smartwizard/core': resolve(__dirname, '../../packages/core/src/index.ts'),
-            // '@smartwizard/ui': resolve(__dirname, '../../packages/ui/src/core.scss'),
             // Sub-path aliases to handle themes and the "full" bundle
             // '@smartwizard/ui/themes': resolve(__dirname, '../../packages/ui/src/themes'),
             // '@smartwizard/ui/full': resolve(__dirname, '../../packages/ui/src/full.scss'),
+            // '@smartwizard/ui': resolve(__dirname, '../../packages/ui/src/core.scss'),
         },
     },
     server: {

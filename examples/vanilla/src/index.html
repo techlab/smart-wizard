@@ -86,7 +86,7 @@
         <!-- TOOLBAR (optional, can be multiple) -->
         <div class="sw-toolbar sw-toolbar-top">
           <div class="sw-toolbar-group">
-            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+            <span class="sw-badge sw-badge-info" id="step-info-1"></span>
             <div class="sw-toolbar-divider"></div>
             <span class="sw-badge sw-badge-warn">⚠ Unsaved</span>
           </div>
@@ -301,7 +301,7 @@
         <!-- TOOLBAR (optional, can be multiple) -->
         <div class="sw-toolbar sw-toolbar-top">
           <div class="sw-toolbar-group">
-            <span class="sw-badge sw-badge-info">Step 2 of 5</span>
+            <span class="sw-badge sw-badge-info" id="step-info-2">Step 2 of 5</span>
             <div class="sw-toolbar-divider"></div>
             <span class="sw-badge sw-badge-warning">⚠ Unsaved</span>
             <button class="btn-icon-only btn" title="Help">?</button>
@@ -691,7 +691,8 @@
     import { SmartWizard } from '@smartwizard/core';
 
     // Initialize SmartWizard
-    const wizard1 = new SmartWizard('#smartwizard-1', {
+    const wizardElement = document.getElementById('smartwizard-1');
+    const wizard1 = new SmartWizard(wizardElement, {
       transition: {
         effect: 'css', // Transition type: default|fade|slideHorizontal|slideVertical|slideSwing|css
         speed: 400, // Animation speed
@@ -710,11 +711,10 @@
     // window.wizard = wizard;
 
     // // Update step info display
-    // function updateStepInfo() {
-    //   const info = wizard.getStepInfo();
-    //   document.getElementById('current-step').textContent = info.currentStep + 1;
-    //   document.getElementById('total-steps').textContent = info.totalSteps;
-    // }
+    function updateStepInfo() {
+      const info = wizard1.getStepInfo();
+      document.getElementById('step-info-1').textContent = `Step ${info.currentStep + 1} of ${info.totalSteps}`;
+    }
     // window.updateStepInfo = updateStepInfo;
 
     // // Listen to wizard events
@@ -729,6 +729,11 @@
     //   console.log('Step changed:', e.detail);
     //   updateStepInfo();
     // });
+
+    wizard1.on('showStep', (e) => {
+      console.log('Step changed (Emit):', e.detail);
+      updateStepInfo();
+    });
 
     // // Initial update
     // updateStepInfo();

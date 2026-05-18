@@ -1,13 +1,14 @@
 import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
     ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, TransitionHandler, StepItem,
-    WizardLayout, WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs
+    WizardLayout, WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
+    EventCallback
 } from './types';
 import { transitions } from './transitions';
 import { defaultOptions } from './options';
 import {
     addClass, removeClass, hasClass, hideElement,
-    addEvent, dispatchEvent, getAttribute, setAttribute,
+    addEvent, getAttribute, setAttribute,
     getFirstDescendant, getAllDescendants,
     getElementHeight, setElementHeight, deepMerge,
     mergeOptions
@@ -28,6 +29,9 @@ export class SmartWizard implements WizardInterface {
     private touchStartX: number = 0;
     private touchStartY: number = 0;
     private extensions: WizardExtension[] = [];
+    private listeners: Partial<
+        Record<keyof WizardEvents, Set<EventCallback>>
+    > = {};
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
         const el = typeof element === 'string'
@@ -127,9 +131,8 @@ export class SmartWizard implements WizardInterface {
         this.setEvents();
 
         // Trigger initialized event
-        dispatchEvent(this.main, 'initialized', {
-            detail: { wizard: this },
-            bubbles: true
+        this.emit('initialized', {
+            wizard: this
         });
 
         this.isInitialized = true;
@@ -159,9 +162,8 @@ export class SmartWizard implements WizardInterface {
         this.showStep(idx);
 
         // Trigger loaded event
-        dispatchEvent(this.main, 'loaded', {
-            detail: { wizard: this },
-            bubbles: true
+        this.emit('loaded', {
+            wizard: this
         });
 
         // Fire onLoad hook on all extensions
@@ -462,12 +464,7 @@ export class SmartWizard implements WizardInterface {
                 stepDirection,
                 stepPosition: this.getStepPosition(this.currentIndex),
             };
-            const event = new CustomEvent('leaveStep', {
-                detail: leaveArgs,
-                bubbles: true,
-                cancelable: true
-            });
-            if (!this.main.dispatchEvent(event)) return;
+            if (!this.emit('leaveStep', leaveArgs, { cancelable: true })) return;
         }
 
         // Load content if contentLoader is set
@@ -506,10 +503,7 @@ export class SmartWizard implements WizardInterface {
                     stepDirection,
                     stepPosition: this.getStepPosition(stepIdx),
                 };
-                dispatchEvent(this.main, 'showStep', {
-                    detail: stepArgs,
-                    bubbles: true
-                });
+                this.emit('showStep', stepArgs);
 
                 // Fire onAfterShow hooks
                 this.runHookSync('onAfterShow', { stepIdx, direction: stepDirection });
@@ -829,6 +823,29 @@ export class SmartWizard implements WizardInterface {
         return true;
     }
 
+    private emit<K extends keyof WizardEvents>(
+        eventName: K,
+        detail?: WizardEvents[K],
+        options: EventInit = {}
+    ): boolean {
+
+        const event = new CustomEvent<WizardEvents[K]>(eventName, {
+            detail,
+            bubbles: options.bubbles ?? true,
+            cancelable: options.cancelable ?? false
+        });
+
+        // Internal listeners
+        this.listeners[eventName]?.forEach(callback => {
+            callback(event);
+        });
+
+        // DOM listeners
+        this.main.dispatchEvent(event);
+
+        return !event.defaultPrevented;
+    }
+
     // ─── Public Methods ───────────────────────────────────────────────────────
 
     public next(): void {
@@ -919,6 +936,55 @@ export class SmartWizard implements WizardInterface {
 
     public getWidth(): number {
         return this.container.offsetWidth;
+    }
+
+    public on<K extends keyof WizardEvents>(
+        eventName: K,
+        callback: EventCallback<WizardEvents[K]>
+    ): this {
+
+        if (!this.listeners[eventName]) {
+            this.listeners[eventName] = new Set();
+        }
+
+        this.listeners[eventName]!.add(callback);
+
+        return this;
+    }
+
+    public off<K extends keyof WizardEvents>(
+        eventName: K,
+        callback?: EventCallback<WizardEvents[K]>
+    ): this {
+
+        const listeners = this.listeners[eventName];
+
+        if (!listeners) {
+            return this;
+        }
+
+        if (callback) {
+            listeners.delete(callback);
+        } else {
+            listeners.clear();
+        }
+
+        return this;
+    }
+
+    public once<K extends keyof WizardEvents>(
+        eventName: K,
+        callback: EventCallback<WizardEvents[K]>
+    ): this {
+
+        const wrapper: EventCallback<WizardEvents[K]> = (event) => {
+            callback(event);
+            this.off(eventName, wrapper);
+        };
+
+        this.on(eventName, wrapper);
+
+        return this;
     }
 
     /**
