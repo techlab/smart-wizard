@@ -8,7 +8,7 @@ import { transitions } from './transitions';
 import { defaultOptions } from './options';
 import {
     addClass, removeClass, hasClass, hideElement,
-    addEvent, getAttribute, setAttribute,
+    getAttribute, setAttribute,
     getFirstDescendant, getAllDescendants,
     getElementHeight, setElementHeight, deepMerge,
     mergeOptions
@@ -32,6 +32,12 @@ export class SmartWizard implements WizardInterface {
     private listeners: Partial<
         Record<keyof WizardEvents, Set<EventCallback>>
     > = {};
+    private boundListeners: Array<{
+        target: EventTarget;
+        type: string;
+        handler: EventListenerOrEventListenerObject;
+        options?: AddEventListenerOptions;
+    }> = [];
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
         const el = typeof element === 'string'
@@ -267,20 +273,31 @@ export class SmartWizard implements WizardInterface {
         });
     }
 
+    private bindEvent(
+        target: EventTarget,
+        type: string,
+        handler: EventListenerOrEventListenerObject,
+        options?: AddEventListenerOptions
+    ): void {
+        target.addEventListener(type, handler, options);
+        this.boundListeners.push({ target, type, handler, options });
+    }
+
     private setEvents(): void {
         // Step anchor click
         this.stepItems.forEach(({ step }, idx) => {
-            addEvent(step, EVENTS.CLICK, (e: Event) => {
+            const handler = (e: Event) => {
                 e.preventDefault();
                 if (!this.options.navigation.enabled) return;
                 if (this.isShowable(idx)) {
                     this.showStep(idx);
                 }
-            });
+            };
+            this.bindEvent(step, EVENTS.CLICK, handler);
         });
 
         // Next / Prev / Scroll buttons (event delegation on main)
-        addEvent(this.main, EVENTS.CLICK, (e: Event) => {
+        const mainClickHandler = (e: Event) => {
             const target = e.target as HTMLElement;
 
             if (target.classList.contains(STYLES.BUTTONS.NEXT)) {
@@ -298,22 +315,25 @@ export class SmartWizard implements WizardInterface {
                     this.scrollAnchor(e.target.dataset.scrollAction as 'prev' | 'next');
                 }
             }
-        });
+        };
+        this.bindEvent(this.main, EVENTS.CLICK, mainClickHandler);
 
         // Scroll end check on nav
-        this.nav.addEventListener(EVENTS.SCROLLEND, () => this.scrollCheck());
+        const scrollEndHandler = () => this.scrollCheck();
+        this.bindEvent(this.nav, EVENTS.SCROLLEND, scrollEndHandler);
 
         // Redirect vertical wheel scroll to horizontal on nav
-        this.nav.addEventListener(EVENTS.WHEEL, (e: WheelEvent) => {
+        const wheelHandler = (e: WheelEvent) => {
             if (this.nav.scrollWidth <= this.nav.clientWidth) return;
             if (e.deltaY === 0) return;
             e.preventDefault();
             this.nav.scrollLeft += e.deltaY;
-        }, { passive: false });
+        };
+        this.bindEvent(this.nav, EVENTS.WHEEL, wheelHandler as EventListener, { passive: false });
 
         // Keyboard navigation
         if (this.options.keyboardNavigation.enabled) {
-            addEvent(document, EVENTS.KEYUP, (e: Event) => {
+            const keyupHandler = (e: Event) => {
                 if (!(e instanceof KeyboardEvent)) return;
 
                 // Ignore key events when focus is inside an input/textarea/select
@@ -326,36 +346,40 @@ export class SmartWizard implements WizardInterface {
                 } else if (this.options.keyboardNavigation.keys.right.includes(key.key)) {
                     this.navigate(STEP_DIRECTION.FORWARD);
                 }
-            });
+            };
+            this.bindEvent(document, EVENTS.KEYUP, keyupHandler);
         }
 
         // Browser back/forward
         if (this.options.behavior.useUrlHash && this.options.behavior.supportBrowserHistory) {
-            addEvent(window, EVENTS.HASHCHANGE, () => {
+            const hashChangeHandler = () => {
                 const idx = this.getURLHashIndex();
                 if (idx !== null && this.isShowable(idx)) {
                     this.showStep(idx);
                 }
-            });
+            };
+            this.bindEvent(window, EVENTS.HASHCHANGE, hashChangeHandler);
         }
 
         // Fix height on window resize
         if (this.options.behavior.autoHeight) {
-            addEvent(window, EVENTS.RESIZE, () => {
+            const resizeHandler = () => {
                 if (this.currentIndex >= 0 && this.stepItems[this.currentIndex]) {
                     this.fixHeight(this.currentIndex);
                 }
-            });
+            };
+            this.bindEvent(window, EVENTS.RESIZE, resizeHandler);
         }
 
         // Swipe navigation on touch
-        addEvent(this.container, EVENTS.TOUCHSTART, (e: Event) => {
+        const touchStartHandler = (e: Event) => {
             const touch = (e as TouchEvent).touches[0];
             this.touchStartX = touch.clientX;
             this.touchStartY = touch.clientY;
-        });
+        };
+        this.bindEvent(this.container, EVENTS.TOUCHSTART, touchStartHandler);
 
-        addEvent(this.container, EVENTS.TOUCHEND, (e: Event) => {
+        const touchEndHandler = (e: Event) => {
             if (!this.options.swipeNavigation.enabled) return;
             const touch = (e as TouchEvent).changedTouches[0];
             const deltaX = touch.clientX - this.touchStartX;
@@ -368,7 +392,8 @@ export class SmartWizard implements WizardInterface {
             } else if (deltaX > threshold) {
                 this.navigate(STEP_DIRECTION.BACKWARD);
             }
-        });
+        };
+        this.bindEvent(this.container, EVENTS.TOUCHEND, touchEndHandler);
     }
 
     private setAnchor(stepIdx: number): void {
@@ -988,11 +1013,49 @@ export class SmartWizard implements WizardInterface {
     }
 
     /**
-     * Tear down the wizard: fires `onDestroy` on all extensions, then clears
-     * the extension registry. Future: event listener cleanup will go here too.
+     * Destroy the wizard and remove all event listeners and styles
      */
     public destroy(): void {
+        // 1. Notify extensions before teardown
         this.runHookSync('onDestroy');
         this.extensions = [];
+
+        // 2. Remove all tracked DOM event listeners
+        for (const { target, type, handler, options } of this.boundListeners) {
+            target.removeEventListener(type, handler, options);
+        }
+        this.boundListeners = [];
+
+        // 3. Clear internal event listener registry
+        this.listeners = {};
+
+        // 4. Remove injected scroll-button elements from the nav bar
+        getAllDescendants(`.${STYLES.BUTTONS.SCROLL}`, this.nav)
+            .forEach(btn => btn.parentNode?.removeChild(btn));
+
+        // 5. Restore all step and page elements to their initial visual state
+        this.stepItems.forEach(({ step, page }) => {
+            removeClass(
+                [STYLES.STATES.ACTIVE, STYLES.STATES.COMPLETED, STYLES.STATES.DEFAULT,
+                STYLES.STATES.DISABLED, STYLES.STATES.ERROR, STYLES.STATES.WARNING,
+                STYLES.STATES.HIDDEN].join(' '),
+                step
+            );
+            page.style.removeProperty('display');
+            page.style.removeProperty('height');
+        });
+
+        // 6. Remove wizard CSS classes and attributes from the main element
+        Array.from(this.main.classList)
+            .filter(cls => cls.startsWith(STYLES.THEME_PREFIX) || cls.startsWith(STYLES.LAYOUT_PREFIX) || cls === STYLES.BASE || cls === STYLES.LOADER)
+            .forEach(cls => this.main.classList.remove(cls));
+        this.main.removeAttribute(DATA_ATTRIBUTES.COLOR_SCHEME);
+
+        // 7. Reset container inline height
+        this.container.style.removeProperty('height');
+
+        // 8. Reset internal state flags
+        this.currentIndex = -1;
+        this.isInitialized = false;
     }
 }
