@@ -32,6 +32,7 @@ export class SmartWizard implements WizardInterface {
     public currentIndex: number = -1;
     private touchStartX: number = 0;
     private touchStartY: number = 0;
+
     // ─── Modules ─────────────────────────────────────────────────────────────
     private readonly emitter: EventEmitter;
     private readonly binder: EventBinder;
@@ -41,6 +42,10 @@ export class SmartWizard implements WizardInterface {
     private navigator!: StepNavigator;
     private progressBar!: ProgressBar;
     private navButtons!: { prev: HTMLElement[]; next: HTMLElement[] };
+
+    // ─── Instance tracking ─────────────────────────────────────────────────────
+    private static counter = 0;
+    public readonly id: string;
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
         const el = typeof element === 'string'
@@ -53,6 +58,9 @@ export class SmartWizard implements WizardInterface {
 
         this.main = el;
         this.options = OptionsParser.parse(this.main, options);
+        this.id = `sw-${++SmartWizard.counter}`;
+        this.main.dataset.swId = this.id;
+
         this.emitter = new EventEmitter(this.main);
         this.binder = new EventBinder();
         this.registry = new ExtensionRegistry();
