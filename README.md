@@ -258,13 +258,11 @@ const wizard = new SmartWizard('#wizard', {
 | `unsetState(steps[], state)` | `void` | Remove a state class from given step indices |
 | `setOptions(options)` | `void` | Merge new options and re-initialize |
 | `getOptions()` | `WizardOptions` | Return the current resolved options |
-| `getStepInfo()` | `StepInfo` | Return `{ currentStep, totalSteps }` |
-| `getCurrentIndex()` | `number` | Return the current step index |
-| `getContentDirection()` | `'ltr' \| 'rtl'` | Return the content direction |
+| `getInfo()` | `WizardInfo` | Returns an aggregated snapshot of the wizard's current runtime state. |
 | `getWidth()` | `number` | Return the content container width in px |
+| `getHeight()` | `number` | Return the content container height in px |
 | `loader('show' \| 'hide')` | `void` | Toggle the loading state class |
-| `adjustHeight()` | `void` | Manually recalculate and set the content height |
-| `resetHeight()` | `void` | Reset the content height to `auto` |
+| `resetHeight()` | `void` | Manually recalculate and set the content height |
 
 ### Step States
 

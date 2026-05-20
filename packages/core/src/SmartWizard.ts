@@ -1,6 +1,6 @@
 import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
-    ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, TransitionHandler, StepItem,
+    ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, WizardInfo, TransitionHandler, StepItem,
     WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
     EventCallback, StepState
 } from './types';
@@ -44,7 +44,7 @@ export class SmartWizard implements WizardInterface {
     private navButtons!: { prev: HTMLElement[]; next: HTMLElement[] };
 
     // ─── Instance tracking ─────────────────────────────────────────────────────
-    private static counter = 0;
+    private static _instanceCounter: number = 0;
     public readonly id: string;
 
     constructor(element: HTMLElement | string, options?: Partial<WizardOptions>) {
@@ -58,7 +58,7 @@ export class SmartWizard implements WizardInterface {
 
         this.main = el;
         this.options = OptionsParser.parse(this.main, options);
-        this.id = `sw-${++SmartWizard.counter}`;
+        this.id = this._generateWizardId();
         this.main.dataset.swId = this.id;
 
         this.emitter = new EventEmitter(this.main);
@@ -123,6 +123,10 @@ export class SmartWizard implements WizardInterface {
         // Initial state
         this.currentIndex = -1;
         this.isInitialized = false;
+    }
+
+    private _generateWizardId(): string {
+        return `sw-${Date.now()}-${++SmartWizard._instanceCounter}`;
     }
 
     private init(): void {
@@ -323,7 +327,7 @@ export class SmartWizard implements WizardInterface {
         if (this.options.behavior.autoHeight) {
             const resizeHandler = () => {
                 if (this.currentIndex >= 0 && this.stepItems[this.currentIndex]) {
-                    this.fixHeight(this.currentIndex);
+                    this.updateHeight(this.currentIndex);
                 }
             };
             this.binder.bind(window, EVENTS.RESIZE, resizeHandler);
@@ -429,7 +433,9 @@ export class SmartWizard implements WizardInterface {
             console.log('transition', this.options.transition.effect, transitions)
             transition(selPage, curPage, stepDirection, this, () => {
                 // Fix height
-                this.fixHeight(stepIdx);
+                if (this.options.behavior.autoHeight) {
+                    this.updateHeight(stepIdx);
+                }
 
                 // Trigger showStep event
                 const stepArgs: StepEventArgs = {
@@ -506,14 +512,12 @@ export class SmartWizard implements WizardInterface {
         }
     }
 
-    private fixHeight(stepIdx: number): void {
-        if (!this.options.behavior.autoHeight) return;
+    private updateHeight(stepIdx: number): void {
         const page = this.stepItems[stepIdx]?.page;
         if (!page) return;
         const h = getElementHeight(page);
-        if (h) setElementHeight(this.container, h);
+        setElementHeight(this.container, h || 'auto');
     }
-
 
     // ─── Extension System ─────────────────────────────────────────────────────
 
@@ -571,28 +575,13 @@ export class SmartWizard implements WizardInterface {
     }
 
     public setOptions(options: Partial<WizardOptions>): void {
-        this.options = deepMerge({ ...this.options } as WizardOptions, options);
+        this.options = OptionsParser.parse(this.main, { ...this.options, ...options });
         this.init();
         this.load();
     }
 
     public getOptions(): WizardOptions {
         return this.options;
-    }
-
-    public getContentDirection(): ContentDirection {
-        return this.contentDirection || CONTENT_DIRECTION.LEFT_TO_RIGHT;
-    }
-
-    public getCurrentIndex(): number {
-        return this.currentIndex;
-    }
-
-    public getStepInfo(): StepInfo {
-        return {
-            currentStep: this.currentIndex >= 0 ? this.currentIndex : 0,
-            totalSteps: this.stepItems.length
-        };
     }
 
     public loader(state: 'show' | 'hide'): void {
@@ -603,19 +592,33 @@ export class SmartWizard implements WizardInterface {
         }
     }
 
-    public adjustHeight(): void {
-        this.fixHeight(this.currentIndex);
-    }
-
     public resetHeight(): void {
-        const elm = this.stepItems[0]?.page;
-        if (!elm) return;
-        const h = getElementHeight(elm);
-        setElementHeight(this.container, h || 'auto');
+        this.updateHeight(this.currentIndex);
     }
 
     public getWidth(): number {
-        return this.container.offsetWidth;
+        return this.main.offsetWidth;
+    }
+
+    public getHeight(): number {
+        return this.main.offsetHeight;
+    }
+
+    /**
+     * Returns an aggregated snapshot of the wizard's current runtime state.
+     */
+    public getInfo(): WizardInfo {
+        return {
+            stepInfo: {
+                currentStep: this.currentIndex >= 0 ? this.currentIndex : 0,
+                totalSteps: this.stepItems.length
+            },
+            contentDirection: this.contentDirection || CONTENT_DIRECTION.LEFT_TO_RIGHT,
+            layout: this.options.layout,
+            colorScheme: this.options.colorScheme,
+            width: this.main.offsetWidth,
+            height: this.main.offsetHeight,
+        };
     }
 
     public on<K extends keyof WizardEvents>(
@@ -646,20 +649,20 @@ export class SmartWizard implements WizardInterface {
      * Destroy the wizard and remove all event listeners and styles
      */
     public destroy(): void {
-        // 1. Notify extensions before teardown
+        // Notify extensions before teardown
         this.registry.runSync('onDestroy', this);
         this.registry.clear();
 
-        // 2. Remove all tracked DOM event listeners (including media-query listener)
+        // Remove all tracked DOM event listeners
         this.binder.unbindAll();
 
-        // 3. Clear internal event listener registry
+        // Clear internal event listener registry
         this.emitter.clear();
 
-        // 4. Remove injected scroll-button elements from the nav bar
+        // Remove injected scroll-button elements from the nav bar
         this.navScroll.destroy();
 
-        // 5. Restore all step and page elements to their initial visual state
+        // Restore all step and page elements to their initial visual state
         this.stepItems.forEach(({ step, page }) => {
             removeClass(
                 [STYLES.STATES.ACTIVE, STYLES.STATES.COMPLETED, STYLES.STATES.DEFAULT,
@@ -671,16 +674,16 @@ export class SmartWizard implements WizardInterface {
             page.style.removeProperty('height');
         });
 
-        // 6. Remove wizard CSS classes and attributes from the main element
+        // Remove wizard CSS classes and attributes from the main element
         Array.from(this.main.classList)
             .filter(cls => cls.startsWith(STYLES.THEME_PREFIX) || cls.startsWith(STYLES.LAYOUT_PREFIX) || cls === STYLES.BASE || cls === STYLES.LOADER)
             .forEach(cls => this.main.classList.remove(cls));
         this.main.removeAttribute(DATA_ATTRIBUTES.COLOR_SCHEME);
 
-        // 7. Reset container inline height
+        // Reset container inline height
         this.container.style.removeProperty('height');
 
-        // 8. Reset internal state flags
+        // Reset internal state flags
         this.currentIndex = -1;
         this.isInitialized = false;
     }

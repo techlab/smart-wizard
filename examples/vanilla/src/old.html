@@ -419,9 +419,9 @@
 
     // Update step info display
     function updateStepInfo() {
-      const info = wizard.getStepInfo();
-      document.getElementById('current-step').textContent = info.currentStep + 1;
-      document.getElementById('total-steps').textContent = info.totalSteps;
+      const info = wizard.getInfo();
+      document.getElementById('current-step').textContent = info.stepInfo.currentStep + 1;
+      document.getElementById('total-steps').textContent = info.stepInfo.totalSteps;
     }
     window.updateStepInfo = updateStepInfo;
 

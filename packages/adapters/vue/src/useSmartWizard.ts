@@ -1,16 +1,23 @@
 import { ref, onMounted, onUnmounted, Ref } from 'vue';
-import { SmartWizard, WizardOptions, StepInfo } from '@smartwizard/core';
+import { SmartWizard, WizardOptions, WizardInfo } from '@smartwizard/core';
 
 export function useSmartWizard(
     containerRef: Ref<HTMLElement | null>,
     options: Partial<WizardOptions>
 ) {
     const wizard = ref<SmartWizard | null>(null);
-    const stepInfo = ref<StepInfo>({ currentStep: 0, totalSteps: 0 });
+    const info = ref<WizardInfo>({
+        stepInfo: { currentStep: 0, totalSteps: 0 },
+        contentDirection: 'ltr',
+        layout: 'horizontal',
+        colorScheme: 'none',
+        width: 0,
+        height: 0,
+    });
 
     const handleStepChange = () => {
         if (wizard.value) {
-            stepInfo.value = wizard.value.getStepInfo();
+            info.value = wizard.value.getInfo();
         }
     };
 
@@ -34,7 +41,7 @@ export function useSmartWizard(
     });
 
     return {
-        stepInfo,
+        info,
         next: () => wizard.value?.next(),
         prev: () => wizard.value?.prev(),
         goToStep: (index: number, force?: boolean) => wizard.value?.goToStep(index, force),

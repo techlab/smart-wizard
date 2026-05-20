@@ -137,15 +137,13 @@ export interface WizardInterface {
     unsetState(stepArray: number[], state: string): void;
 
     // ── Layout ───────────────────────────────────────────────────────────
-    adjustHeight(): void;
     resetHeight(): void;
     getWidth(): number;
-    getContentDirection(): ContentDirection;
+    getHeight(): number;
 
     // ── Info ─────────────────────────────────────────────────────────────
-    getStepInfo(): StepInfo;
-    getCurrentIndex(): number;
     getOptions(): WizardOptions;
+    getInfo(): WizardInfo;
 
     // ── Loader ───────────────────────────────────────────────────────────
     loader(state: 'show' | 'hide'): void;
@@ -154,6 +152,22 @@ export interface WizardInterface {
 export interface StepInfo {
     currentStep: number;
     totalSteps: number;
+}
+
+/** Aggregated snapshot of the wizard's current runtime state. */
+export interface WizardInfo {
+    /** Current and total step counts. */
+    stepInfo: StepInfo;
+    /** Text flow direction of the wizard content area. */
+    contentDirection: ContentDirection;
+    /** Active layout mode. */
+    layout: WizardLayout;
+    /** Active color scheme. */
+    colorScheme: ColorScheme;
+    /** Width of the root wizard element in pixels. */
+    width: number;
+    /** Height of the root wizard element in pixels. */
+    height: number;
 }
 
 export interface Transitions {
