@@ -29,7 +29,7 @@ export class SmartWizard implements WizardInterface {
     public stepItems!: StepItem[];
     private contentDirection!: ContentDirection;
     private isInitialized: boolean = false;
-    public currentIndex: number = -1;
+    private _currentIndex: number = -1;
     private touchStartX: number = 0;
     private touchStartY: number = 0;
 
@@ -112,7 +112,7 @@ export class SmartWizard implements WizardInterface {
         // Step navigator
         this.navigator = new StepNavigator(
             () => this.stepItems,
-            () => this.currentIndex,
+            () => this._currentIndex,
             () => this.options
         );
 
@@ -121,7 +121,7 @@ export class SmartWizard implements WizardInterface {
             document.documentElement.getAttribute('dir') || CONTENT_DIRECTION.LEFT_TO_RIGHT) as ContentDirection;
 
         // Initial state
-        this.currentIndex = -1;
+        this._currentIndex = -1;
         this.isInitialized = false;
     }
 
@@ -157,7 +157,7 @@ export class SmartWizard implements WizardInterface {
         this.stepItems.forEach(({ page }) => hideElement(page));
 
         // Reset index
-        this.currentIndex = -1;
+        this._currentIndex = -1;
 
         // Get initial step
         const idx = this.getInitialStep();
@@ -326,8 +326,8 @@ export class SmartWizard implements WizardInterface {
         // Fix height on window resize
         if (this.options.behavior.autoHeight) {
             const resizeHandler = () => {
-                if (this.currentIndex >= 0 && this.stepItems[this.currentIndex]) {
-                    this.updateHeight(this.currentIndex);
+                if (this._currentIndex >= 0 && this.stepItems[this._currentIndex]) {
+                    this.updateHeight(this._currentIndex);
                 }
             };
             this.binder.bind(window, EVENTS.RESIZE, resizeHandler);
@@ -359,7 +359,7 @@ export class SmartWizard implements WizardInterface {
     }
 
     private setAnchor(stepIdx: number): void {
-        this.stateManager.setAnchor(stepIdx, this.currentIndex, this.options);
+        this.stateManager.setAnchor(stepIdx, this._currentIndex, this.options);
     }
 
     private setButtons(stepPosition: StepPosition): void {
@@ -379,7 +379,7 @@ export class SmartWizard implements WizardInterface {
 
     private async showStep(stepIdx: number): Promise<void> {
         if (stepIdx === -1 || stepIdx === null) return;
-        if (stepIdx === this.currentIndex) return;
+        if (stepIdx === this._currentIndex) return;
         const selItem = this.stepItems[stepIdx];
         if (!selItem) return;
         if (!this.navigator.isEnabled(selItem.step)) return;
@@ -389,18 +389,18 @@ export class SmartWizard implements WizardInterface {
         // Run onBeforeShow hooks — any extension can cancel by returning false
         const allowed = await this.registry.runBeforeShow(this, {
             stepIdx,
-            currentIdx: this.currentIndex,
+            currentIdx: this._currentIndex,
             direction: stepDirection,
         });
         if (!allowed) return;
 
-        if (this.currentIndex !== -1) {
+        if (this._currentIndex !== -1) {
             const leaveArgs: LeaveStepEventArgs = {
-                stepIndex: this.currentIndex,
+                stepIndex: this._currentIndex,
                 nextStepIndex: stepIdx,
-                stepElement: this.stepItems[this.currentIndex]?.step ?? null,
+                stepElement: this.stepItems[this._currentIndex]?.step ?? null,
                 stepDirection,
-                stepPosition: this.navigator.getPosition(this.currentIndex),
+                stepPosition: this.navigator.getPosition(this._currentIndex),
             };
             if (!this.emitter.emit('leaveStep', leaveArgs, { cancelable: true })) return;
         }
@@ -424,7 +424,7 @@ export class SmartWizard implements WizardInterface {
             }
 
             // Get pages
-            const curPage = this.stepItems[this.currentIndex]?.page ?? null;
+            const curPage = this.stepItems[this._currentIndex]?.page ?? null;
 
             // Perform transition
             const transition: TransitionHandler = (transitions as any)[this.options.transition.effect]
@@ -451,7 +451,7 @@ export class SmartWizard implements WizardInterface {
             });
 
             // Update current index
-            this.currentIndex = stepIdx;
+            this._currentIndex = stepIdx;
             // Update buttons
             const stepPosition = this.navigator.getPosition(stepIdx);
             this.setButtons(stepPosition);
@@ -488,7 +488,7 @@ export class SmartWizard implements WizardInterface {
     }
 
     private navigate(direction: StepDirection): void {
-        const stepIndex = this.navigator.nextShowable(this.currentIndex, direction);
+        const stepIndex = this.navigator.nextShowable(this._currentIndex, direction);
         if (stepIndex !== null) this.showStep(stepIndex);
     }
 
@@ -531,6 +531,16 @@ export class SmartWizard implements WizardInterface {
     }
 
     // ─── Public Methods ───────────────────────────────────────────────────────
+
+    /** Index of the active step */
+    get currentIndex(): number {
+        return this._currentIndex >= 0 ? this._currentIndex : 0;
+    }
+
+    /** Total number of steps */
+    get totalSteps(): number {
+        return this.stepItems.length;
+    }
 
     public next(): void {
         this.navigate(STEP_DIRECTION.FORWARD);
@@ -593,7 +603,7 @@ export class SmartWizard implements WizardInterface {
     }
 
     public resetHeight(): void {
-        this.updateHeight(this.currentIndex);
+        this.updateHeight(this._currentIndex);
     }
 
     public getWidth(): number {
@@ -610,7 +620,7 @@ export class SmartWizard implements WizardInterface {
     public getInfo(): WizardInfo {
         return {
             stepInfo: {
-                currentStep: this.currentIndex >= 0 ? this.currentIndex : 0,
+                currentStep: this._currentIndex >= 0 ? this._currentIndex : 0,
                 totalSteps: this.stepItems.length
             },
             contentDirection: this.contentDirection || CONTENT_DIRECTION.LEFT_TO_RIGHT,
@@ -684,7 +694,7 @@ export class SmartWizard implements WizardInterface {
         this.container.style.removeProperty('height');
 
         // Reset internal state flags
-        this.currentIndex = -1;
+        this._currentIndex = -1;
         this.isInitialized = false;
     }
 }
