@@ -1,21 +1,27 @@
 {
-    "name": "@smartwizard/extension-url-hash",
+    "name": "@smart-wizard/extension-url-hash",
     "version": "0.1.0",
     "description": "URL hash + browser history navigation extension for SmartWizard",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsup src/index.ts --format cjs,esm --dts --external @smartwizard/core",
-        "dev":   "tsup src/index.ts --format cjs,esm --dts --watch --external @smartwizard/core"
+        "build": "tsup src/index.ts --format cjs,esm --dts --external @smart-wizard/core",
+        "dev": "tsup src/index.ts --format cjs,esm --dts --watch --external @smart-wizard/core"
     },
-    "keywords": ["smartwizard", "wizard", "extension", "url-hash", "history"],
+    "keywords": [
+        "smartwizard",
+        "wizard",
+        "extension",
+        "url-hash",
+        "history"
+    ],
     "license": "MIT",
     "peerDependencies": {
-        "@smartwizard/core": "workspace:*"
+        "@smart-wizard/core": "workspace:*"
     },
     "devDependencies": {
-        "@smartwizard/core": "workspace:*",
+        "@smart-wizard/core": "workspace:*",
         "tsup": "^8.0.0",
         "typescript": "^5.0.0"
     }

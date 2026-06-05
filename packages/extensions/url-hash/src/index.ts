@@ -1,4 +1,4 @@
-import type { WizardExtension, WizardInterface } from '@smartwizard/core';
+import type { WizardExtension, WizardInterface } from '@smart-wizard/core';
 
 export interface UrlHashOptions {
     /**
@@ -18,8 +18,8 @@ export interface UrlHashOptions {
  *
  * @example
  * ```ts
- * import { SmartWizard } from '@smartwizard/core';
- * import { createUrlHashExtension } from '@smartwizard/extension-url-hash';
+ * import { SmartWizard } from '@smart-wizard/core';
+ * import { createUrlHashExtension } from '@smart-wizard/extension-url-hash';
  *
  * const wizard = new SmartWizard('#wizard', options)
  *   .extend(createUrlHashExtension({ supportHistory: true }));

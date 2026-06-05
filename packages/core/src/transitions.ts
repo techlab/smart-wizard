@@ -341,7 +341,7 @@ export const transitions: Record<string, TransitionHandler> = {
  * @param handler - The transition function to execute.
  *
  * @example
- * import { registerTransition } from '@smartwizard/core';
+ * import { registerTransition } from '@smart-wizard/core';
  *
  * registerTransition('myFlip', (next, current, direction, wizard, done) => {
  *   // your animation logic

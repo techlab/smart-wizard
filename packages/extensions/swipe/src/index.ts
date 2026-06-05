@@ -1,4 +1,4 @@
-import type { WizardExtension } from '@smartwizard/core';
+import type { WizardExtension } from '@smart-wizard/core';
 
 export interface SwipeOptions {
     /**
@@ -17,8 +17,8 @@ export interface SwipeOptions {
  *
  * @example
  * ```ts
- * import { SmartWizard } from '@smartwizard/core';
- * import { createSwipeExtension } from '@smartwizard/extension-swipe';
+ * import { SmartWizard } from '@smart-wizard/core';
+ * import { createSwipeExtension } from '@smart-wizard/extension-swipe';
  *
  * const wizard = new SmartWizard('#wizard', options)
  *   .extend(createSwipeExtension({ threshold: 60 }));

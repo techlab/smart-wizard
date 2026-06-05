@@ -9,8 +9,8 @@
         "dev": "vite"
     },
     "dependencies": {
-        "@smartwizard/core": "workspace:*",
-        "@smartwizard/ui": "workspace:*"
+        "@smart-wizard/core": "workspace:*",
+        "@smart-wizard/ui": "workspace:*"
     },
     "devDependencies": {
         "vite": "^5.0.0"

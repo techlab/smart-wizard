@@ -112,7 +112,7 @@ All examples demonstrate:
 ### React
 ```tsx
 import { useRef } from 'react';
-import { useSmartWizard } from '@smartwizard/react';
+import { useSmartWizard } from '@smart-wizard/react';
 
 function MyWizard() {
   const wizardRef = useRef<HTMLDivElement>(null);
@@ -128,7 +128,7 @@ function MyWizard() {
 ```vue
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useSmartWizard } from '@smartwizard/vue';
+import { useSmartWizard } from '@smart-wizard/vue';
 
 const wizardRef = ref<HTMLElement | null>(null);
 const { stepInfo, next, prev } = useSmartWizard(wizardRef, {

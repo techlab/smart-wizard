@@ -23,17 +23,15 @@ A modern, framework-agnostic wizard/stepper component library built with TypeScr
 
 | Package | Description | Version |
 |---------|-------------|---------|
-| `@smartwizard/core` | Framework-agnostic core logic | 0.1.0 |
-| `@smartwizard/vanilla` | Vanilla JavaScript implementation | 0.1.0 |
-| `@smartwizard/react` | React bindings | 0.1.0 |
-| `@smartwizard/vue` | Vue 3 bindings | 0.1.0 |
-| `@smartwizard/extension-url-hash` | URL hash + browser history navigation | 0.1.0 |
-| `@smartwizard/extension-keyboard` | Keyboard arrow-key navigation | 0.1.0 |
-| `@smartwizard/extension-swipe` | Touch swipe navigation | 0.1.0 |
-| `@smartwizard/extension-auto-height` | Auto content-height adjustment | 0.1.0 |
+| `@smart-wizard/core` | Framework-agnostic core logic | 0.1.0 |
+| `@smart-wizard/vanilla` | Vanilla JavaScript implementation | 0.1.0 |
+| `@smart-wizard/react` | React bindings | 0.1.0 |
+| `@smart-wizard/vue` | Vue 3 bindings | 0.1.0 |
 
-
-## 🛠️ Development Setup
+| `@smart-wizard/extension-url-hash` | URL hash + browser history navigation | 0.1.0 |
+| `@smart-wizard/extension-keyboard` | Keyboard arrow-key navigation | 0.1.0 |
+| `@smart-wizard/extension-swipe` | Touch swipe navigation | 0.1.0 |
+| `@smart-wizard/extension-auto-height` | Auto content-height adjustment | 0.1.0 |
 
 ### Prerequisites
 
@@ -52,32 +50,6 @@ pnpm build
 # Development mode (watch mode)
 pnpm dev
 ```
-
-### Project Structure
-
-```
-smart-wizard/
-├── packages/
-│   ├── core/               # Framework-agnostic core logic
-│   ├── ui/                 # Themes and styles
-│   ├── vanilla/            # Vanilla JavaScript implementation
-│   ├── react/              # React bindings
-│   ├── vue/                # Vue 3 bindings
-│   └── extensions/         # Official opt-in extensions
-│       ├── url-hash/       # @smartwizard/extension-url-hash
-│       ├── keyboard/       # @smartwizard/extension-keyboard
-│       ├── swipe/          # @smartwizard/extension-swipe
-│       └── auto-height/    # @smartwizard/extension-auto-height
-├── examples/
-│   ├── vanilla/
-│   ├── react/
-│   └── vue/
-├── pnpm-workspace.yaml
-├── turbo.json
-└── tsconfig.base.json
-```
-
----
 
 ## 📖 Usage
 
@@ -125,7 +97,7 @@ Every SmartWizard instance requires this base structure. Class names are used to
 ```html
 <link rel="stylesheet" href="path/to/smartwizard.css">
 <script type="module">
-  import { SmartWizard } from '@smartwizard/core';
+  import { SmartWizard } from '@smart-wizard/core';
 
   const wizard = new SmartWizard('#wizard', {
     theme: 'default',
@@ -324,17 +296,17 @@ install only what you need.
 
 | Package | What it does |
 |---------|-------------|
-| `@smartwizard/extension-url-hash` | Syncs steps with `window.location.hash`; handles browser back/forward |
-| `@smartwizard/extension-keyboard` | Left / right arrow key navigation |
-| `@smartwizard/extension-swipe` | Horizontal touch swipe navigation |
-| `@smartwizard/extension-auto-height` | Adjusts content container height on step change and window resize |
+| `@smart-wizard/extension-url-hash` | Syncs steps with `window.location.hash`; handles browser back/forward |
+| `@smart-wizard/extension-keyboard` | Left / right arrow key navigation |
+| `@smart-wizard/extension-swipe` | Horizontal touch swipe navigation |
+| `@smart-wizard/extension-auto-height` | Adjusts content container height on step change and window resize |
 
 ```ts
-import { SmartWizard } from '@smartwizard/core';
-import { createUrlHashExtension }   from '@smartwizard/extension-url-hash';
-import { createKeyboardExtension }  from '@smartwizard/extension-keyboard';
-import { createSwipeExtension }     from '@smartwizard/extension-swipe';
-import { createAutoHeightExtension } from '@smartwizard/extension-auto-height';
+import { SmartWizard } from '@smart-wizard/core';
+import { createUrlHashExtension }   from '@smart-wizard/extension-url-hash';
+import { createKeyboardExtension }  from '@smart-wizard/extension-keyboard';
+import { createSwipeExtension }     from '@smart-wizard/extension-swipe';
+import { createAutoHeightExtension } from '@smart-wizard/extension-auto-height';
 
 const wizard = new SmartWizard('#wizard', options)
   .extend(
@@ -348,7 +320,7 @@ const wizard = new SmartWizard('#wizard', options)
 ### `WizardExtension` Interface
 
 ```typescript
-import type { WizardExtension } from '@smartwizard/core';
+import type { WizardExtension } from '@smart-wizard/core';
 
 const myExtension: WizardExtension = {
   name: 'my-extension',   // Required: unique identifier
@@ -367,7 +339,7 @@ const myExtension: WizardExtension = {
 ### Registration
 
 ```javascript
-import { SmartWizard } from '@smartwizard/core';
+import { SmartWizard } from '@smart-wizard/core';
 
 const wizard = new SmartWizard('#wizard', options)
   .extend(myExtension, anotherExtension);
@@ -436,7 +408,7 @@ const analyticsExtension = {
 Register your own transition effect with `registerTransition()`. Use it by setting `transition.effect` to your chosen name.
 
 ```javascript
-import { SmartWizard, registerTransition } from '@smartwizard/core';
+import { SmartWizard, registerTransition } from '@smart-wizard/core';
 
 registerTransition('flipX', (next, current, direction, wizard, done) => {
   const speed = wizard.options.transition.speed;
@@ -495,7 +467,7 @@ Custom themes can be created by targeting the `sw-theme-{name}` class on the roo
 
 ## 🔐 Security Notes
 
-- **XSS** — The extension API never accepts raw HTML. Use `setContent(el, string | Node)` (exported from `@smartwizard/core`) instead of `innerHTML` in your extensions.
+- **XSS** — The extension API never accepts raw HTML. Use `setContent(el, string | Node)` (exported from `@smart-wizard/core`) instead of `innerHTML` in your extensions.
 - **CSP** — The core uses no `eval` or dynamic script injection. Transition animations mutate inline `style` properties, so `style-src 'self'` is required in strict CSP environments.
 - **Prototype Pollution** — All internal merge operations guard against `__proto__`, `constructor`, and `prototype` keys.
 

@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import { WizardOptions } from '@smartwizard/core';
+import { WizardOptions } from '@smart-wizard/core';
 import { useSmartWizard } from './useSmartWizard';
 
 const props = defineProps<{
@@ -34,21 +34,3 @@ const props = defineProps<{
 
 const { state, next, previous, goToStep } = useSmartWizard(props.options);
 </script>
-
-<style scoped>
-.sw-wizard {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.sw-nav {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.sw-toolbar {
-  display: flex;
-  justify-content: space-between;
-}
-</style>

@@ -1,5 +1,5 @@
 import { ref, onMounted, onUnmounted, Ref } from 'vue';
-import { SmartWizard, WizardOptions, WizardInfo } from '@smartwizard/core';
+import { SmartWizard, WizardOptions, WizardInfo } from '@smart-wizard/core';
 
 export function useSmartWizard(
     containerRef: Ref<HTMLElement | null>,

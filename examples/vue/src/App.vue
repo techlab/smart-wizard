@@ -118,7 +118,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useSmartWizard } from '@smartwizard/vue';
+import { useSmartWizard } from '@smart-wizard/vue';
 
 const wizardRef = ref<HTMLElement | null>(null);
 const transitionType = ref('slideHorizontal');

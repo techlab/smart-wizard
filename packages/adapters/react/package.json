@@ -1,16 +1,16 @@
 {
-    "name": "@smartwizard/react",
+    "name": "@smart-wizard/react",
     "version": "0.1.0",
-    "description": "React bindings for SmartWizard",
+    "description": "React bindings for SmartWizard - modern, framework-agnostic wizard/stepper component",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsup src/index.ts --format cjs,esm --dts --external @smartwizard/core --external react",
+        "build": "tsup src/index.ts --format cjs,esm --dts --external @smart-wizard/core --external react",
         "dev": "tsup src/index.ts --format cjs,esm --watch"
     },
     "dependencies": {
-        "@smartwizard/core": "workspace:*"
+        "@smart-wizard/core": "workspace:*"
     },
     "peerDependencies": {
         "react": "^18.0.0"

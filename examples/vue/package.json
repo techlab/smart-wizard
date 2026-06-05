@@ -9,8 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@smartwizard/core": "workspace:*",
-        "@smartwizard/vue": "workspace:*",
+        "@smart-wizard/core": "workspace:*",
+        "@smart-wizard/vue": "workspace:*",
         "vue": "^3.4.0"
     },
     "devDependencies": {

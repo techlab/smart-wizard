@@ -9,8 +9,8 @@
         "preview": "vite preview"
     },
     "dependencies": {
-        "@smartwizard/core": "workspace:*",
-        "@smartwizard/react": "workspace:*",
+        "@smart-wizard/core": "workspace:*",
+        "@smart-wizard/react": "workspace:*",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     },

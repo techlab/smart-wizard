@@ -1,5 +1,5 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { WizardOptions } from '@smartwizard/core';
+import { WizardOptions } from '@smart-wizard/core';
 import { useSmartWizard } from './useSmartWizard';
 
 interface SmartWizardContextValue {

@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { useSmartWizard } from '@smartwizard/react';
+import { useSmartWizard } from '@smart-wizard/react';
 import './App.css';
 
 function App() {

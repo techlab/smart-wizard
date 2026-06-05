@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, RefObject } from 'react';
-import { SmartWizard, WizardOptions, WizardInfo } from '@smartwizard/core';
+import { SmartWizard, WizardOptions, WizardInfo } from '@smart-wizard/core';
 
 export function useSmartWizard(
     containerRef: RefObject<HTMLElement>,
