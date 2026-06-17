@@ -9,14 +9,14 @@
     },
     "exports": {
         ".": {
-            "import": "./dist/smartwizard.min.css",
-            "style": "./dist/smartwizard.min.css",
-            "default": "./dist/smartwizard.min.css"
+            "import": "./dist/smartwizard.css",
+            "style": "./dist/smartwizard.css",
+            "default": "./dist/smartwizard.css"
         },
         "./full": {
-            "import": "./dist/smartwizard-full.min.css",
-            "style": "./dist/smartwizard-full.min.css",
-            "default": "./dist/smartwizard-full.min.css"
+            "import": "./dist/smartwizard-full.css",
+            "style": "./dist/smartwizard-full.css",
+            "default": "./dist/smartwizard-full.css"
         },
         "./themes/*": {
             "import": "./dist/themes/*.css",

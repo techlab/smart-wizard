@@ -11,16 +11,12 @@ var displayMode;
  */
 function applyTheme(isDark) {
     document.body.dataset.uiTheme = isDark ? 'dark' : 'light';
-    if (typeof wizard1 !== 'undefined') {
-        wizard1.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
-    }
 
-    if (typeof wizard2 !== 'undefined') {
-        wizard2.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
-    }
-
-    if (typeof wizard3 !== 'undefined') {
-        wizard3.setOptions({ colorScheme: isDark ? 'dark' : 'light' });
+    const colorScheme = isDark ? 'dark' : 'light';
+    var wizardIndex = 1;
+    while (typeof window["wizard" + wizardIndex] !== 'undefined') {
+        window["wizard" + wizardIndex].setOptions({ colorScheme: colorScheme });
+        wizardIndex++;
     }
 }
 

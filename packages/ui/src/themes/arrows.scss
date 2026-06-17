@@ -14,11 +14,41 @@
     // Navigation style
     &>.sw-nav {
 
-        &>.sw-nav-item-group {
-            padding: 0 20px;
+        .sw-nav-item-group {
 
+            // Layout 1: When items are grouped
             &:last-of-type {
-                padding-right: 0;
+                .sw-nav-item:last-of-type {
+                    margin-right: 0;
+                    @include arrow-clip-last(20px);
+                }
+            }
+
+            // First item: no left chevron indent
+            &:first-of-type {
+                .sw-nav-item {
+
+                    &:first-of-type {
+                        margin-right: calc(-1 * var(--sw-arrow-tip));
+                        padding-left: 14px;
+                        @include arrow-clip-first(20px);
+                    }
+                }
+            }
+        }
+
+        // Layout 2: When items are flat/ungrouped at the root - Last item: no right arrow point
+        &>*:not(.sw-nav-item-group) {
+            &:last-of-type {
+                margin-right: 0;
+                @include arrow-clip-last(20px);
+            }
+
+            // First item: no left chevron indent
+            &:first-of-type {
+                margin-right: calc(-1 * var(--sw-arrow-tip));
+                padding-left: 14px;
+                @include arrow-clip-first(20px);
             }
         }
 
@@ -41,19 +71,6 @@
 
                 clip-path: none !important;
                 padding: 10px 14px !important;
-            }
-
-            // First item: no left chevron indent
-            &:first-of-type {
-                margin-right: calc(-1 * var(--sw-arrow-tip));
-                padding-left: 14px;
-                @include arrow-clip-first(20px);
-            }
-
-            // Last item: no right arrow point
-            &:last-of-type {
-                margin-right: 0;
-                @include arrow-clip-last(20px);
             }
 
             &:only-of-type {

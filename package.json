@@ -4,12 +4,12 @@
     "private": true,
     "description": "A modern, framework-agnostic wizard/stepper component",
     "scripts": {
-        "start": "turbo run dev --concurrency 12",
-        "dev": "turbo run dev --concurrency 12",
-        "dev:react": "turbo run dev --concurrency 12 --filter=@smart-wizard/react",
-        "dev:vanilla": "turbo run dev --concurrency 12 --filter=smartwizard-vanilla-example",
-        "dev:vue": "turbo run dev --concurrency 12 --filter=@smart-wizard/vue",
-        "dev:ui": "turbo run dev --concurrency 12 --filter=@smart-wizard/ui",
+        "start": "turbo run dev",
+        "dev": "turbo run dev",
+        "dev:react": "turbo run dev --filter=@smart-wizard/react",
+        "dev:vanilla": "turbo run dev --filter=smartwizard-vanilla-example --filter=@smart-wizard/ui",
+        "dev:vue": "turbo run dev --filter=@smart-wizard/vue",
+        "dev:ui": "turbo run dev --filter=@smart-wizard/ui",
         "build": "turbo run build",
         "lint": "turbo run lint",
         "test": "turbo run test"
