@@ -38,7 +38,9 @@ function initWizardControls(wizardElement) {
         });
 
         themeListControls.addEventListener('change', () => {
-            wizardElement.smartWizard('setOptions', { theme: themeListControls.value });
+            wizardElement.setOptions({
+                theme: themeListControls.value,
+            });
         });
     }
 
@@ -119,7 +121,7 @@ function initWizardControls(wizardElement) {
             const options = cssAnim
                 ? { transition: { effect: 'css', css: { ...cssAnim } } }
                 : { transition: { effect: transitionControls.value } };
-            wizardElement.smartWizard('setOptions', options);
+            wizardElement.setOptions(options);
         });
     }
 
@@ -149,34 +151,28 @@ function initWizardControls(wizardElement) {
                 colorListControls.querySelectorAll('[data-color]').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
                 if (key) {
-                    wizardElement.attr('data-color', key);
+                    wizardElement.setOptions({
+                        color: key
+                    });
                 } else {
-                    wizardElement.removeAttr('data-color');
+                    wizardElement.setOptions({
+                        color: ''
+                    });
                 }
             });
             colorListControls.appendChild(btn);
         });
     }
 
-    // ── Toolbar swicher
-    const toolbarSelect = document.getElementById('toolbar-select');
-    if (toolbarSelect) {
-        toolbarSelect.addEventListener('change', () => {
-            if (toolbarSelect.value) {
-                wizardElement.smartWizard('setOptions', { toolbar: { position: toolbarSelect.value } });
-            }
-        });
-    }
-
     // ── Step infor
-    const swCur = document.getElementById('sw-cur');
-    const swTotal = document.getElementById('sw-total');
-    if (swCur && swTotal) {
-        // Step show event
-        wizardElement.on("shown.sw", function (e, args) {
-            swCur.textContent = args.stepIndex + 1;
-            swTotal.textContent = wizardElement.smartWizard('getStepInfo').totalSteps;
-        });
-    }
+    // const swCur = document.getElementById('sw-cur');
+    // const swTotal = document.getElementById('sw-total');
+    // if (swCur && swTotal) {
+    //     // Step show event
+    //     wizardElement.on("shown.sw", function (e, args) {
+    //         swCur.textContent = args.stepIndex + 1;
+    //         swTotal.textContent = wizardElement.smartWizard('getStepInfo').totalSteps;
+    //     });
+    // }
 
 }

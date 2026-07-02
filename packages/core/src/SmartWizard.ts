@@ -541,8 +541,8 @@ export class SmartWizard implements WizardInterface {
         return this._activeIndex >= 0 ? this._activeIndex : 0;
     }
 
-    /** Total number of steps */
-    get totalSteps(): number {
+    /** Length of the steps */
+    get stepLength(): number {
         return this.stepItems.length;
     }
 
