@@ -24,20 +24,20 @@ export function useSmartWizard(
         // Listen to step changes
         const handleStepChange = () => {
             if (wizardRef.current) {
-                setInfo(wizardRef.current.getInfo());
+                setInfo(wizardRef.current.info);
             }
         };
 
-        containerRef.current.addEventListener('showStep', handleStepChange);
-        containerRef.current.addEventListener('initialized', handleStepChange);
+        wizardRef.current.on('showStep', handleStepChange);
+        wizardRef.current.on('initialized', handleStepChange);
 
         // Initial update
         handleStepChange();
 
         return () => {
-            if (containerRef.current) {
-                containerRef.current.removeEventListener('showStep', handleStepChange);
-                containerRef.current.removeEventListener('initialized', handleStepChange);
+            if (wizardRef.current) {
+                wizardRef.current.off('showStep', handleStepChange);
+                wizardRef.current.off('initialized', handleStepChange);
             }
         };
     }, [containerRef, options]);
@@ -46,7 +46,7 @@ export function useSmartWizard(
         info,
         next: () => wizardRef.current?.next(),
         prev: () => wizardRef.current?.prev(),
-        goToStep: (index: number, force?: boolean) => wizardRef.current?.goToStep(index, force),
+        goTo: (index: number, force?: boolean) => wizardRef.current?.goTo(index, { 'force': force }),
         reset: () => wizardRef.current?.reset(),
         wizard: wizardRef.current,
     };

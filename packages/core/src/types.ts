@@ -120,7 +120,7 @@ export interface WizardInterface {
     // ── State ────────────────────────────────────────────────────────────
     readonly options: WizardOptions;
     readonly stepItems: StepItem[];
-    readonly currentIndex: number;
+    readonly activeIndex: number;
 
     // ── Root elements ────────────────────────────────────────────────────
     readonly main: HTMLElement;
@@ -129,7 +129,7 @@ export interface WizardInterface {
     // ── Navigation ───────────────────────────────────────────────────────
     next(): void;
     prev(): void;
-    goToStep(stepIndex: number, force?: boolean): void;
+    goTo(stepIndex: number, options?: { force?: boolean }): void;
     reset(): void;
 
     // ── Step state management ─────────────────────────────────────────────
@@ -137,13 +137,12 @@ export interface WizardInterface {
     unsetState(stepArray: number[], state: string): void;
 
     // ── Layout ───────────────────────────────────────────────────────────
-    resetHeight(): void;
-    getWidth(): number;
-    getHeight(): number;
+    readonly width: number;
+    readonly height: number;
+    updateHeight(): void;
 
     // ── Info ─────────────────────────────────────────────────────────────
-    getOptions(): WizardOptions;
-    getInfo(): WizardInfo;
+    readonly info: WizardInfo;
 
     // ── Loader ───────────────────────────────────────────────────────────
     loader(state: 'show' | 'hide'): void;
@@ -181,7 +180,7 @@ export interface ExtensionBeforeShowArgs {
     /** Index of the step about to be shown. */
     stepIdx: number;
     /** Index of the step that is currently active (-1 on initial load). */
-    currentIdx: number;
+    activeIndex: number;
     /** Direction of the navigation. */
     direction: StepDirection;
 }
@@ -234,8 +233,8 @@ export interface WizardExtension {
      * Return `false` or `Promise<false>` to **cancel** the navigation.
      *
      * @example Async validation
-     * async onBeforeShow(wizard, { stepIdx, currentIdx }) {
-     *   const ok = await myApi.validateStep(currentIdx);
+     * async onBeforeShow(wizard, { stepIdx, activeIndex }) {
+     *   const ok = await myApi.validateStep(activeIndex);
      *   if (!ok) return false;
      * }
      */

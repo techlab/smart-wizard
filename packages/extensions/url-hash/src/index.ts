@@ -56,13 +56,13 @@ export function createUrlHashExtension(options: UrlHashOptions = {}): WizardExte
     return {
         name: 'url-hash',
 
-        onLoad(wizard) {
+        onLoad(wizard: WizardInterface) {
             // On first load, jump to the hash-targeted step if the URL has one.
             const hash = window.location.hash;
             if (hash) {
                 const idx = findStepByHash(wizard, hash);
-                if (idx !== null && idx !== wizard.currentIndex) {
-                    wizard.goToStep(idx);
+                if (idx !== null && idx !== wizard.activeIndex) {
+                    wizard.goTo(idx);
                 }
             }
 
@@ -74,8 +74,8 @@ export function createUrlHashExtension(options: UrlHashOptions = {}): WizardExte
                 const h = window.location.hash;
                 if (!h) return;
                 const i = findStepByHash(wizard, h);
-                if (i !== null && i !== wizard.currentIndex) {
-                    wizard.goToStep(i);
+                if (i !== null && i !== wizard.activeIndex) {
+                    wizard.goTo(i);
                 }
             };
 

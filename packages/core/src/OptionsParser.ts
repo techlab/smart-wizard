@@ -1,4 +1,4 @@
-import { WizardOptions, WizardLayout } from './types';
+import { WizardOptions, WizardLayout, ColorScheme } from './types';
 import { mergeOptions } from './util';
 import { defaultOptions } from './options';
 import { DATA_ATTRIBUTES, LAYOUT } from './constants';
@@ -36,6 +36,9 @@ export class OptionsParser {
 
         const theme = el.getAttribute(DATA_ATTRIBUTES.THEME);
         if (theme !== null) overrides.theme = theme;
+
+        const colorScheme = el.getAttribute(DATA_ATTRIBUTES.COLOR_SCHEME);
+        if (colorScheme !== null) overrides.colorScheme = colorScheme as ColorScheme;
 
         const color = el.getAttribute(DATA_ATTRIBUTES.COLOR);
         if (color !== null) overrides.color = color;

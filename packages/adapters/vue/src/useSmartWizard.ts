@@ -17,7 +17,7 @@ export function useSmartWizard(
 
     const handleStepChange = () => {
         if (wizard.value) {
-            info.value = wizard.value.getInfo();
+            info.value = wizard.value.info;
         }
     };
 
@@ -26,17 +26,17 @@ export function useSmartWizard(
 
         wizard.value = new SmartWizard(containerRef.value, options);
 
-        containerRef.value.addEventListener('showStep', handleStepChange);
-        containerRef.value.addEventListener('initialized', handleStepChange);
+        wizard.value.on('showStep', handleStepChange);
+        wizard.value.on('initialized', handleStepChange);
 
         // Initial update
         handleStepChange();
     });
 
     onUnmounted(() => {
-        if (containerRef.value) {
-            containerRef.value.removeEventListener('showStep', handleStepChange);
-            containerRef.value.removeEventListener('initialized', handleStepChange);
+        if (wizard.value) {
+            wizard.value.off('showStep', handleStepChange);
+            wizard.value.off('initialized', handleStepChange);
         }
     });
 
@@ -44,7 +44,7 @@ export function useSmartWizard(
         info,
         next: () => wizard.value?.next(),
         prev: () => wizard.value?.prev(),
-        goToStep: (index: number, force?: boolean) => wizard.value?.goToStep(index, force),
+        goTo: (index: number, force?: boolean) => wizard.value?.goTo(index, { 'force': force }),
         reset: () => wizard.value?.reset(),
         wizard,
     };

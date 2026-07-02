@@ -1,21 +1,21 @@
 function initWizardControls(wizardElement) {
 
     // External Button Events
-    $("#btn-reset").on("click", function () {
+    document.getElementById('btn-reset').addEventListener('click', (e) => {
         // Reset wizard
-        wizardElement.smartWizard("reset");
+        wizardElement.reset();
         return true;
     });
 
-    $("#btn-prev").on("click", function () {
+    document.getElementById('btn-prev').addEventListener('click', (e) => {
         // Navigate previous
-        wizardElement.smartWizard("prev");
+        wizardElement.prev();
         return true;
     });
 
-    $("#btn-next").on("click", function () {
+    document.getElementById('btn-next').addEventListener('click', (e) => {
         // Navigate next
-        wizardElement.smartWizard("next");
+        wizardElement.next();
         return true;
     });
 
