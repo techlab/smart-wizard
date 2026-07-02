@@ -1,23 +1,26 @@
-import React, { createContext, useContext, ReactNode } from 'react';
-import { WizardOptions } from '@smart-wizard/core';
+import React, { createContext, useContext, ReactNode, useRef } from 'react';
+import { WizardOptions, WizardInfo, SmartWizard } from '@smart-wizard/core';
 import { useSmartWizard } from './useSmartWizard';
 
 interface SmartWizardContextValue {
-    state: any;
+    info: WizardInfo;
     next: () => void;
-    previous: () => void;
-    goToStep: (index: number) => void;
+    prev: () => void;
+    goTo: (index: number, force?: boolean) => void;
+    reset: () => void;
+    wizard: SmartWizard | null;
 }
 
 const SmartWizardContext = createContext<SmartWizardContextValue | null>(null);
 
 interface SmartWizardProviderProps {
-    options: WizardOptions;
+    containerRef: React.RefObject<HTMLElement>;
+    options: Partial<WizardOptions>;
     children: ReactNode;
 }
 
-export function SmartWizardProvider({ options, children }: SmartWizardProviderProps) {
-    const wizard = useSmartWizard(options);
+export function SmartWizardProvider({ containerRef, options, children }: SmartWizardProviderProps) {
+    const wizard = useSmartWizard(containerRef, options);
 
     return (
         <SmartWizardContext.Provider value={wizard}>

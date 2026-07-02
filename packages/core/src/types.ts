@@ -111,6 +111,77 @@ export interface StepItem {
     page: HTMLElement;
 }
 
+// ─── Step Fluent API Interfaces ───────────────────────────────────────────────
+
+/**
+ * Contract for a single wizard step wrapper.
+ * Implemented by `WizardStep`. Declared here to avoid circular imports
+ * between `types.ts` ↔ `WizardStep.ts`.
+ */
+export interface IWizardStep {
+    /** Zero-based index of this step. */
+    readonly index: number;
+    /** The nav anchor `<a>` / `<button>` element. */
+    readonly element: HTMLElement;
+    /** The content panel element. */
+    readonly page: HTMLElement;
+
+    // ── State queries ──────────────────────────────────────────────────────
+    /** Returns `true` if the given state class is applied. */
+    hasState(state: StepState): boolean;
+    /** Returns `true` if this is the currently active step. */
+    isActive(): boolean;
+    /** Returns `true` if the step has the `disabled` state. */
+    isDisabled(): boolean;
+    /** Returns `true` if the step has the `completed` state. */
+    isCompleted(): boolean;
+    /** Returns `true` if the step has the `hidden` state. */
+    isHidden(): boolean;
+
+    // ── State mutations (all return `this` for fluent chaining) ────────────
+    state(s: StepState): this;
+    removeState(s: StepState): this;
+    /** Remove **all** state classes from this step. */
+    reset(): this;
+    disable(): this;
+    enable(): this;
+    complete(): this;
+    warning(): this;
+    error(): this;
+    show(): this;
+    hide(): this;
+}
+
+/**
+ * Contract for a collection of wizard steps supporting bulk operations.
+ * Implemented by `WizardStepCollection`.
+ */
+export interface IWizardStepCollection {
+    /** Number of steps in the collection. */
+    readonly length: number;
+
+    // ── Bulk state mutations (all return `this` for fluent chaining) ───────
+    state(s: StepState): this;
+    removeState(s: StepState): this;
+    /** Clear all state classes from every step in the collection. */
+    reset(): this;
+    disable(): this;
+    enable(): this;
+    complete(): this;
+    warning(): this;
+    error(): this;
+    show(): this;
+    hide(): this;
+}
+
+/** Controls the wizard's loading overlay. */
+export interface WizardLoader {
+    /** Show the loading overlay (`sw-loading` class on the root element). */
+    show(): void;
+    /** Hide the loading overlay. */
+    hide(): void;
+}
+
 /**
  * The public API surface that extensions receive in every hook.
  * Extension packages should depend on this interface rather than
@@ -121,6 +192,14 @@ export interface WizardInterface {
     readonly options: WizardOptions;
     readonly stepItems: StepItem[];
     readonly activeIndex: number;
+    /** The currently active step as a `WizardStep` object. */
+    readonly activeStep: IWizardStep;
+    /** Current progress as a percentage (0–100). 0% on the first step, 100% on the last. */
+    readonly progress: number;
+    /** `true` if there is a showable step after the current one. */
+    readonly canGoNext: boolean;
+    /** `true` if there is a showable step before the current one. */
+    readonly canGoPrev: boolean;
 
     // ── Root elements ────────────────────────────────────────────────────
     readonly main: HTMLElement;
@@ -132,9 +211,19 @@ export interface WizardInterface {
     goTo(stepIndex: number, options?: { force?: boolean }): void;
     reset(): void;
 
-    // ── Step state management ─────────────────────────────────────────────
-    setState(stepArray: number[], state: string): void;
-    unsetState(stepArray: number[], state: string): void;
+    // ── Step fluent API ───────────────────────────────────────────────────
+    /**
+     * Return a `WizardStep` wrapper for the step at the given index.
+     * @example wizard.step(2).disable();
+     */
+    step(index: number): IWizardStep;
+    /**
+     * Return a `WizardStepCollection` for the given indices, or **all** steps
+     * if no indices are provided.
+     * @example wizard.steps([1, 2, 3]).disable();
+     * @example wizard.steps().reset();
+     */
+    steps(indexes?: number[]): IWizardStepCollection;
 
     // ── Layout ───────────────────────────────────────────────────────────
     readonly width: number;
@@ -145,7 +234,8 @@ export interface WizardInterface {
     readonly info: WizardInfo;
 
     // ── Loader ───────────────────────────────────────────────────────────
-    loader(state: 'show' | 'hide'): void;
+    /** Controls the wizard loading overlay. */
+    readonly loader: WizardLoader;
 }
 
 export interface StepInfo {

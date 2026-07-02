@@ -2,7 +2,7 @@ import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
     ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, WizardInfo, TransitionHandler, StepItem,
     WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
-    EventCallback, StepState
+    EventCallback, StepState, IWizardStep, IWizardStepCollection, WizardLoader
 } from './types';
 import { transitions } from './transitions';
 import {
@@ -19,6 +19,8 @@ import { StepStateManager } from './StepStateManager';
 import { OptionsParser } from './OptionsParser';
 import { ProgressBar } from './ProgressBar';
 import { StepNavigator } from './StepNavigator';
+import { WizardStep } from './WizardStep';
+import { WizardStepCollection } from './WizardStepCollection';
 import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION } from './constants';
 
 export class SmartWizard implements WizardInterface {
@@ -546,6 +548,59 @@ export class SmartWizard implements WizardInterface {
         return this.stepItems.length;
     }
 
+    // ─── Step Fluent API ──────────────────────────────────────────────────────
+
+    /**
+     * Return a `WizardStep` wrapper for the step at the given index.
+     * @example wizard.step(2).disable();
+     * @example wizard.step(0).complete().show();
+     */
+    public step(index: number): WizardStep {
+        const item = this.stepItems[index];
+        if (!item) throw new Error(`SmartWizard: Step index ${index} is out of range (0–${this.stepItems.length - 1}).`);
+        return new WizardStep(index, item, () => this._activeIndex);
+    }
+
+    /**
+     * Return a `WizardStepCollection` for the given indices.
+     * When called with no arguments, wraps **all** steps.
+     * @example wizard.steps([1, 2, 3]).disable();
+     * @example wizard.steps().reset();
+     */
+    public steps(indexes?: number[]): WizardStepCollection {
+        const wizardSteps = indexes
+            ? indexes.map(i => this.step(i))
+            : this.stepItems.map((_, i) => this.step(i));
+        return new WizardStepCollection(wizardSteps);
+    }
+
+    /** The currently active step as a `WizardStep` object. */
+    get activeStep(): WizardStep {
+        const idx = this._activeIndex >= 0 ? this._activeIndex : 0;
+        return this.step(idx);
+    }
+
+    /**
+     * Current progress as a percentage (0–100).
+     * 0% on the first step, 100% on the last step.
+     */
+    get progress(): number {
+        const total = this.stepItems.length;
+        if (total <= 1) return 100;
+        const idx = this._activeIndex >= 0 ? this._activeIndex : 0;
+        return Math.round((idx / (total - 1)) * 100);
+    }
+
+    /** `true` if there is a showable step after the current one. */
+    get canGoNext(): boolean {
+        return this.navigator.nextShowable(this._activeIndex, STEP_DIRECTION.FORWARD) !== null;
+    }
+
+    /** `true` if there is a showable step before the current one. */
+    get canGoPrev(): boolean {
+        return this.navigator.nextShowable(this._activeIndex, STEP_DIRECTION.BACKWARD) !== null;
+    }
+
     /** Configuration */
     get options(): Readonly<WizardOptions> {
         return this._options;
@@ -617,13 +672,6 @@ export class SmartWizard implements WizardInterface {
         this.load();
     }
 
-    public setState(stepArray: number[], state: StepState): void {
-        this.stateManager.setState(stepArray, state);
-    }
-
-    public unsetState(stepArray: number[], state: StepState): void {
-        this.stateManager.unsetState(stepArray, state);
-    }
 
     public setOptions(options: Partial<WizardOptions>): void {
         this._options = OptionsParser.parse(this.main, { ...this._options, ...options });
@@ -635,12 +683,19 @@ export class SmartWizard implements WizardInterface {
         return this._options;
     }
 
-    public loader(state: 'show' | 'hide'): void {
-        if (state === 'show') {
-            addClass(STYLES.LOADER, this.main);
-        } else {
-            removeClass(STYLES.LOADER, this.main);
-        }
+    /**
+     * Controls the wizard loading overlay.
+     *
+     * @example
+     * wizard.loader.show();
+     * // ... async work ...
+     * wizard.loader.hide();
+     */
+    get loader(): WizardLoader {
+        return {
+            show: () => addClass(STYLES.LOADER, this.main),
+            hide: () => removeClass(STYLES.LOADER, this.main),
+        };
     }
 
     public updateHeight(): void {
