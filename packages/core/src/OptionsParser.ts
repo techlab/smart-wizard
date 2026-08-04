@@ -12,14 +12,16 @@ export class OptionsParser {
      * Produce a fully-resolved `WizardOptions` object.
      * Priority (highest wins): data attributes > caller options > defaults.
      */
-    static parse(el: HTMLElement, supplied?: Partial<WizardOptions>): WizardOptions {
+    static parse(el: HTMLElement, supplied?: Partial<WizardOptions>, loadAttr: boolean = true): WizardOptions {
         // Start from a fully isolated copy of defaults — never mutate the shared defaultOptions object.
         const base = structuredClone(defaultOptions) as WizardOptions;
         let opts = mergeOptions(base, supplied ?? {});
 
-        const overrides = OptionsParser.fromAttributes(el, opts);
-        if (Object.keys(overrides).length > 0) {
-            opts = mergeOptions(opts, overrides);
+        if (loadAttr === true) {
+            const overrides = OptionsParser.fromAttributes(el, opts);
+            if (Object.keys(overrides).length > 0) {
+                opts = mergeOptions(opts, overrides);
+            }
         }
 
         return opts;

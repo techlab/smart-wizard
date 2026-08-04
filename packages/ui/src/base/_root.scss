@@ -1,184 +1,104 @@
 // Root CSS variables used for theming and color customization
 
+// Component Tokens
+// --sw-step-bg
+// --sw-step-border
+// --sw-step-active-bg
+// --sw-step-active-border
+// --sw-step-active-text
+
+// --sw-toolbar-bg
+// --sw-progress-fill
+// --sw-button-bg
+// --sw-button-text
+// --sw-input-border
+
 :root {
-    // ─────────────────────────────────────────────
-    // 1. BRAND COLORS
-    // ─────────────────────────────────────────────
-    --sw-primary: #51a2ff;
-    --sw-primary-light: #eff6ff;
-    --sw-primary-dark: #1447e6;
-    --sw-primary-contrast: #ffffff;
+    // SURFACE COLORS
 
-    --sw-secondary: #2ecc71;
-    --sw-secondary-light: #e8f5e9;
-    --sw-secondary-dark: #27ae60;
-    --sw-secondary-contrast: #ffffff;
+    /* Backgrounds */
+    --sw-bg: #ffffff;
+    --sw-surface: #f8fafc;
+    --sw-surface-hover: #f1f5f9;
 
-    // ─────────────────────────────────────────────
-    // 2. FUNCTIONAL COLORS
-    // ─────────────────────────────────────────────
-    --sw-success: #00c951;
-    --sw-success-light: #f0fdf4;
-    --sw-success-dark: #008236;
-    --sw-warning: #ffc107;
-    --sw-warning-light: #fefce8;
-    --sw-warning-dark: #d08700;
-    --sw-info: #c27aff;
-    --sw-info-light: #faf5ff;
-    --sw-info-dark: #8200db;
-    --sw-error: #e7000b;
-    --sw-error-light: #f8d7da;
-    --sw-error-dark: #c10007;
+    /* Borders */
+    --sw-border: #dfe3ea;
 
-    // ─────────────────────────────────────────────
-    // 3. NEUTRALS & SURFACES
-    // ─────────────────────────────────────────────
-    --sw-white: #ffffff;
-    --sw-black: #000000;
+    /* Text */
+    --sw-text: #111827;
+    --sw-text-muted: #6b7280;
+    --sw-text-disabled: #9ca3af;
 
-    --sw-gray-100: #f8f9fa;
-    --sw-gray-200: #e9ecef;
-    --sw-gray-300: #dee2e6;
-    --sw-gray-400: #ced4da;
-    --sw-gray-500: #adb5bd;
-    --sw-gray-600: #6c757d;
-    --sw-gray-700: #495057;
-    --sw-gray-800: #343a40;
-    --sw-gray-900: #212529;
+    // PRIMARY THEME
+    --sw-primary: #6366f1;
+    --sw-primary-hover: #5558e8;
+    --sw-primary-active: #4548d8;
 
-    --sw-bg: #f4f6fb;
-    --sw-surface: #ffffff;
-    --sw-border: #e4e7f0;
+    --sw-on-primary: #ffffff;
 
-    // ─────────────────────────────────────────────
-    // 4. TEXT COLORS
-    // ─────────────────────────────────────────────
-    --sw-text-primary: #0a0f1e;
-    --sw-text-secondary: #4a5168;
-    --sw-text-tertiary: #8b92a9;
-    --sw-text-disabled: #adb5bd;
-
-    // ─────────────────────────────────────────────
-    // 5. GLOBAL PROPERTIES
-    // ─────────────────────────────────────────────
-    --sw-border-radius: 0.5rem;
-    --sw-border-radius-lg: 0.75rem;
-    --sw-border-width: 1px;
-
-    --sw-shadow-sm: 0 1px 4px rgba(0, 0, 0, .06), 0 0 0 1px rgba(0, 0, 0, .04);
-    --sw-shadow-md: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
-    --sw-shadow-lg: 0 12px 40px rgba(0, 0, 0, .12);
-
-    --sw-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-    // Focus Ring
-    --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
-    --sw-focus-ring-width: 3px;
-
-    --sw-badge-default-bg: var(--sw-gray-200);
-    --sw-btn-default-bg: var(--sw-white);
+    // SEMANTIC COLORS
+    --sw-success: #22c55e;
+    --sw-warning: #f59e0b;
+    --sw-danger: #ef4444;
+    --sw-info: #0ea5e9;
 }
 
 // ─────────────────────────────────────────────
 // DARK MODE
 // ─────────────────────────────────────────────
 [data-color-scheme="dark"] {
-    --sw-bg: #121212;
-    --sw-surface: #1e1e1e;
-    --sw-border: #2e2e2e;
+    // SURFACE COLORS
+    --sw-bg: #11151d;
+    --sw-surface: #1b2130;
+    --sw-surface-hover: #252c3d;
 
-    --sw-text-primary: #f8f9fa;
-    --sw-text-secondary: #dee2e6;
-    --sw-text-tertiary: #adb5bd;
+    --sw-border: #31384b;
 
-    --sw-gray-100: #1e1e1e;
-    --sw-gray-200: #2e2e2e;
-    --sw-gray-300: #3e3e3e;
-
-    --sw-nav-bg: #181818;
-
-    --sw-loader-bg: rgba(18, 18, 18, 0.7);
-
-    --sw-focus-ring-color: rgba(52, 152, 219, 0.6);
-
-    //---------------------------------------------
-    // Surface
-    --sw-border-color: #2e2e2e;
-    --sw-surface: #181818;
-    --sw-border: #2e2e2e;
-    --sw-shadow: 0 2px 14px rgba(0, 0, 0, .6);
-
-    // Content
-    --sw-content-bg: #1e1e1e;
-    --sw-content-text: #d8d8d8;
-
-    // Brand
-    --sw-accent: #42a5f5;
-    --sw-accent-dark: #1e88e5;
-    --sw-accent-light: #64b5f6;
-    --sw-accent-text: #ffffff;
-
-    // Loader
-    --sw-loader-color: #42a5f5;
-    --sw-loader-background-color: #1e1e1e;
-    --sw-loader-background-wrapper-color: rgba(24, 24, 24, 0.7);
-
-    // Progress
-    --sw-progress-color: #42a5f5;
-    --sw-progress-background-color: #2a2a2a;
-
-    // Progress connector line
-    --sw-connector-color: #3a3a3a;
-
-    // Toolbar
-    --sw-toolbar-btn-color: #ffffff;
-    --sw-toolbar-btn-background-color: #1e88e5;
-
-    // Buttons
-    --sw-btn-secondary-bg: #2a2a2a;
-    --sw-btn-secondary-text: #d8d8d8;
-    --sw-btn-default-bg: var(--sw-gray-200);
-
-    // Navigation — default steps
-    --sw-nav-default-text: #666666;
-    --sw-nav-default-bg: #2a2a2a;
-    --sw-nav-default-badge-text: #777777;
-    --sw-nav-default-badge-bg: #383838;
-
-    // Navigation — active step
-    --sw-nav-active-text: #ffffff;
-    --sw-nav-active-bg: #1e88e5;
-    --sw-nav-active-badge-text: #1e88e5;
-    --sw-nav-active-badge-bg: #ffffff;
-    --sw-badge-default-bg: var(--sw-gray-300);
-
-    // Navigation — completed steps
-    --sw-nav-completed-text: #bbbbbb;
-    --sw-nav-completed-bg: #2d4a6b;
-    --sw-nav-completed-badge-text: #64b5f6;
-    --sw-nav-completed-badge-bg: #1e2e3e;
-
-    // Navigation — error steps
-    --sw-nav-error-text: #ffffff;
-    --sw-nav-error-bg: #c62828;
-    --sw-nav-error-badge-text: #ef5350;
-    --sw-nav-error-badge-bg: #2a1a1a;
-
-    // Navigation — warning steps
-    --sw-nav-warning-text: #ffffff;
-    --sw-nav-warning-bg: #e65100;
-    --sw-nav-warning-badge-text: #ffa726;
-    --sw-nav-warning-badge-bg: #2a1f10;
+    --sw-text: #f8fafc;
+    --sw-text-muted: #9ca3af;
+    --sw-text-disabled: #5f6778;
 }
 
 /* Smart Wizard Variables */
 .sw {
-    --sw-text-on-primary: var(--sw-white);
+    // ============================================
+    // STEP STATE VARIABLES
+    --sw-step-bg: transparent;
+    --sw-step-border: var(--sw-border);
+    --sw-step-text: var(--sw-text-muted);
+
+    --sw-step-active-bg: color-mix(in srgb, var(--sw-primary) 12%, transparent);
+    --sw-step-active-border: var(--sw-primary);
+    --sw-step-active-text: var(--sw-text);
+
+    --sw-step-complete-bg: color-mix(in srgb, var(--sw-primary) 18%, transparent);
+    --sw-step-complete-border: var(--sw-primary);
+    --sw-step-complete-text: var(--sw-text);
+
+    --sw-step-disabled-opacity: .45;
+
+    // FORM CONTROLS
+    --sw-input-bg: var(--sw-surface);
+    --sw-input-border: var(--sw-border);
+    --sw-input-focus: var(--sw-primary);
+
+    // BUTTONS
+    --sw-button-bg: var(--sw-primary);
+    --sw-button-text: var(--sw-on-primary);
+
+    --sw-button-secondary-bg: var(--sw-surface);
+    --sw-button-secondary-text: var(--sw-text);
+
+    // Progress
+    --sw-progress-bg: var(--sw-border);
+    --sw-progress-fill: var(--sw-primary);
+
+    // ============================================
 
     // Wizard Container
-    --sw-wizard-bg: var(--sw-surface);
+    --sw-wizard-bg: var(--sw-bg);
     --sw-wizard-border: var(--sw-border);
-    --sw-wizard-shadow: var(--sw-shadow-md);
+    --sw-wizard-shadow: var(--sw-shadow);
     --sw-wizard-radius: var(--sw-border-radius);
 
     // Navigation
@@ -190,7 +110,7 @@
     --sw-nav-item-default-bg: transparent;
     --sw-nav-item-default-text: var(--sw-text-tertiary);
     --sw-nav-item-active-bg: var(--sw-primary);
-    --sw-nav-item-active-text: var(--sw-primary-contrast);
+    --sw-nav-item-active-text: var(--sw-on-primary);
     --sw-nav-item-completed-bg: var(--sw-primary-light);
     --sw-nav-item-completed-text: var(--sw-primary);
 
@@ -229,11 +149,36 @@
     --sw-loader-color: var(--sw-primary);
     --sw-loader-bg: rgba(255, 255, 255, 0.7);
 
-    // Progress
-    --sw-progress-bg: var(--sw-gray-200);
-    --sw-progress-fill: var(--sw-primary);
-
     // Connector Line
     --sw-connector-color: var(--sw-border);
     --sw-connector-height: 2px;
+
+    // GLOBAL PROPERTIES
+    --sw-border-radius: 0.8rem;
+    --sw-border-radius-lg: 0.75rem;
+    --sw-border-width: 1px;
+
+    --sw-shadow: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+
+    --sw-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    // Focus Ring
+    --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
+    --sw-focus-ring-width: 3px;
+
+    --sw-badge-default-bg: var(--sw-gray-200);
+    --sw-btn-default-bg: var(--sw-white);
 }
+
+
+// .theme-green{
+//     --sw-primary:#16a34a;
+//     --sw-primary-hover:#15803d;
+//     --sw-primary-active:#166534;
+// }
+
+// .theme-purple{
+//     --sw-primary:#7c3aed;
+//     --sw-primary-hover:#6d28d9;
+//     --sw-primary-active:#5b21b6;
+// }

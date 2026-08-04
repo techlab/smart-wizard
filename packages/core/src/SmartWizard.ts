@@ -674,7 +674,7 @@ export class SmartWizard implements WizardInterface {
 
 
     public setOptions(options: Partial<WizardOptions>): void {
-        this._options = OptionsParser.parse(this.main, { ...this._options, ...options });
+        this._options = OptionsParser.parse(this.main, { ...this._options, ...options }, false);
         this.init();
         this.load();
     }

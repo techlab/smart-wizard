@@ -27,12 +27,12 @@
   </header>
 
   <!-- Controls bar -->
-  <div class="demo-controls">
+  <div class="demo-controls wizard-control-panel" data-wizard-id="wizard1">
 
     <div class="demo-control-wrapper">
       <div class="control-group">
         <label class="control-label" for="theme-select">Theme:</label>
-        <select class="ctrl-select" id="theme-select">
+        <select class="ctrl-select theme-select" id="theme-select">
         </select>
       </div>
 
@@ -40,7 +40,7 @@
 
       <div class="control-group">
         <label class="control-label" for="transition-select">Animation:</label>
-        <select class="ctrl-select" id="transition-select">
+        <select class="ctrl-select transition-select" id="transition-select">
         </select>
       </div>
 
@@ -49,10 +49,10 @@
       <div class="control-group">
         <span class="control-label">Color:</span>
         <div class="btn-group" id="color-list">
-          <div class="theme-btn active" data-theme="default" title="Blue (Default)" onclick="setTheme(this, '')"></div>
-          <div class="theme-btn" data-theme="dark" title="Dark" onclick="setTheme(this, 'theme-dark')"></div>
-          <div class="theme-btn" data-theme="neon" title="Neon Purple" onclick="setTheme(this, 'theme-neon')"></div>
-          <div class="theme-btn" data-theme="warm" title="Warm Earthy" onclick="setTheme(this, 'theme-warm')"></div>
+          <div class="theme-btn active" data-theme="default" title="Blue (Default)"></div>
+          <div class="theme-btn" data-theme="dark" title="Dark"></div>
+          <div class="theme-btn" data-theme="neon" title="Neon Purple"></div>
+          <div class="theme-btn" data-theme="warm" title="Warm Earthy"></div>
         </div>
       </div>
 
@@ -62,9 +62,9 @@
         <label class="control-label" for="toolbar-select">External Controls:</label>
         <!-- External controls -->
         <div class="btn-group">
-          <button class="btn" id="btn-prev">← Prev</button>
-          <button class="btn" id="btn-next">Next →</button>
-          <button class="btn" id="btn-reset">↺ Reset</button>
+          <button class="btn btn-prev">← Prev</button>
+          <button class="btn btn-next">Next →</button>
+          <button class="btn btn-reset">↺ Reset</button>
         </div>
       </div>
     </div>
@@ -80,8 +80,8 @@
       <div class="section-desc">All steps visible simultaneously. Numbers + labels + connectors.</div>
 
       <!-- WIZARD -->
-      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="basic" data-nav="classic"
-        data-progress="segmented" data-start-step="0" role="region" aria-label="Setup Wizard">
+      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-color="forest"
+        data-start-step="0" role="region" aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
         <div class="sw-toolbar sw-toolbar-top">
@@ -334,7 +334,7 @@
           <div class="sw-nav-item-group">
             <span class="sw-group-header">Group B</span>
 
-            <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-3">
+            <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-3">
               <div class="badge">3</div>
               <div class="info">
                 <span class="title">Payment</span>
@@ -342,7 +342,7 @@
               </div>
             </div>
 
-            <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-4">
+            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-4">
               <div class="badge">4</div>
               <div class="info">
                 <span class="title">Review</span>
@@ -350,7 +350,7 @@
               </div>
             </div>
 
-            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-5">
+            <div class="sw-nav-item" data-step="5" role="tab" aria-selected="true" aria-controls="panel-5">
               <div class="badge">5</div>
               <div class="info">
                 <span class="title">Finish</span>
@@ -363,7 +363,7 @@
           <div class="sw-nav-item-group">
             <span class="sw-group-header">Group C</span>
 
-            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="sw-nav-item" data-step="6" role="tab" aria-selected="true" aria-controls="panel-6">
               <div class="badge">10</div>
               <div class="info">
                 <span class="title">Extra E</span>
@@ -371,7 +371,7 @@
               </div>
             </div>
 
-            <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-8">
+            <div class="sw-nav-item" data-step="7" role="tab" aria-selected="true" aria-controls="panel-7">
               <div class="badge">11</div>
               <div class="info">
                 <span class="title">Extra F</span>
@@ -881,18 +881,43 @@
     window.wizard4 = new SmartWizard('#smartwizard-4');
 
     // Update step info display
-    function updateStepInfo() {
-      const info = window.wizard1.getInfo();
-      document.getElementById('step-info-1').textContent = `Step ${info.stepInfo.currentStep + 1} of ${info.stepInfo.totalSteps}`;
+    function updateStepInfo(wizObj, args, elementId) {
+      const wizStatElm = document.getElementById(elementId);
+      console.log(elementId, wizStatElm)
+      if (wizStatElm) {
+        wizStatElm.textContent = `Step ${args.stepIndex + 1} of ${wizObj.stepLength}`;
+      }
+    }
+
+    var wizardIndex = 1;
+    while (typeof window["wizard" + wizardIndex] !== 'undefined') {
+      let wizObj = window["wizard" + wizardIndex];
+
+      wizObj.on('showStep', (e) => {
+        console.log('ElmS', wizObj);
+
+        updateStepInfo(wizObj, e.detail, 'step-info-' + wizardIndex);
+      });
+      wizardIndex++;
     }
 
     // Listen to wizard events
-    window.wizard1.on('showStep', (e) => {
-      console.log('Step changed (Emit):', e.detail);
-      updateStepInfo();
-    });
+    // window.wizard1.on('showStep', (e, args) => {
+    //   console.log('Step changed (Emit):', e.detail, args);
+    //   updateStepInfo(window.wizard1, e.detail, 'step-info-1');
+    // });
 
-    // // Initial update
+    // window.wizard2.on('showStep', (e) => {
+    //   console.log('Step changed (Emit):', e.detail);
+    //   updateStepInfo(window.wizard2, 'step-info-2');
+    // });
+
+    // window.wizard3.on('showStep', (e) => {
+    //   console.log('Step changed (Emit):', e.detail);
+    //   updateStepInfo(window.wizard3, 'step-info-3');
+    // });
+
+    // Initial update
     // updateStepInfo();
 
     console.log('✅ SmartWizard loaded successfully!');

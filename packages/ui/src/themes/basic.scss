@@ -22,65 +22,65 @@
     // These sit on the `.sw-theme-basic` element and cascade into all children.
 
     // Surfaces & borders
-    --sw-basic-bg:              #1a1f2e;
-    --sw-basic-surface:         #1e2440;
-    --sw-basic-border:          rgba(255, 255, 255, 0.08);
-    --sw-basic-border-solid:    #2a3050;
+    // --sw-basic-bg: #1a1f2e;
+    // --sw-basic-surface: #1e2440;
+    // --sw-basic-border: rgba(255, 255, 255, 0.08);
+    // --sw-basic-border-solid: #2a3050;
 
-    // Accent (bright indigo, matches the active-tab underline in the image)
-    --sw-basic-accent:          #5b6af0;
-    --sw-basic-accent-hover:    #7b87f5;
+    // // Accent (bright indigo, matches the active-tab underline in the image)
+    // --sw-basic-accent: #5b6af0;
+    // --sw-basic-accent-hover: #7b87f5;
 
-    // Text
-    --sw-basic-text-active:     #ffffff;
-    --sw-basic-text-muted:      #8892b0;
-    --sw-basic-text-completed:  #a5b4fc;   // soft lavender for visited tabs
+    // // Text
+    // --sw-basic-text-active: #ffffff;
+    // --sw-basic-text-muted: #8892b0;
+    // --sw-basic-text-completed: #a5b4fc; // soft lavender for visited tabs
 
     // Button (dark pill, third image)
-    --sw-basic-btn-bg:          #2d3348;
-    --sw-basic-btn-bg-hover:    #3a4060;
-    --sw-basic-btn-text:        #c8d0e8;
-    --sw-basic-btn-text-hover:  #ffffff;
+    // --sw-basic-btn-bg:          #2d3348;
+    // --sw-basic-btn-bg-hover:    #3a4060;
+    // --sw-basic-btn-text:        #c8d0e8;
+    // --sw-basic-btn-text-hover:  #ffffff;
 
-    // Error / Warning accents — kept visible against dark bg
-    --sw-basic-error:           #f06070;
-    --sw-basic-warning:         #f0a060;
+    // // Error / Warning accents — kept visible against dark bg
+    // --sw-basic-error:           #f06070;
+    // --sw-basic-warning:         #f0a060;
 
     // ── Wizard root element ─────────────────────────────────────────────────
     // Override the core variables so .sw picks them up automatically.
-    --sw-wizard-bg:             var(--sw-basic-bg);
-    --sw-wizard-border:         var(--sw-basic-border-solid);
-    --sw-wizard-shadow:         0 4px 32px rgba(0, 0, 0, 0.40);
-    --sw-wizard-radius:         10px;
+    --sw-wizard-bg: var(--sw-basic-bg);
+    --sw-wizard-border: var(--sw-basic-border-solid);
+    --sw-wizard-shadow: 0 4px 32px rgba(0, 0, 0, 0.40);
+    --sw-wizard-radius: 10px;
 
     // Navigation
-    --sw-nav-bg:                var(--sw-basic-bg);
-    --sw-nav-border:            var(--sw-basic-border-solid);
+    --sw-nav-bg: var(--sw-basic-bg);
+    --sw-nav-border: var(--sw-basic-border-solid);
 
-    --sw-nav-item-default-bg:   transparent;
+    --sw-nav-item-default-bg: transparent;
     --sw-nav-item-default-text: var(--sw-basic-text-muted);
-    --sw-nav-item-active-bg:    transparent;
-    --sw-nav-item-active-text:  var(--sw-basic-text-active);
+    --sw-nav-item-active-bg: transparent;
+    --sw-nav-item-active-text: var(--sw-basic-text-active);
     --sw-nav-item-completed-bg: transparent;
     --sw-nav-item-completed-text: var(--sw-basic-text-completed);
 
     // Content panels
-    --sw-panel-bg:              var(--sw-basic-surface);
-    --sw-panel-text:            #d0d8f0;
+    --sw-panel-bg: var(--sw-basic-surface);
+    --sw-panel-text: #d0d8f0;
 
     // Progress bar
-    --sw-progress-bg:           var(--sw-basic-border-solid);
-    --sw-progress-fill:         var(--sw-basic-accent);
+    --sw-progress-bg: var(--sw-basic-border-solid);
+    --sw-progress-fill: var(--sw-basic-accent);
 
     // Loader
-    --sw-loader-color:          var(--sw-basic-accent);
-    --sw-loader-bg:             rgba(26, 31, 46, 0.85);
+    --sw-loader-color: var(--sw-basic-accent);
+    --sw-loader-bg: rgba(26, 31, 46, 0.85);
 
     // Connector line
-    --sw-connector-color:       var(--sw-basic-border-solid);
+    --sw-connector-color: var(--sw-basic-border-solid);
 
     // Focus ring (matches accent)
-    --sw-focus-ring-color:      rgba(91, 106, 240, 0.45);
+    --sw-focus-ring-color: rgba(91, 106, 240, 0.45);
 
     // ── Navigation bar ──────────────────────────────────────────────────────
     &>.sw-nav {
@@ -203,17 +203,17 @@
 
     // ── Buttons (dark pill, from third image) ───────────────────────────────
     .sw-btn {
-        --sw-btn-default-bg:     var(--sw-basic-btn-bg);
+        --sw-btn-default-bg: var(--sw-basic-btn-bg);
         --sw-btn-default-border: var(--sw-basic-border-solid);
-        --sw-btn-default-text:   var(--sw-basic-btn-text);
-        --sw-btn-hover-bg:       var(--sw-basic-btn-bg-hover);
-        --sw-btn-hover-border:   var(--sw-basic-accent);
-        --sw-btn-hover-text:     var(--sw-basic-btn-text-hover);
+        --sw-btn-default-text: var(--sw-basic-btn-text);
+        --sw-btn-hover-bg: var(--sw-basic-btn-bg-hover);
+        --sw-btn-hover-border: var(--sw-basic-accent);
+        --sw-btn-hover-text: var(--sw-basic-btn-text-hover);
 
         // Pill shape matching the reference screenshot
-        --sw-btn-radius:         6px;
-        --sw-btn-padding:        8px 20px;
-        --sw-btn-font-weight:    600;
+        --sw-btn-radius: 6px;
+        --sw-btn-padding: 8px 20px;
+        --sw-btn-font-weight: 600;
 
         border-color: var(--sw-basic-border-solid);
         box-shadow: none;
@@ -232,12 +232,12 @@
     .sw-btn-primary,
     .sw-btn-next,
     .sw-btn-prev {
-        --sw-btn-default-bg:     var(--sw-basic-accent);
+        --sw-btn-default-bg: var(--sw-basic-accent);
         --sw-btn-default-border: var(--sw-basic-accent);
-        --sw-btn-default-text:   #ffffff;
-        --sw-btn-hover-bg:       var(--sw-basic-accent-hover);
-        --sw-btn-hover-border:   var(--sw-basic-accent-hover);
-        --sw-btn-hover-text:     #ffffff;
+        --sw-btn-default-text: #ffffff;
+        --sw-btn-hover-bg: var(--sw-basic-accent-hover);
+        --sw-btn-hover-border: var(--sw-basic-accent-hover);
+        --sw-btn-hover-text: #ffffff;
 
         box-shadow: none;
 

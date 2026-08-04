@@ -1,23 +1,63 @@
 function initWizardControls(wizardElement) {
+    // Select the parent container holding the items
+    const controlPanel = document.querySelector(".wizard-control-panel");
+    // Attach the same function to both events
+    controlPanel.addEventListener("click", handlePanelEvent);
+    controlPanel.addEventListener("change", handlePanelEvent);
 
-    // External Button Events
-    document.getElementById('btn-reset').addEventListener('click', (e) => {
-        // Reset wizard
-        wizardElement.reset();
-        return true;
-    });
+    // Handler function
+    function handlePanelEvent(event) {
+        var wizardId = event.currentTarget.dataset.wizardId;
+        if (typeof window[wizardId] === 'undefined') {
+            return;
+        }
+        const wizardObj = window[wizardId];
+        const element = event.target;
 
-    document.getElementById('btn-prev').addEventListener('click', (e) => {
-        // Navigate previous
-        wizardElement.prev();
-        return true;
-    });
+        if (event.type == 'change') {
+            if (element.classList.contains("theme-select")) {
+                wizardObj.setOptions({
+                    theme: element.value,
+                });
+            }
+            else if (element.classList.contains("transition-select")) {
+                const cssAnim = cssAnimationList[element.value];
+                const options = cssAnim
+                    ? { transition: { effect: 'css', css: { ...cssAnim } } }
+                    : { transition: { effect: element.value } };
+                wizardObj.setOptions(options);
+            }
+        } else {
+            if (element.classList.contains("btn-reset")) {
+                wizardObj.reset();
+            }
+            else if (element.classList.contains("btn-prev")) {
+                wizardObj.prev();
+            }
+            else if (element.classList.contains("btn-next")) {
+                wizardObj.next();
+            }
+            else if (element.classList.contains("btn-color-theme")) {
+                const clickedBtn = element.closest('[data-color]');
+                if (!clickedBtn) return; // Ignore clicks that aren't on a color button
 
-    document.getElementById('btn-next').addEventListener('click', (e) => {
-        // Navigate next
-        wizardElement.next();
-        return true;
-    });
+                // Get all children of the item's parent, turned into an array
+                const siblings = Array.from(clickedBtn.parentNode.children);
+                // Loop and remove the class from everyone EXCEPT the current element 'b'
+                siblings.forEach(sibling => {
+                    if (sibling !== clickedBtn) {
+                        sibling.classList.remove('active');
+                    }
+                });
+
+                clickedBtn.classList.add('active');
+                const colorScheme = clickedBtn.dataset.color;
+                wizardObj.setOptions({
+                    colorScheme: colorScheme
+                });
+            }
+        }
+    }
 
     // ── Theme switcher ──
     const themeList = {
@@ -35,12 +75,6 @@ function initWizardControls(wizardElement) {
             option.value = key;
             if (typeof activeTheme !== 'undefined' && key === activeTheme) option.selected = true;
             themeListControls.appendChild(option);
-        });
-
-        themeListControls.addEventListener('change', () => {
-            wizardElement.setOptions({
-                theme: themeListControls.value,
-            });
         });
     }
 
@@ -115,14 +149,6 @@ function initWizardControls(wizardElement) {
 
             transitionControls.appendChild(optgroup);
         });
-
-        transitionControls.addEventListener('change', () => {
-            const cssAnim = cssAnimationList[transitionControls.value];
-            const options = cssAnim
-                ? { transition: { effect: 'css', css: { ...cssAnim } } }
-                : { transition: { effect: transitionControls.value } };
-            wizardElement.setOptions(options);
-        });
     }
 
     // ── Color switcher ──
@@ -145,34 +171,9 @@ function initWizardControls(wizardElement) {
             btn.textContent = value;
             btn.dataset.color = key;
             btn.classList.add('btn');
-            if (typeof activeColor !== 'undefined' && key === activeColor) btn.classList.add('active');
-
-            btn.addEventListener('click', () => {
-                colorListControls.querySelectorAll('[data-color]').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                if (key) {
-                    wizardElement.setOptions({
-                        color: key
-                    });
-                } else {
-                    wizardElement.setOptions({
-                        color: ''
-                    });
-                }
-            });
+            btn.classList.add('btn-color-theme');
+            // if (typeof activeColor !== 'undefined' && key === activeColor) btn.classList.add('active');
             colorListControls.appendChild(btn);
         });
     }
-
-    // ── Step infor
-    // const swCur = document.getElementById('sw-cur');
-    // const swTotal = document.getElementById('sw-total');
-    // if (swCur && swTotal) {
-    //     // Step show event
-    //     wizardElement.on("shown.sw", function (e, args) {
-    //         swCur.textContent = args.stepIndex + 1;
-    //         swTotal.textContent = wizardElement.smartWizard('getStepInfo').totalSteps;
-    //     });
-    // }
-
 }
