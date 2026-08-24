@@ -883,9 +883,8 @@
     // Update step info display
     function updateStepInfo(wizObj, args, elementId) {
       const wizStatElm = document.getElementById(elementId);
-      console.log('##################', wizObj, args, elementId, wizStatElm)
       if (wizStatElm) {
-        wizStatElm.textContent = `Step ${args.stepIndex + 1} of ${wizObj.stepLength()}`;
+        wizStatElm.textContent = `Step ${args.stepIndex + 1} of ${wizObj.stepLength}`;
       }
     }
 
@@ -901,29 +900,7 @@
       wizardIndex++;
     }
 
-    // Listen to wizard events
-    // window.wizard1.on('showStep', (e, args) => {
-    //   console.log('Step changed (Emit):', e.detail, args);
-    //   updateStepInfo(window.wizard1, e.detail, 'step-info-1');
-    // });
-
-    // window.wizard2.on('showStep', (e) => {
-    //   console.log('Step changed (Emit):', e.detail);
-    //   updateStepInfo(window.wizard2, 'step-info-2');
-    // });
-
-    // window.wizard3.on('showStep', (e) => {
-    //   console.log('Step changed (Emit):', e.detail);
-    //   updateStepInfo(window.wizard3, 'step-info-3');
-    // });
-
-    // Initial update
-    // updateStepInfo();
-
-    console.log('✅ SmartWizard loaded successfully!');
-
     window.onload = () => {
-      console.log('Page loaded successfully!');
       initWizardControls(window.wizard1);
     };
   </script>

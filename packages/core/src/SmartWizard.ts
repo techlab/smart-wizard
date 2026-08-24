@@ -440,7 +440,6 @@ export class SmartWizard implements WizardInterface {
             const transition: TransitionHandler = (transitions as any)[this._options.transition.effect]
                 || (transitions as any)['default'];
 
-            console.log('transition', this._options.transition.effect, transitions)
             transition(selPage, curPage, stepDirection, this, () => {
                 // Fix height
                 if (this._options.behavior.autoHeight) {
