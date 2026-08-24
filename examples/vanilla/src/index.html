@@ -80,7 +80,7 @@
       <div class="section-desc">All steps visible simultaneously. Numbers + labels + connectors.</div>
 
       <!-- WIZARD -->
-      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-color="forest"
+      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-color="ocean"
         data-start-step="0" role="region" aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
@@ -883,20 +883,20 @@
     // Update step info display
     function updateStepInfo(wizObj, args, elementId) {
       const wizStatElm = document.getElementById(elementId);
-      console.log(elementId, wizStatElm)
+      console.log('##################', wizObj, args, elementId, wizStatElm)
       if (wizStatElm) {
-        wizStatElm.textContent = `Step ${args.stepIndex + 1} of ${wizObj.stepLength}`;
+        wizStatElm.textContent = `Step ${args.stepIndex + 1} of ${wizObj.stepLength()}`;
       }
     }
 
     var wizardIndex = 1;
     while (typeof window["wizard" + wizardIndex] !== 'undefined') {
       let wizObj = window["wizard" + wizardIndex];
+      let currentIndex = wizardIndex; // capture current value per iteration
+
 
       wizObj.on('showStep', (e) => {
-        console.log('ElmS', wizObj);
-
-        updateStepInfo(wizObj, e.detail, 'step-info-' + wizardIndex);
+        updateStepInfo(wizObj, e.detail, 'step-info-' + currentIndex);
       });
       wizardIndex++;
     }

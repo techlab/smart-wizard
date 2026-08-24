@@ -1,4 +1,4 @@
-function initWizardControls(wizardElement) {
+function initWizardControls() {
     // Select the parent container holding the items
     const controlPanel = document.querySelector(".wizard-control-panel");
     // Attach the same function to both events
@@ -51,9 +51,9 @@ function initWizardControls(wizardElement) {
                 });
 
                 clickedBtn.classList.add('active');
-                const colorScheme = clickedBtn.dataset.color;
+                const color = clickedBtn.dataset.color;
                 wizardObj.setOptions({
-                    colorScheme: colorScheme
+                    color: color
                 });
             }
         }

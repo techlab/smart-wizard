@@ -21,7 +21,7 @@ import { ProgressBar } from './ProgressBar';
 import { StepNavigator } from './StepNavigator';
 import { WizardStep } from './WizardStep';
 import { WizardStepCollection } from './WizardStepCollection';
-import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION } from './constants';
+import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION, LAYOUT } from './constants';
 
 export class SmartWizard implements WizardInterface {
     private _options: WizardOptions;
@@ -132,8 +132,11 @@ export class SmartWizard implements WizardInterface {
     }
 
     private init(): void {
+        this.resetDataAttributes();
         // Set main element classes including theme
         this.setElements();
+        // Set display mode
+        this.setColorScheme();
         // Set anchor states
         this.setNav();
 
@@ -183,6 +186,14 @@ export class SmartWizard implements WizardInterface {
         this.registry.runSync('onLoad', this);
     }
 
+    private resetDataAttributes(): void {
+        setAttribute(this.main, DATA_ATTRIBUTES.COLOR_SCHEME, this._options.colorScheme);
+        setAttribute(this.main, DATA_ATTRIBUTES.THEME, this._options.theme);
+        setAttribute(this.main, DATA_ATTRIBUTES.LAYOUT, this._options.layout);
+        setAttribute(this.main, DATA_ATTRIBUTES.TRANSITION, this._options.transition.effect);
+        setAttribute(this.main, DATA_ATTRIBUTES.COLOR, this._options.color);
+    }
+
     private getInitialStep(): number {
         // Determine target step from hash if enabled
         let hashIndex: number | null = null;
@@ -209,9 +220,6 @@ export class SmartWizard implements WizardInterface {
             }
         });
         addClass(STYLES.BASE + ' ' + STYLES.THEME_PREFIX + this._options.theme + ' ' + STYLES.LAYOUT_PREFIX + this._options.layout, this.main);
-
-        // Set display mode
-        this.setColorScheme();
     }
 
     private setColorScheme(): void {
@@ -671,7 +679,6 @@ export class SmartWizard implements WizardInterface {
         this.init();
         this.load();
     }
-
 
     public setOptions(options: Partial<WizardOptions>): void {
         this._options = OptionsParser.parse(this.main, { ...this._options, ...options }, false);
