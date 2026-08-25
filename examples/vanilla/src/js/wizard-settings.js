@@ -161,7 +161,9 @@ function initWizardControls() {
         'crimson': 'Crimson',
         'amber': 'Amber',
         'indigo': 'Indigo',
-        'slate': 'Slate ♿',
+        'slate': 'Slate',
+        'purple': 'Purple',
+        'green': 'Green',
     };
 
     const colorListControls = document.getElementById('color-list');

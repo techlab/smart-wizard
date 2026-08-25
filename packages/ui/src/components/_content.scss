@@ -36,17 +36,13 @@
             // --- Standard Form Styles ---
             .sw-label {
                 display: block;
-                font-size: 0.875rem;
-                font-weight: 500;
-                margin-bottom: 0.5rem;
+                margin-bottom: 1rem;
                 color: var(--sw-text-secondary);
             }
 
             .sw-input {
-                font-family: inherit;
-                font-size: 1rem;
                 width: 100%;
-                padding: 0.625rem 0.875rem;
+                padding: 0.5rem;
                 border: var(--sw-border-width) solid var(--sw-border);
                 border-radius: var(--sw-border-radius);
                 background: var(--sw-bg);

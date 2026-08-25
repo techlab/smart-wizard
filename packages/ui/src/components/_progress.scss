@@ -8,6 +8,7 @@
         background: var(--sw-progress-bg);
         overflow: hidden;
         height: 4px;
+        border-radius: var(--sw-border-radius);
 
         .sw-progress-bar {
             height: 100%;
@@ -15,9 +16,5 @@
             background: var(--sw-progress-fill);
             transition: width var(--sw-transition);
         }
-    }
-
-    .sw-progress-round {
-        border-radius: var(--sw-border-radius);
     }
 }

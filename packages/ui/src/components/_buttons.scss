@@ -13,9 +13,7 @@
         transition: var(--sw-btn-transition);
 
         &:hover {
-            border-color: var(--sw-btn-hover-border);
-            color: var(--sw-btn-hover-text);
-            background: var(--sw-btn-hover-bg);
+            box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-btn-default-bg);
         }
 
         &:focus-visible {
@@ -52,12 +50,12 @@
     }
 
     .sw-btn-danger {
-        --sw-btn-default-bg: var(--sw-error);
-        --sw-btn-default-border: var(--sw-error);
+        --sw-btn-default-bg: var(--sw-danger);
+        --sw-btn-default-border: var(--sw-danger);
         --sw-btn-default-text: var(--sw-white);
 
-        --sw-btn-hover-bg: var(--sw-error-dark, var(--sw-error));
-        --sw-btn-hover-border: var(--sw-error-dark, var(--sw-error));
+        --sw-btn-hover-bg: var(--sw-danger-dark, var(--sw-danger));
+        --sw-btn-hover-border: var(--sw-danger-dark, var(--sw-danger));
         --sw-btn-hover-text: var(--sw-white);
     }
 

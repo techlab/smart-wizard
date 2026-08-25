@@ -1,21 +1,6 @@
 // Root CSS variables used for theming and color customization
 
-// Component Tokens
-// --sw-step-bg
-// --sw-step-border
-// --sw-step-active-bg
-// --sw-step-active-border
-// --sw-step-active-text
-
-// --sw-toolbar-bg
-// --sw-progress-fill
-// --sw-button-bg
-// --sw-button-text
-// --sw-input-border
-
 :root {
-    // SURFACE COLORS
-
     /* Backgrounds */
     --sw-bg: #ffffff;
     --sw-surface: #f8fafc;
@@ -33,7 +18,6 @@
     --sw-primary: #6366f1;
     --sw-primary-hover: #5558e8;
     --sw-primary-active: #4548d8;
-
     --sw-on-primary: #ffffff;
 
     // SEMANTIC COLORS
@@ -154,7 +138,7 @@
     --sw-connector-height: 2px;
 
     // GLOBAL PROPERTIES
-    --sw-border-radius: 0.8rem;
+    --sw-border-radius: 0.4rem;
     --sw-border-radius-lg: 0.75rem;
     --sw-border-width: 1px;
 
@@ -164,21 +148,8 @@
 
     // Focus Ring
     --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
-    --sw-focus-ring-width: 3px;
+    --sw-focus-ring-width: 1px;
 
     --sw-badge-default-bg: var(--sw-gray-200);
     --sw-btn-default-bg: var(--sw-white);
 }
-
-
-// .theme-green{
-//     --sw-primary:#16a34a;
-//     --sw-primary-hover:#15803d;
-//     --sw-primary-active:#166534;
-// }
-
-// .theme-purple{
-//     --sw-primary:#7c3aed;
-//     --sw-primary-hover:#6d28d9;
-//     --sw-primary-active:#5b21b6;
-// }

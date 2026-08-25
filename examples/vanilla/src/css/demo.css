@@ -173,6 +173,11 @@ body[data-ui-theme="dark"] .ctrl-select {
     color: #2196f3;
 }
 
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .btn.active {
     background: #2196f3;
     color: #fff;
@@ -191,6 +196,20 @@ body[data-ui-theme="dark"] .btn.active {
     border-color: #42a5f5;
 }
 
+.btn-color-theme {
+    /* background: linear-gradient(135deg, #A855F7, #0A0514) !important; */
+    background: linear-gradient(135deg, var(--sw-primary), var(--sw-primary-active)) !important;
+    color: #fff !important;
+    border-color: var(--sw-primary) !important;
+
+    /* width: 26px;
+    height: 26px; */
+    /* border-radius: 50%; */
+    /* border: 0px; */
+    cursor: pointer;
+    transition: var(--trans);
+    position: relative;
+}
 
 .btn-primary {
     background: #3498db;
@@ -240,11 +259,6 @@ body[data-ui-theme="dark"] .btn.active {
 .btn-sm {
     padding: 6px 12px;
     font-size: 0.8rem;
-}
-
-.btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
 }
 
 .btn-group {
