@@ -1,0 +1,264 @@
+// Chevron theme
+// Horizontal stepper: circular badge (outlined/filled) + title, separated by › chevron.
+// Completed: filled primary badge (checkmark shown via HTML or ::after).
+// Active:    outlined primary badge + primary label.
+// Inactive:  outlined muted badge + muted label.
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+
+.sw-theme-chevron {
+
+    // ── Theme-local tokens ───────────────────────────────────────────────────
+    --sw-chevron-bg:            var(--sw-bg);
+    --sw-chevron-border:        var(--sw-border);
+    --sw-chevron-text-muted:    var(--sw-text-muted);
+    --sw-chevron-text-active:   var(--sw-primary);
+    --sw-chevron-text-done:     var(--sw-text);
+    --sw-chevron-badge-size:    38px;
+    --sw-chevron-badge-stroke:  2px;
+    --sw-chevron-sep-color:     var(--sw-border);
+    --sw-chevron-sep-size:      1.4rem;
+
+    // Container
+    border: 1px solid var(--sw-chevron-border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--sw-chevron-bg);
+
+    // ── Navigation bar ───────────────────────────────────────────────────────
+    &>.sw-nav {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0;
+        padding: 0;
+        background: var(--sw-chevron-bg);
+        border-bottom: 1px solid var(--sw-chevron-border);
+        overflow: visible;
+
+        .sw-nav-item {
+            clip-path: none !important;
+            border-radius: 0 !important;
+            margin: 0 !important;
+
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 12px;
+            flex: 1 1 0;
+            padding: 16px 24px !important;
+            background: transparent;
+            color: var(--sw-chevron-text-muted);
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: background var(--sw-transition), color var(--sw-transition);
+            position: relative;
+
+            // Chevron separator — rendered as a pseudo-element after each non-last item
+            // Positioned at right edge of the item, centred vertically
+            &:not(:last-of-type)::after {
+                content: '\203A';
+                position: absolute;
+                right: -0.5em;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: var(--sw-chevron-sep-size);
+                font-weight: 300;
+                color: var(--sw-chevron-sep-color);
+                pointer-events: none;
+                z-index: 2;
+                line-height: 1;
+            }
+
+            // ── Badge circle ─────────────────────────────────────────────────
+            &>.badge {
+                flex-shrink: 0;
+                width: var(--sw-chevron-badge-size);
+                height: var(--sw-chevron-badge-size);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.85rem;
+                font-weight: 600;
+                line-height: 1;
+                transition: background var(--sw-transition),
+                            border-color var(--sw-transition),
+                            color var(--sw-transition),
+                            box-shadow var(--sw-transition);
+                // Default: outlined circle, muted
+                background: transparent;
+                border: var(--sw-chevron-badge-stroke) solid var(--sw-chevron-sep-color);
+                color: var(--sw-chevron-text-muted);
+            }
+
+            // ── Description text — hide in this theme ─────────────────────────
+            &>.info>.desc,
+            &>.desc {
+                display: none;
+            }
+
+            // ── Title text ────────────────────────────────────────────────────
+            &>.info>.title {
+                font-size: 0.875rem;
+                font-weight: 500;
+            }
+
+            // ── Hover ────────────────────────────────────────────────────────
+            &:hover:not(.disabled):not(.hidden) {
+                background: color-mix(in srgb, var(--sw-primary) 5%, transparent);
+                color: var(--sw-chevron-text-active);
+
+                &>.badge {
+                    border-color: var(--sw-primary);
+                    color: var(--sw-primary);
+                }
+            }
+
+            // ── Active ───────────────────────────────────────────────────────
+            &.active {
+                color: var(--sw-chevron-text-active);
+                background: transparent;
+                cursor: pointer;
+
+                &>.info>.title {
+                    font-weight: 600;
+                }
+
+                &>.badge {
+                    background: transparent;
+                    border-color: var(--sw-primary);
+                    color: var(--sw-primary);
+                    box-shadow: 0 0 0 3px color-mix(in srgb, var(--sw-primary) 14%, transparent);
+                }
+            }
+
+            // ── Completed ────────────────────────────────────────────────────
+            &.completed {
+                color: var(--sw-chevron-text-done);
+                background: transparent;
+                cursor: pointer;
+
+                &>.badge {
+                    background: var(--sw-primary);
+                    border-color: var(--sw-primary);
+                    color: var(--sw-on-primary);
+                    // If badge has text content (e.g. "✓"), keep it visible
+                    font-size: 1rem;
+                }
+
+                // CSS-only checkmark fallback when badge has no text / shows a number
+                &>.badge:not(:has(*))::after,
+                &>.badge.sw-badge-number::after {
+                    content: '';
+                    display: inline-block;
+                    width: 11px;
+                    height: 7px;
+                    border-left: 2.5px solid var(--sw-on-primary);
+                    border-bottom: 2.5px solid var(--sw-on-primary);
+                    transform: rotate(-45deg) translate(1px, -1px);
+                    flex-shrink: 0;
+                }
+            }
+
+            // ── Error ────────────────────────────────────────────────────────
+            &.error {
+                color: var(--sw-danger);
+                background: transparent;
+
+                &>.badge {
+                    background: var(--sw-danger);
+                    border-color: var(--sw-danger);
+                    color: #fff;
+                }
+            }
+
+            // ── Warning ──────────────────────────────────────────────────────
+            &.warning {
+                color: var(--sw-warning);
+                background: transparent;
+
+                &>.badge {
+                    background: var(--sw-warning);
+                    border-color: var(--sw-warning);
+                    color: #fff;
+                }
+            }
+
+            // ── Disabled ─────────────────────────────────────────────────────
+            &.disabled,
+            &:disabled {
+                opacity: 0.4;
+                pointer-events: none;
+            }
+
+            // ── Mobile: hide label, show only badge ──────────────────────────
+            @media screen and (max-width: $breakpoint-phone) {
+                flex: 1 0 auto;
+                justify-content: center;
+                padding: 10px 12px !important;
+
+                &:not(:last-of-type)::after {
+                    display: none;
+                }
+
+                &>.info,
+                &>.step-text {
+                    display: none;
+                }
+            }
+        }
+
+        // Grouped items wrapper
+        .sw-nav-item-group {
+            display: flex;
+            flex: 1 1 0;
+            align-items: stretch;
+
+            // No separator after the very last item in the last group
+            &:last-of-type .sw-nav-item:last-of-type::after {
+                display: none;
+            }
+        }
+    }
+
+    // ── RTL support ──────────────────────────────────────────────────────────
+    &[dir="rtl"]>.sw-nav {
+        .sw-nav-item {
+            &:not(:last-of-type)::after {
+                content: '\2039';
+                right: auto;
+                left: -0.5em;
+            }
+        }
+    }
+
+    // ── Content panels ───────────────────────────────────────────────────────
+    &>.sw-panels {
+        background: var(--sw-bg);
+
+        .sw-panel {
+            background: var(--sw-bg);
+        }
+    }
+
+    // ── Toolbar ──────────────────────────────────────────────────────────────
+    .sw-toolbar {
+        background: var(--sw-surface);
+        border-top: 1px solid var(--sw-chevron-border);
+    }
+
+    // ── Progress bar ─────────────────────────────────────────────────────────
+    .sw-progress .sw-progress-bar {
+        background: var(--sw-primary);
+    }
+}
+
+// ── Dark-mode specific chevron tokens ────────────────────────────────────────
+[data-color-scheme="dark"] .sw-theme-chevron {
+    --sw-chevron-bg:          var(--sw-bg);
+    --sw-chevron-border:      var(--sw-border);
+    --sw-chevron-text-muted:  var(--sw-text-muted);
+    --sw-chevron-sep-color:   var(--sw-border);
+}

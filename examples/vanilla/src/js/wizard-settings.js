@@ -66,6 +66,7 @@ function initWizardControls() {
         'glow': 'Glow',
         'basic': 'Basic',
         'pills': 'Pills',
+        'chevron': 'Chevron',
     };
     const themeListControls = document.getElementById('theme-select');
     if (themeListControls) {
