@@ -82,6 +82,36 @@
         }
     }
 
+
+    // Vertical layout: reset horizontal arrow clip-paths
+    &.sw-layout-vertical>.sw-nav {
+
+        // All nav items in vertical mode: plain rectangles, no horizontal arrow geometry
+        .sw-nav-item {
+            clip-path: none !important;
+            margin-right: 0 !important;
+            padding: 10px calc(var(--sw-arrow-tip) + 14px) !important;
+        }
+
+        // Grouped items: undo first/last overrides applied by the horizontal rules
+        .sw-nav-item-group {
+            .sw-nav-item:first-of-type,
+            .sw-nav-item:last-of-type {
+                clip-path: none !important;
+                margin-right: 0 !important;
+                padding-left: calc(var(--sw-arrow-tip) + 14px) !important;
+            }
+        }
+
+        // Ungrouped (flat) first/last items at root level
+        &>.sw-nav-item:first-of-type,
+        &>.sw-nav-item:last-of-type {
+            clip-path: none !important;
+            margin-right: 0 !important;
+            padding-left: calc(var(--sw-arrow-tip) + 14px) !important;
+        }
+    }
+
     // RTL Support
     &[dir="rtl"]>.sw-nav {
 

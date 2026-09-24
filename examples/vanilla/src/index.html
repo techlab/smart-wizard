@@ -22,12 +22,16 @@
     <h1>SmartWizard - Examples</h1>
     <div class="header-right" id="demo-nav"></div>
     <div class="header-right">
-      <button class="header-btn" id="toggle-dark"> ⚡Auto</button>
+      <div class="toggle-btn-group" role="group" aria-label="Color scheme">
+        <button class="header-btn" id="toggle-auto">⚡Auto</button>
+        <button class="header-btn" id="toggle-dark">🌙 Dark</button>
+        <button class="header-btn" id="toggle-light">☀️ Light</button>
+      </div>
     </div>
   </header>
 
   <!-- Controls bar -->
-  <div class="demo-controls wizard-control-panel" data-wizard-id="wizard1">
+  <div class="demo-controls wizard-control-panel" data-wizard-id="wizard1,wizard2">
 
     <div class="demo-control-wrapper">
       <div class="control-group">
@@ -491,7 +495,6 @@
     while (typeof window["wizard" + wizardIndex] !== 'undefined') {
       let wizObj = window["wizard" + wizardIndex];
       let currentIndex = wizardIndex; // capture current value per iteration
-
 
       wizObj.on('showStep', (e) => {
         updateStepInfo(wizObj, e.detail, 'step-info-' + currentIndex);

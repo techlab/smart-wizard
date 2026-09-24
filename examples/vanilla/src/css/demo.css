@@ -77,6 +77,27 @@ body[data-ui-theme="dark"] {
     background: rgba(255, 255, 255, 0.16);
 }
 
+/* ── Grouped toggle button set ── */
+.toggle-btn-group {
+    display: inline-flex;
+    border-radius: 0.375rem;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.toggle-btn-group .header-btn {
+    border-radius: 0;
+    border: none;
+    border-right: 1px solid rgba(255, 255, 255, 0.15);
+    margin: 0;
+}
+
+.toggle-btn-group .header-btn:last-child {
+    border-right: none;
+}
+
+
+
 /* ── Controls bar ── */
 .demo-controls {
     display: flex;

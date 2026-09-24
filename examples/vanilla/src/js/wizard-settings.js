@@ -8,65 +8,67 @@ function initWizardControls() {
     // Handler function
     function handlePanelEvent(event) {
         var wizardId = event.currentTarget.dataset.wizardId;
-        if (typeof window[wizardId] === 'undefined') {
-            return;
-        }
-        const wizardObj = window[wizardId];
-        const element = event.target;
+        var wizardIsArr = wizardId.split(',');
 
-        if (event.type == 'change') {
-            if (element.classList.contains("theme-select")) {
-                wizardObj.setOptions({
-                    theme: element.value,
-                });
+        wizardIsArr.forEach((wizardId) => {
+            if (typeof window[wizardId] === 'undefined') {
+                return;
             }
-            else if (element.classList.contains("transition-select")) {
-                const cssAnim = cssAnimationList[element.value];
-                const options = cssAnim
-                    ? { transition: { effect: 'css', css: { ...cssAnim } } }
-                    : { transition: { effect: element.value } };
-                wizardObj.setOptions(options);
-            }
-        } else {
-            if (element.classList.contains("btn-reset")) {
-                wizardObj.reset();
-            }
-            else if (element.classList.contains("btn-prev")) {
-                wizardObj.prev();
-            }
-            else if (element.classList.contains("btn-next")) {
-                wizardObj.next();
-            }
-            else if (element.classList.contains("btn-color-theme")) {
-                const clickedBtn = element.closest('[data-color]');
-                if (!clickedBtn) return; // Ignore clicks that aren't on a color button
+            const wizardObj = window[wizardId];
+            const element = event.target;
 
-                // Get all children of the item's parent, turned into an array
-                const siblings = Array.from(clickedBtn.parentNode.children);
-                // Loop and remove the class from everyone EXCEPT the current element 'b'
-                siblings.forEach(sibling => {
-                    if (sibling !== clickedBtn) {
-                        sibling.classList.remove('active');
-                    }
-                });
+            if (event.type == 'change') {
+                if (element.classList.contains("theme-select")) {
+                    wizardObj.setOptions({
+                        theme: element.value,
+                    });
+                }
+                else if (element.classList.contains("transition-select")) {
+                    const cssAnim = cssAnimationList[element.value];
+                    const options = cssAnim
+                        ? { transition: { effect: 'css', css: { ...cssAnim } } }
+                        : { transition: { effect: element.value } };
+                    wizardObj.setOptions(options);
+                }
+            } else {
+                if (element.classList.contains("btn-reset")) {
+                    wizardObj.reset();
+                }
+                else if (element.classList.contains("btn-prev")) {
+                    wizardObj.prev();
+                }
+                else if (element.classList.contains("btn-next")) {
+                    wizardObj.next();
+                }
+                else if (element.classList.contains("btn-color-theme")) {
+                    const clickedBtn = element.closest('[data-color]');
+                    if (!clickedBtn) return; // Ignore clicks that aren't on a color button
 
-                clickedBtn.classList.add('active');
-                const color = clickedBtn.dataset.color;
-                wizardObj.setOptions({
-                    color: color
-                });
+                    // Get all children of the item's parent, turned into an array
+                    const siblings = Array.from(clickedBtn.parentNode.children);
+                    // Loop and remove the class from everyone EXCEPT the current element 'b'
+                    siblings.forEach(sibling => {
+                        if (sibling !== clickedBtn) {
+                            sibling.classList.remove('active');
+                        }
+                    });
+
+                    clickedBtn.classList.add('active');
+                    const color = clickedBtn.dataset.color;
+                    wizardObj.setOptions({
+                        color: color
+                    });
+                }
             }
-        }
+        });
+
     }
 
     // ── Theme switcher ──
     const themeList = {
         '': 'Default',
         'arrows': 'Arrows',
-        'glow': 'Glow',
-        'basic': 'Basic',
         'pills': 'Pills',
-        'chevron': 'Chevron',
     };
     const themeListControls = document.getElementById('theme-select');
     if (themeListControls) {

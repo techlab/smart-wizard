@@ -45,14 +45,14 @@ if (demoNavs) {
 }
 
 /**
- * Update the toggle button label to reflect the current stored preference.
- * Labels: auto → detected, dark → forced dark, light → forced light.
+ * Update the grouped toggle buttons to reflect the current preference.
+ * The matching button receives the 'active' class; others are cleared.
  */
-function updateToggleLabel(darkToggle, pref) {
-    if (!darkToggle) return;
-    const labels = { auto: '⚡ Auto', dark: '🌙 Dark', light: '☀️ Light' };
-    darkToggle.textContent = labels[pref] || labels.auto;
-    darkToggle.classList.toggle('active', pref === 'dark');
+function updateToggleButtons(pref) {
+    ['auto', 'dark', 'light'].forEach((mode) => {
+        const btn = document.getElementById('toggle-' + mode);
+        if (btn) btn.classList.toggle('active', mode === pref);
+    });
 }
 
 // ── Initialise on load ──
@@ -61,7 +61,7 @@ function initTheme() {
     const isDark = saved === 'dark' || (saved === 'auto' && osPrefersDark());
     displayMode = isDark ? 'dark' : 'light';
     applyTheme(isDark);
-    updateToggleLabel(document.getElementById('toggle-dark'), saved);
+    updateToggleButtons(saved);
 };
 
 // ── OS theme-change listener (only active when preference is 'auto') ──
@@ -72,24 +72,20 @@ mq.addEventListener('change', (e) => {
     }
 });
 
-// ── Button click: cycle auto → dark → light → auto ──
-const darkToggle = document.getElementById('toggle-dark');
-if (darkToggle) {
-    darkToggle.addEventListener('click', () => {
-        const current = localStorage.getItem(STORAGE_KEY) || 'auto';
-        const cycle = { auto: 'dark', dark: 'light', light: 'auto' };
-        const next = cycle[current] || 'auto';
-
-        if (next === 'auto') {
-            localStorage.removeItem(STORAGE_KEY); // let OS decide; removeItem keeps fallback clean
+// ── Grouped toggle buttons: each directly sets its mode ──
+['auto', 'dark', 'light'].forEach((mode) => {
+    const btn = document.getElementById('toggle-' + mode);
+    if (!btn) return;
+    btn.addEventListener('click', () => {
+        if (mode === 'auto') {
+            localStorage.removeItem(STORAGE_KEY); // let OS decide
         } else {
-            localStorage.setItem(STORAGE_KEY, next);
+            localStorage.setItem(STORAGE_KEY, mode);
         }
-
-        const isDark = next === 'dark' || (next === 'auto' && osPrefersDark());
+        const isDark = mode === 'dark' || (mode === 'auto' && osPrefersDark());
         applyTheme(isDark);
-        updateToggleLabel(darkToggle, next);
+        updateToggleButtons(mode);
     });
-}
+});
 
 window.addEventListener("load", initTheme);

@@ -40,12 +40,10 @@
                 color: var(--sw-text-secondary, #6c757d);
                 background: transparent;
                 border-right: none;
-                border-bottom: none;
             }
 
             &>.sw-nav-item {
                 padding-left: 35px; // Indent nested items
-                border-bottom: none;
             }
         }
 

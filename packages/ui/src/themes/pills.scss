@@ -24,4 +24,11 @@
             }
         }
     }
+
+    // Vertical layout
+    &.sw-layout-vertical>.sw-nav {
+        .sw-nav-item-group>.sw-nav-item {
+            margin: 5px 0 !important;
+        }
+    }
 }
