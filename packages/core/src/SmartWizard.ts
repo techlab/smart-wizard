@@ -529,7 +529,16 @@ export class SmartWizard implements WizardInterface {
         const page = this.stepItems[stepIdx]?.page;
         if (!page) return;
         const h = getElementHeight(page);
-        setElementHeight(this.container, h || 'auto');
+        if (!h || h === 'auto' || h === '0px') {
+            setElementHeight(this.container, 'auto');
+            return;
+        }
+        // Add the container's vertical padding so the panel content isn't clipped.
+        const containerStyle = window.getComputedStyle(this.container);
+        const paddingTop = parseFloat(containerStyle.paddingTop) || 0;
+        const paddingBottom = parseFloat(containerStyle.paddingBottom) || 0;
+        const totalHeight = parseFloat(h) + paddingTop + paddingBottom;
+        setElementHeight(this.container, `${totalHeight}px`);
     }
 
     // ─── Extension System ─────────────────────────────────────────────────────

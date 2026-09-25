@@ -1,3 +1,6 @@
+@import "../../../packages/ui/dist/smartwizard-full.css";
+@import "../../../packages/ui/dist/themes/arrows.css";
+
 * {
     margin: 0;
     padding: 0;

@@ -3,9 +3,9 @@
     // CONTENT PANELS
     &>.sw-panels {
         position: relative;
-        padding: var(--sw-content-pad);
-        background: var(--sw-content-bg);
-        color: var(--sw-content-text);
+        padding: var(--sw-panel-padding);
+        background: var(--sw-panel-bg);
+        color: var(--sw-panel-text);
         min-height: 140px;
         transition: height 0.5s ease;
 

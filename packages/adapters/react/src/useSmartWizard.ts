@@ -6,6 +6,10 @@ export function useSmartWizard(
     options: Partial<WizardOptions>
 ) {
     const wizardRef = useRef<SmartWizard | null>(null);
+    // Capture initial options in a ref so inline object literals don't
+    // cause the effect to re-run on every render.
+    const optionsRef = useRef<Partial<WizardOptions>>(options);
+
     const [info, setInfo] = useState<WizardInfo>({
         stepInfo: { currentStep: 0, totalSteps: 0 },
         contentDirection: 'ltr',
@@ -18,10 +22,9 @@ export function useSmartWizard(
     useEffect(() => {
         if (!containerRef.current) return;
 
-        // Initialize wizard
-        wizardRef.current = new SmartWizard(containerRef.current, options);
+        // Initialize wizard once using the captured initial options
+        wizardRef.current = new SmartWizard(containerRef.current, optionsRef.current);
 
-        // Listen to step changes
         const handleStepChange = () => {
             if (wizardRef.current) {
                 setInfo(wizardRef.current.info);
@@ -40,14 +43,23 @@ export function useSmartWizard(
                 wizardRef.current.off('initialized', handleStepChange);
             }
         };
-    }, [containerRef, options]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [containerRef]); // options intentionally omitted — use wizard.setOptions() to update
 
     return {
         info,
-        next: () => wizardRef.current?.next(),
-        prev: () => wizardRef.current?.prev(),
-        goTo: (index: number, force?: boolean) => wizardRef.current?.goTo(index, { 'force': force }),
-        reset: () => wizardRef.current?.reset(),
-        wizard: wizardRef.current,
+        stepInfo: info.stepInfo,
+        next:          () => wizardRef.current?.next(),
+        prev:          () => wizardRef.current?.prev(),
+        first:         () => wizardRef.current?.first(),
+        last:          () => wizardRef.current?.last(),
+        goTo:          (index: number, force?: boolean) => wizardRef.current?.goTo(index, { force }),
+        reset:         () => wizardRef.current?.reset(),
+        destroy:       () => wizardRef.current?.destroy(),
+        setOptions:    (opts: Parameters<NonNullable<typeof wizardRef.current>['setOptions']>[0]) => wizardRef.current?.setOptions(opts),
+        getOptions:    () => wizardRef.current?.getOptions(),
+        updateHeight:  () => wizardRef.current?.updateHeight(),
+        loader:        wizardRef.current?.loader,
+        wizard:        wizardRef.current,
     };
 }

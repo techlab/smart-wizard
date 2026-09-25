@@ -6,9 +6,9 @@
     "scripts": {
         "start": "turbo run dev",
         "dev": "turbo run dev",
-        "dev:react": "turbo run dev --filter=@smart-wizard/react",
+        "dev:react": "turbo run dev --filter=@smart-wizard/react --filter=smartwizard-react-example",
         "dev:vanilla": "turbo run dev --filter=smartwizard-vanilla-example --filter=@smart-wizard/ui",
-        "dev:vue": "turbo run dev --filter=@smart-wizard/vue",
+        "dev:vue": "turbo run dev --filter=@smart-wizard/vue --filter=smartwizard-vue-example",
         "dev:ui": "turbo run dev --filter=@smart-wizard/ui",
         "build": "turbo run build",
         "lint": "turbo run lint",

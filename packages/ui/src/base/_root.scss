@@ -92,17 +92,17 @@
     --sw-nav-item-gap: 10px;
 
     --sw-nav-item-default-bg: transparent;
-    --sw-nav-item-default-text: var(--sw-text-tertiary);
+    --sw-nav-item-default-text: var(--sw-on-primary);
     --sw-nav-item-active-bg: var(--sw-primary);
     --sw-nav-item-active-text: var(--sw-on-primary);
-    --sw-nav-item-completed-bg: var(--sw-primary-light);
+    --sw-nav-item-completed-bg: var(--sw-bg);
     --sw-nav-item-completed-text: var(--sw-primary);
 
     // Badge
     --sw-badge-padding: 4px 8px;
     --sw-badge-radius: 20px;
     --sw-badge-font-size: 11px;
-    --sw-badge-default-text: var(--sw-text-tertiary);
+    --sw-badge-default-text: var(--sw-on-primary);
     --sw-badge-default-border: var(--sw-border);
 
     // Toolbar
@@ -110,24 +110,24 @@
     --sw-toolbar-border: var(--sw-border);
 
     // Buttons
-    --sw-btn-primary-bg: var(--sw-accent);
-    --sw-btn-primary-text: var(--sw-accent-text);
+    --sw-btn-primary-bg: var(--sw-bg);
+    --sw-btn-primary-text: var(--sw-on-primary);
     --sw-btn-padding: 8px 18px;
     --sw-btn-radius: var(--sw-border-radius);
     --sw-btn-font-weight: 600;
     --sw-btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
-    --sw-btn-default-text: var(--sw-text-secondary);
+    --sw-btn-default-text: var(--sw-on-primary);
     --sw-btn-default-border: var(--sw-border);
 
-    --sw-btn-hover-bg: var(--sw-primary-light);
+    --sw-btn-hover-bg: var(--sw-bg);
     --sw-btn-hover-text: var(--sw-primary);
-    --sw-btn-hover-border: var(--sw-primary-light);
+    --sw-btn-hover-border: var(--sw-bg);
 
     // Content Panels
     --sw-panel-padding: 24px;
     --sw-panel-bg: var(--sw-surface);
-    --sw-panel-text: var(--sw-text-primary);
+    --sw-panel-text: var(--sw-on-primary);
 
     // Loader
     --sw-loader-color: var(--sw-primary);
@@ -150,6 +150,6 @@
     --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
     --sw-focus-ring-width: 1px;
 
-    --sw-badge-default-bg: var(--sw-gray-200);
-    --sw-btn-default-bg: var(--sw-white);
+    --sw-badge-default-bg: var(--sw-bg);
+    --sw-btn-default-bg: var(--sw-bg);
 }
