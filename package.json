@@ -12,9 +12,13 @@
         "dev:ui": "turbo run dev --filter=@smart-wizard/ui",
         "build": "turbo run build",
         "lint": "turbo run lint",
-        "test": "turbo run test"
+        "test": "turbo run test",
+        "changeset": "changeset",
+        "version": "changeset version",
+        "publish": "changeset publish"
     },
     "devDependencies": {
+        "@changesets/cli": "^3.0.3",
         "turbo": "^2.9.14"
     },
     "packageManager": "pnpm@8.15.0",

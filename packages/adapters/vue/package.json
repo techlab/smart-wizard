@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/vue",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Vue bindings for SmartWizard - modern, framework-agnostic wizard/stepper component",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -19,5 +19,38 @@
         "vue": "^3.0.0",
         "tsup": "^8.0.0",
         "typescript": "^5.0.0"
-    }
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/techlab/smart-wizard.git",
+        "directory": "packages/adapters/vue"
+    },
+    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "bugs": {
+        "url": "https://github.com/techlab/smart-wizard/issues"
+    },
+    "author": "Dipu Rajendran",
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "exports": {
+        ".": {
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "keywords": [
+        "wizard",
+        "stepper",
+        "form",
+        "multi-step",
+        "vue",
+        "smartwizard"
+    ]
 }

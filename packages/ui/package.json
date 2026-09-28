@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/ui",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "description": "Core styles for SmartWizard - framework-agnostic wizard component",
     "style": "dist/smartwizard.css",
     "main": "dist/smartwizard.css",
@@ -25,7 +25,9 @@
         }
     },
     "files": [
-        "dist"
+        "dist",
+        "README.md",
+        "LICENSE"
     ],
     "sideEffects": [
         "*.css"
@@ -46,7 +48,7 @@
         "css",
         "scss"
     ],
-    "author": "",
+    "author": "Dipu Rajendran",
     "license": "MIT",
     "devDependencies": {
         "autoprefixer": "^10.5.0",
@@ -54,5 +56,14 @@
         "postcss": "^8.5.14",
         "postcss-cli": "^11.0.1",
         "sass": "^1.70.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/techlab/smart-wizard.git",
+        "directory": "packages/ui"
+    },
+    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "bugs": {
+        "url": "https://github.com/techlab/smart-wizard/issues"
     }
 }

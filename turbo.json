@@ -21,6 +21,12 @@
                 "build"
             ],
             "outputs": []
+        },
+        "publish": {
+            "dependsOn": [
+                "build"
+            ],
+            "cache": false
         }
     }
 }
