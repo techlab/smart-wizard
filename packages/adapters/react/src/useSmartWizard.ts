@@ -41,6 +41,8 @@ export function useSmartWizard(
             if (wizardRef.current) {
                 wizardRef.current.off('showStep', handleStepChange);
                 wizardRef.current.off('initialized', handleStepChange);
+                wizardRef.current.destroy();
+                wizardRef.current = null;
             }
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps

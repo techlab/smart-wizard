@@ -157,7 +157,7 @@ export class SmartWizard implements WizardInterface {
         this.registry.runSync('onInit', this);
     }
 
-    private load(): void {
+    private load(targetStep?: number): void {
         // Hide all pages
         this.stepItems.forEach(({ page }) => hideElement(page));
 
@@ -165,7 +165,7 @@ export class SmartWizard implements WizardInterface {
         this._activeIndex = -1;
 
         // Get initial step
-        const idx = this.getInitialStep();
+        const idx = targetStep ?? this.getInitialStep();
 
         // Mark previous steps as completed if needed
         if (idx > 0 && this._options.navigation.completed.enabled && this._options.navigation.completed.completeAllPreviousSteps) {
@@ -689,9 +689,10 @@ export class SmartWizard implements WizardInterface {
     }
 
     public setOptions(options: Partial<WizardOptions>): void {
+        const currentStep = this._activeIndex;
         this._options = OptionsParser.parse(this.main, { ...this._options, ...options }, false);
         this.init();
-        this.load();
+        this.load(currentStep >= 0 ? currentStep : undefined);
     }
 
     public getOptions(): WizardOptions {

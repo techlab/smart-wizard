@@ -121,7 +121,7 @@ function App() {
         useSmartWizard(wizard2Ref, {});
 
     // ── Shared control state ──
-    const [selectedTheme, setSelectedTheme] = useState("");
+    const [selectedTheme, setSelectedTheme] = useState("arrows");
     const [selectedTransition, setSelectedTransition] = useState("cssLightspeed");
     const [selectedColor, setSelectedColor] = useState("ocean");
 

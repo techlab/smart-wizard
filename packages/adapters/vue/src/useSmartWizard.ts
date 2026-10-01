@@ -40,6 +40,8 @@ export function useSmartWizard(
         if (wizard.value) {
             wizard.value.off("showStep", handleStepChange);
             wizard.value.off("initialized", handleStepChange);
+            wizard.value.destroy();
+            wizard.value = null;
         }
     });
 
