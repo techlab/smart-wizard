@@ -25,6 +25,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/adapters/vue"
     },
+    "license": "MIT",
     "homepage": "https://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
