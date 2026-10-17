@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/vue",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Vue bindings for SmartWizard - modern, framework-agnostic wizard/stepper component",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
