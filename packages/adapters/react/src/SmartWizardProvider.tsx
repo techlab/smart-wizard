@@ -1,35 +1,37 @@
 import React, { createContext, useContext, ReactNode, useRef } from 'react';
-import { WizardOptions, WizardInfo, SmartWizard } from '@smart-wizard/core';
+import { WizardOptions } from '@smart-wizard/core';
 import { useSmartWizard } from './useSmartWizard';
 
-interface SmartWizardContextValue {
-    info: WizardInfo;
-    next: () => void;
-    prev: () => void;
-    goTo: (index: number, force?: boolean) => void;
-    reset: () => void;
-    wizard: SmartWizard | null;
-}
+export type SmartWizardContextValue = ReturnType<typeof useSmartWizard> & {
+    containerRef: React.RefObject<HTMLElement>;
+};
 
 const SmartWizardContext = createContext<SmartWizardContextValue | null>(null);
 
-interface SmartWizardProviderProps {
-    containerRef: React.RefObject<HTMLElement>;
-    options: Partial<WizardOptions>;
+export interface SmartWizardProviderProps {
+    containerRef?: React.RefObject<HTMLElement>;
+    options?: Partial<WizardOptions>;
     children: ReactNode;
 }
 
-export function SmartWizardProvider({ containerRef, options, children }: SmartWizardProviderProps) {
-    const wizard = useSmartWizard(containerRef, options);
+export function SmartWizardProvider({ containerRef, options = {}, children }: SmartWizardProviderProps) {
+    const internalRef = useRef<HTMLElement>(null);
+    const targetRef = containerRef ?? internalRef;
+    const wizard = useSmartWizard(targetRef, options);
+
+    const value: SmartWizardContextValue = {
+        ...wizard,
+        containerRef: targetRef,
+    };
 
     return (
-        <SmartWizardContext.Provider value={wizard}>
+        <SmartWizardContext.Provider value={value}>
             {children}
         </SmartWizardContext.Provider>
     );
 }
 
-export function useWizardContext() {
+export function useWizardContext(): SmartWizardContextValue {
     const context = useContext(SmartWizardContext);
     if (!context) {
         throw new Error('useWizardContext must be used within SmartWizardProvider');

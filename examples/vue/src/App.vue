@@ -123,7 +123,7 @@
         ref="wizard1Ref"
         id="smartwizard-1"
         class="sw"
-        data-layout="circular"
+        data-layout="horizontal"
         data-theme="arrows"
         data-color="ocean"
         data-start-step="0"
@@ -166,21 +166,21 @@
               <span class="desc">Location info</span>
             </div>
           </div>
-          <div class="sw-nav-item" data-step="2" role="tab" aria-controls="sw1-panel-3">
+          <div class="sw-nav-item" data-step="3" role="tab" aria-controls="sw1-panel-3">
             <div class="badge">3</div>
             <div class="info">
               <span class="title">Payment</span>
               <span class="desc">Billing details</span>
             </div>
           </div>
-          <div class="sw-nav-item" data-step="3" role="tab" aria-controls="sw1-panel-4">
+          <div class="sw-nav-item" data-step="4" role="tab" aria-controls="sw1-panel-4">
             <div class="badge">4</div>
             <div class="info">
               <span class="title">Review</span>
               <span class="desc">Confirmation</span>
             </div>
           </div>
-          <div class="sw-nav-item" data-step="4" role="tab" aria-controls="sw1-panel-5">
+          <div class="sw-nav-item" data-step="5" role="tab" aria-controls="sw1-panel-5">
             <div class="badge">5</div>
             <div class="info">
               <span class="title">Finish</span>

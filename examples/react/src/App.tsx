@@ -321,7 +321,7 @@ function App() {
                         ref={wizard1Ref}
                         id="smartwizard-1"
                         className="sw"
-                        data-layout="circular"
+                        data-layout="horizontal"
                         data-theme="arrows"
                         data-color="ocean"
                         data-start-step="0"
@@ -366,21 +366,21 @@ function App() {
                                     <span className="desc">Location info</span>
                                 </div>
                             </div>
-                            <div className="sw-nav-item" data-step="2" role="tab" aria-controls="sw1-panel-3">
+                            <div className="sw-nav-item" data-step="3" role="tab" aria-controls="sw1-panel-3">
                                 <div className="badge">3</div>
                                 <div className="info">
                                     <span className="title">Payment</span>
                                     <span className="desc">Billing details</span>
                                 </div>
                             </div>
-                            <div className="sw-nav-item" data-step="3" role="tab" aria-controls="sw1-panel-4">
+                            <div className="sw-nav-item" data-step="4" role="tab" aria-controls="sw1-panel-4">
                                 <div className="badge">4</div>
                                 <div className="info">
                                     <span className="title">Review</span>
                                     <span className="desc">Confirmation</span>
                                 </div>
                             </div>
-                            <div className="sw-nav-item" data-step="4" role="tab" aria-controls="sw1-panel-5">
+                            <div className="sw-nav-item" data-step="5" role="tab" aria-controls="sw1-panel-5">
                                 <div className="badge">5</div>
                                 <div className="info">
                                     <span className="title">Finish</span>

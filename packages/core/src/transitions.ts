@@ -19,6 +19,21 @@ export const transitions: Record<string, TransitionHandler> = {
     },
 
     /**
+     * None transition: instant show/hide (alias for default)
+     */
+    none: (
+        next: HTMLElement,
+        current: HTMLElement | null,
+        _stepDirection: StepDirection,
+        _wizard: WizardInterface,
+        callback: TransitionCallback
+    ): void => {
+        if (current) hideElement(current);
+        showElement(next);
+        callback();
+    },
+
+    /**
      * Fade transition
      */
     fade: (

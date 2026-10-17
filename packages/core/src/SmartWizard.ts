@@ -415,6 +415,8 @@ export class SmartWizard implements WizardInterface {
             if (!this.emitter.emit('leaveStep', leaveArgs, { cancelable: true })) return;
         }
 
+        const prevIdx = this._activeIndex;
+
         // Load content if contentLoader is set
         this.loadContent(stepIdx, () => {
             const { step: selStep, page: selPage } = this.stepItems[stepIdx];
@@ -454,6 +456,12 @@ export class SmartWizard implements WizardInterface {
                     stepPosition: this.navigator.getPosition(stepIdx),
                 };
                 this.emitter.emit('showStep', stepArgs);
+
+                // Trigger stepChanged event
+                this.emitter.emit('stepChanged', {
+                    currentStep: stepIdx,
+                    previousStep: prevIdx,
+                });
 
                 // Fire onAfterShow hooks
                 this.registry.runSync('onAfterShow', this, { stepIdx, direction: stepDirection });

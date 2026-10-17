@@ -1,7 +1,9 @@
 # SmartWizard
 
-**A modern, framework-agnostic wizard / multi-step component.**
+**A modern, framework-agnostic wizard / multi-step component.**  
 Zero dependencies · TypeScript · React & Vue adapters · Accessible · Themeable
+
+_**SmartWizard** is the next-generation continuation of the popular [jQuery SmartWizard](https://techlaboratory.net/smartwizard), rebuilt from the ground up for the modern web._
 
 ---
 
@@ -36,18 +38,24 @@ Zero dependencies · TypeScript · React & Vue adapters · Accessible · Themeab
 | `@smart-wizard/ui` | CSS styles, themes, and design tokens (SCSS) |
 | `@smart-wizard/react` | React hooks + context adapter |
 | `@smart-wizard/vue` | Vue 3 composable adapter |
+| `@smart-wizard/extension-swipe` | Touch swipe navigation extension |
+| `@smart-wizard/extension-url-hash` | URL hash and browser history extension |
 
 ---
 
 ## 📥 Installation
 
 ```bash
-# Core + styles
+# Core engine + styles
 npm install @smart-wizard/core @smart-wizard/ui
 
-# Framework adapters (pick one or both)
+# Framework adapters (optional)
 npm install @smart-wizard/react
 npm install @smart-wizard/vue
+
+# Official extensions (optional)
+npm install @smart-wizard/extension-swipe
+npm install @smart-wizard/extension-url-hash
 ```
 
 ---
@@ -195,8 +203,10 @@ All options can be set via `data-*` attributes on the root element:
 |-----------|--------|-------------|
 | `data-theme` | `default` \| `arrows` \| `pills` | Visual theme |
 | `data-layout` | `horizontal` \| `vertical` | Navigation layout |
-| `data-color` | `default` \| `blue` \| `violet` \| … | Color preset |
+| `data-color` | `default` \| `ocean` \| `forest` \| `violet` \| … | Color preset |
 | `data-color-scheme` | `auto` \| `dark` \| `light` \| `none` | Color scheme override |
+| `data-transition` | `default` \| `none` \| `fade` \| `slideHorizontal` \| `slideVertical` \| `slideSwing` \| `css` | Transition effect |
+| `data-initial-step` (or `data-start-step`) | `number` | Initial selected step index (0-based) |
 
 ---
 
@@ -210,7 +220,7 @@ new SmartWizard('#wizard', {
   theme: 'default',         // 'default' | 'arrows' | 'pills'
   colorScheme: 'auto',      // 'auto' | 'dark' | 'light' | 'none'
   layout: 'horizontal',     // 'horizontal' | 'vertical'
-  color: 'default',         // 'default' | 'blue' | 'violet' | any string
+  color: 'default',         // 'default' | 'ocean' | 'forest' | 'violet' | any string
 
   behavior: {
     autoHeight: true,               // Auto-adjust panel container height on step change
@@ -230,7 +240,7 @@ new SmartWizard('#wizard', {
   },
 
   transition: {
-    effect: 'default',  // 'default'|'fade'|'slideHorizontal'|'slideVertical'|'slideSwing'|'css'
+    effect: 'default',  // 'default'|'none'|'fade'|'slideHorizontal'|'slideVertical'|'slideSwing'|'css'
     speed: 400,         // Duration in ms
     easing: '',         // CSS easing string
     css: {              // Only used when effect: 'css'
@@ -297,9 +307,9 @@ new SmartWizard('#wizard', {
 | `step(index)` | `WizardStep` | Fluent API wrapper for a single step |
 | `steps(indices?)` | `WizardStepCollection` | Fluent API wrapper for multiple (or all) steps |
 | `destroy()` | `void` | Tear down event listeners and DOM modifications |
-| `on(event, cb)` | `void` | Add a typed event listener |
-| `off(event, cb)` | `void` | Remove a typed event listener |
-| `once(event, cb)` | `void` | Add a one-time event listener |
+| `on(event, cb)` | `this` | Add a typed event listener (fluent) |
+| `off(event, cb)` | `this` | Remove a typed event listener (fluent) |
+| `once(event, cb)` | `this` | Add a one-time event listener (fluent) |
 
 ### Read-only Properties
 
@@ -308,15 +318,18 @@ new SmartWizard('#wizard', {
 | `activeIndex` | `number` | Zero-based index of the currently active step |
 | `activeStep` | `WizardStep` | Fluent step wrapper for the active step |
 | `stepLength` | `number` | Total number of steps |
+| `stepItems` | `StepItem[]` | Array of step anchor and page element pairs |
 | `progress` | `number` | Progress percentage (0–100) |
 | `canGoNext` | `boolean` | Whether there is a navigable next step |
 | `canGoPrev` | `boolean` | Whether there is a navigable previous step |
 | `info` | `WizardInfo` | Snapshot: `{ stepInfo, layout, colorScheme, width, height, contentDirection }` |
-| `loader` | `WizardLoader` | Loader overlay controller |
+| `loader` | `WizardLoader` | Loader overlay controller (`show()`, `hide()`) |
 | `options` | `WizardOptions` | Current resolved options (read-only) |
 | `id` | `string` | Auto-generated unique instance ID |
 | `main` | `HTMLElement` | Root wizard element |
 | `container` | `HTMLElement` | `.sw-panels` content container |
+| `width` | `number` | Current pixel width of root wizard element |
+| `height` | `number` | Current pixel height of root wizard element |
 
 ---
 
@@ -440,6 +453,32 @@ wizard.extend(anotherExtension);
 - Registering the same `name` twice is **silently skipped**.
 - All hooks fire in **registration order**.
 
+### Official Extensions
+
+SmartWizard provides official extensions for common needs:
+
+#### `@smart-wizard/extension-swipe` — Touch Swipe Navigation
+Enables touch swipe gestures on mobile and touch devices. Horizontal swipes advance or return, while vertical page scrolling is preserved.
+
+```typescript
+import { SmartWizard } from '@smart-wizard/core';
+import { createSwipeExtension } from '@smart-wizard/extension-swipe';
+
+const wizard = new SmartWizard('#wizard', options)
+  .extend(createSwipeExtension({ threshold: 50 })); // threshold in px (default: 50)
+```
+
+#### `@smart-wizard/extension-url-hash` — URL Hash & Browser History
+Syncs current step with `window.location.hash` and integrates with browser back/forward buttons.
+
+```typescript
+import { SmartWizard } from '@smart-wizard/core';
+import { createUrlHashExtension } from '@smart-wizard/extension-url-hash';
+
+const wizard = new SmartWizard('#wizard', options)
+  .extend(createUrlHashExtension({ supportHistory: true })); // pushState vs location.hash
+```
+
 ---
 
 ## ⏳ Loader
@@ -483,7 +522,7 @@ const wizard = new SmartWizard('#wizard', {
 
 | Effect | Description |
 |--------|-------------|
-| `default` | Instant show/hide |
+| `default` / `none` | Instant show/hide (no animation) |
 | `fade` | Cross-fade between steps |
 | `slideHorizontal` | Slide left/right |
 | `slideVertical` | Slide up/down |
@@ -516,9 +555,16 @@ new SmartWizard('#wizard', {
 | `arrows` | `dist/themes/arrows.css` | Arrow-chevron step connectors |
 | `pills` | `dist/themes/pills.css` | Pill / capsule style steps |
 
+```javascript
+// In modern JS bundlers (Vite, Webpack, etc.):
+import '@smart-wizard/ui/full';
+import '@smart-wizard/ui/themes/arrows.css';
+```
+
 ```html
-<link rel="stylesheet" href="@smart-wizard/ui/dist/smartwizard-full.css" />
-<link rel="stylesheet" href="@smart-wizard/ui/dist/themes/arrows.css" />
+<!-- Or via HTML links: -->
+<link rel="stylesheet" href="node_modules/@smart-wizard/ui/dist/smartwizard-full.css" />
+<link rel="stylesheet" href="node_modules/@smart-wizard/ui/dist/themes/arrows.css" />
 ```
 
 ```javascript
@@ -545,20 +591,19 @@ wizard.setOptions({ colorScheme: 'dark' });
 
 ### Color Presets
 
-Built-in: `default`, `blue`, `violet`. Any string is accepted for custom presets.
+Built-in presets in `@smart-wizard/ui`:
+`default`, `ocean`, `forest`, `violet`, `crimson`, `amber`, `indigo`, `slate`, `teal`, `purple`, `green`. Any string is accepted for custom presets.
 
 ```javascript
-wizard.setOptions({ color: 'blue' });
+wizard.setOptions({ color: 'ocean' });
 ```
 
 Custom preset via CSS custom properties:
 
 ```css
-[data-color="ocean"] {
-  --sw-primary: #006994;
-  --sw-primary-light: #e0f4fb;
+[data-color="sunset"] {
+  --sw-primary: #f97316;
   --sw-on-primary: #ffffff;
-  --sw-accent: #00b4d8;
 }
 ```
 
@@ -661,6 +706,15 @@ function App() {
   );
 }
 
+function WizardRoot() {
+  const { containerRef } = useWizardContext();
+  return (
+    <div ref={containerRef} id="wizard">
+      {/* Wizard nav, panels, and content */}
+    </div>
+  );
+}
+
 function WizardControls() {
   const { next, prev, stepInfo } = useWizardContext();
   return (
@@ -729,6 +783,7 @@ const {
   goTo, reset, destroy,
   setOptions, getOptions,
   updateHeight,
+  loader,       // { show(), hide() }
   wizard,       // Ref<SmartWizard | null> — escape hatch
 } = useSmartWizard(wizardRef, {
   theme: 'arrows',
@@ -755,7 +810,11 @@ const {
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request.
+If you liked the project please support with your contribution.
+
+[GitHub Sponsor](https://github.com/sponsors/techlab)  
+
+Code contributions are also welcome! Please open an issue or submit a pull request.
 
 ```bash
 # Clone and install
@@ -776,11 +835,15 @@ pnpm run build
 
 ## 📝 License
 
-MIT License — see [LICENSE](LICENSE) for details.
+**Smart Wizard** is dual-licensed:
+
+**[MIT License](https://github.com/techlab/smart-wizard/blob/main/LICENSE)** — Free for personal and open-source projects.
+
+**[Commercial License](https://techlaboratory.net/smart-wizard#license)** — Required for closed-source, SaaS, or any  commercial projects.  
+If you use **Smart Wizard** in a commercial or client application, please purchase a commercial license.
+
+Commercial licenses help support continued development, maintenance, and new features.
 
 ---
 
-## 🙏 Credits
-
-Based on the popular [jQuery SmartWizard](https://techlaboratory.net/smartwizard) plugin,
-rebuilt from the ground up for modern, framework-agnostic JavaScript.
+Happy Coding ❤️

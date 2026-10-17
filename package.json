@@ -1,8 +1,28 @@
 {
     "name": "smart-wizard",
     "version": "1.0.0",
+    "title": "Smart Wizard",
     "private": true,
     "description": "A modern, framework-agnostic wizard/stepper component",
+    "author": {
+        "name": "Dipu Rajendran",
+        "email": "hello.techlab@gmail.com",
+        "url": "https://github.com/techlab"
+    },
+    "keywords": [
+        "wizard",
+        "stepper",
+        "form",
+        "component"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/techlab/smart-wizard.git"
+    },
+    "bugs": {
+        "url": "https://github.com/techlab/smart-wizard/issues"
+    },
     "scripts": {
         "start": "turbo run dev",
         "dev": "turbo run dev",

@@ -50,6 +50,11 @@ export class OptionsParser {
             overrides.transition = { ...base.transition, effect: transition };
         }
 
+        const initialStep = el.getAttribute(DATA_ATTRIBUTES.INITIAL_STEP) ?? el.getAttribute(DATA_ATTRIBUTES.START_STEP);
+        if (initialStep !== null && !isNaN(Number(initialStep))) {
+            overrides.initialStep = parseInt(initialStep, 10);
+        }
+
         return overrides;
     }
 }

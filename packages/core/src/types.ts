@@ -58,7 +58,7 @@ export interface Navigation {
 }
 
 export interface Transition {
-    effect: 'default' | 'fade' | 'slideHorizontal' | 'slideVertical' | 'slideSwing' | 'css' | string;
+    effect: 'default' | 'none' | 'fade' | 'slideHorizontal' | 'slideVertical' | 'slideSwing' | 'css' | string;
     speed: number;
     easing: string;
     css: {

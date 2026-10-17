@@ -61,7 +61,10 @@ export function useSmartWizard(
         setOptions:    (opts: Parameters<NonNullable<typeof wizardRef.current>['setOptions']>[0]) => wizardRef.current?.setOptions(opts),
         getOptions:    () => wizardRef.current?.getOptions(),
         updateHeight:  () => wizardRef.current?.updateHeight(),
-        loader:        wizardRef.current?.loader,
+        loader: {
+            show: () => wizardRef.current?.loader.show(),
+            hide: () => wizardRef.current?.loader.hide(),
+        },
         wizard:        wizardRef.current,
     };
 }

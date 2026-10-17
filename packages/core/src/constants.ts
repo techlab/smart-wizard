@@ -58,6 +58,8 @@ export const DATA_ATTRIBUTES = {
     COLOR: 'data-color', // default | any string
     LAYOUT: 'data-layout', // horizontal | vertical
     TRANSITION: 'data-transition',
+    INITIAL_STEP: 'data-initial-step',
+    START_STEP: 'data-start-step',
 };
 
 export const STYLES = {

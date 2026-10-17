@@ -58,6 +58,10 @@ export function useSmartWizard(
         setOptions:   (opts: Parameters<NonNullable<typeof wizard.value>["setOptions"]>[0]) => wizard.value?.setOptions(opts),
         getOptions:   () => wizard.value?.getOptions(),
         updateHeight: () => wizard.value?.updateHeight(),
+        loader: {
+            show: () => wizard.value?.loader.show(),
+            hide: () => wizard.value?.loader.hide(),
+        },
         wizard,
     };
 }

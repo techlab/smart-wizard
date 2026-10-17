@@ -79,7 +79,7 @@
       <div class="section-desc">All steps visible simultaneously. Numbers + labels + connectors.</div>
 
       <!-- WIZARD -->
-      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-start-step="0" role="region"
+      <div id="smartwizard-1" class="sw" data-layout="horizontal" data-theme="arrows" data-start-step="0" role="region"
         aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
@@ -106,16 +106,15 @@
 
         <!-- NAVIGATION (swappable) -->
         <nav class="sw-nav" role="tablist" aria-label="Wizard steps" aria-orientation="horizontal">
-          <div class="sw-nav-item done" data-step="1" role="tab" aria-selected="true" aria-controls="panel-1"
-            aria-selected="false" aria-disabled="false" tabindex="-1">
-            <div class="badge">✓</div>
+          <div class="sw-nav-item" data-step="1" role="tab" aria-controls="panel-1">
+            <div class="badge">1</div>
             <div class="info">
               <span class="title">Account</span>
               <span class="desc">Personal details</span>
             </div>
           </div>
 
-          <div class="sw-nav-item active" data-step="2" role="tab" aria-selected="true" aria-controls="panel-2">
+          <div class="sw-nav-item" data-step="2" role="tab" aria-controls="panel-2">
             <div class="badge">2</div>
             <div class="info">
               <span class="title">Address</span>
@@ -123,7 +122,7 @@
             </div>
           </div>
 
-          <div class="sw-nav-item" data-step="2" role="tab" aria-selected="true" aria-controls="panel-3">
+          <div class="sw-nav-item" data-step="3" role="tab" aria-controls="panel-3">
             <div class="badge">3</div>
             <div class="info">
               <span class="title">Payment</span>
@@ -131,7 +130,7 @@
             </div>
           </div>
 
-          <div class="sw-nav-item" data-step="3" role="tab" aria-selected="true" aria-controls="panel-4">
+          <div class="sw-nav-item" data-step="4" role="tab" aria-controls="panel-4">
             <div class="badge">4</div>
             <div class="info">
               <span class="title">Review</span>
@@ -139,7 +138,7 @@
             </div>
           </div>
 
-          <div class="sw-nav-item" data-step="4" role="tab" aria-selected="true" aria-controls="panel-5">
+          <div class="sw-nav-item" data-step="5" role="tab" aria-controls="panel-5">
             <div class="badge">5</div>
             <div class="info">
               <span class="title">Finish</span>
