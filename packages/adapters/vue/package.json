@@ -25,7 +25,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/adapters/vue"
     },
-    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "homepage": "http://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
     },

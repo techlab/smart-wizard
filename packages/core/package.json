@@ -31,7 +31,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/core"
     },
-    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "homepage": "http://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
     },

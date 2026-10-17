@@ -3,7 +3,7 @@
 **Official touch swipe navigation extension for SmartWizard.**  
 Enables mobile and touch swipe gestures without interfering with vertical page scrolling.
 
-> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular jQuery SmartWizard.
+> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular [jQuery SmartWizard](https://github.com/techlab/jquery-smartwizard).
 
 ---
 

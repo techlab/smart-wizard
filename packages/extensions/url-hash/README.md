@@ -3,7 +3,7 @@
 **Official URL hash and browser history navigation extension for SmartWizard.**  
 Synchronizes active steps with `window.location.hash` and integrates with browser back/forward buttons.
 
-> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular jQuery SmartWizard.
+> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular [jQuery SmartWizard](https://github.com/techlab/jquery-smartwizard).
 
 ---
 
