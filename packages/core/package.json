@@ -16,7 +16,11 @@
         "stepper",
         "wizard"
     ],
-    "author": "Dipu Rajendran",
+    "author": {
+        "name": "Dipu Rajendran",
+        "email": "hello.techlab@gmail.com",
+        "url": "https://github.com/techlab"
+    },
     "license": "MIT",
     "devDependencies": {
         "tsup": "^8.0.0",

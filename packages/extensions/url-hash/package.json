@@ -34,7 +34,11 @@
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
     },
-    "author": "Dipu Rajendran",
+    "author": {
+        "name": "Dipu Rajendran",
+        "email": "hello.techlab@gmail.com",
+        "url": "https://github.com/techlab"
+    },
     "publishConfig": {
         "access": "public"
     },
