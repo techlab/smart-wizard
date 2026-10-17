@@ -1,0 +1,306 @@
+@use '../base/variables' as *;
+
+// NAVIGATION
+.sw {
+    &>.sw-nav {
+        display: flex;
+        list-style: none;
+        gap: 0;
+        margin: 0;
+        padding: 0;
+        position: relative;
+        flex-wrap: nowrap;
+        align-items: stretch;
+        background: var(--sw-bg);
+        border-bottom: var(--sw-border-width) solid var(--sw-border);
+        overflow-x: auto;
+        overflow-y: hidden;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+
+        &::-webkit-scrollbar {
+            display: none;
+        }
+
+        &:hover {
+            &>.sw-nav-scroll-btn {
+                opacity: .8;
+            }
+        }
+
+        @media screen and (max-width: $breakpoint-phone) {
+            flex-direction: column !important;
+            flex: 1 auto;
+            border-bottom: none;
+
+            &>.sw-nav-item {
+                border-bottom: var(--sw-border-width) solid var(--sw-border);
+
+                &:last-child {
+                    border-bottom: none;
+                }
+
+                &.active {
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        left: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 4px;
+                        background: var(--sw-on-primary);
+                        opacity: 0.5;
+                    }
+                }
+            }
+        }
+
+        // Nested Nav
+        & .sw-nav-item-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            position: relative;
+            list-style: none;
+            z-index: 1;
+            align-items: center;
+            width: 100%;
+            user-select: none;
+            text-decoration: none;
+            position: relative;
+            transition: var(--sw-transition);
+            white-space: nowrap;
+
+            &:has(.sw-nav-item.active) {
+                .sw-group-header {
+                    color: var(--sw-primary) !important;
+                }
+            }
+
+            // &:has(.sw-nav-item.completed) {
+            //     .sw-group-header {
+            //         color: var(--_sw-primary-tint);
+            //     }
+            // }
+
+
+            &>.sw-group-header {
+                flex-basis: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: var(--sw-text-muted);
+                background: var(--sw-surface-2);
+                font-weight: 700;
+                padding: 5px;
+            }
+
+            &>.sw-nav-item {
+                flex: 1;
+            }
+
+        }
+
+        // NAV ITEM
+        & .sw-nav-item {
+            display: flex;
+            position: relative;
+            list-style: none;
+            z-index: 1;
+            align-items: center;
+            width: 100%;
+            cursor: default;
+            user-select: none;
+            color: var(--sw-text-muted);
+            background: transparent;
+            text-decoration: none;
+            position: relative;
+            transition: var(--sw-transition);
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+            padding: var(--sw-nav-padding);
+            gap: 10px;
+
+            &:hover,
+            &:active,
+            &:focus {
+                text-decoration: none;
+            }
+
+            &:focus-visible {
+                outline: none;
+                box-shadow: inset 0 0 0 2px var(--_sw-ring);
+                z-index: 10;
+            }
+
+            &:hover:not(.disabled) .badge {
+                transform: scale(1.05);
+            }
+
+            &::-moz-focus-inner {
+                border: 0;
+            }
+
+            &>.badge {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                pointer-events: none;
+                clear: both;
+                line-height: 1;
+                font-size: 1em;
+                color: var(--sw-text-muted);
+                background: var(--sw-bg);
+                border: 1px solid var(--sw-border);
+                transition: var(--sw-transition);
+            }
+
+            &>.info {
+                display: flex;
+                flex-direction: column;
+
+                &>.title {
+                    font-size: 1em;
+                    font-weight: 700;
+                }
+
+                &>.desc {
+                    font-size: 0.8em;
+                }
+
+            }
+
+            // ── State classes ──
+            &.active {
+                cursor: pointer;
+                color: var(--sw-on-primary);
+                background: var(--sw-primary);
+
+                .badge {
+                    color: var(--sw-on-primary);
+                    background: var(--_sw-primary-active);
+                    border-color: var(--_sw-primary-hover);
+                    box-shadow: 0 0 0 4px var(--_sw-primary-tint);
+                }
+            }
+
+            &.completed {
+                cursor: pointer;
+                color: var(--sw-primary);
+                background: var(--_sw-primary-tint);
+
+                .badge {
+                    color: var(--sw-on-primary);
+                    background: var(--sw-primary);
+                    border-color: transparent;
+                }
+            }
+
+            &.error {
+                cursor: pointer;
+                color: var(--sw-on-status);
+                background: var(--sw-danger);
+
+                .badge {
+                    color: var(--sw-on-status);
+                    background: var(--sw-danger);
+                    border-color: transparent;
+                }
+            }
+
+            &.warning {
+                cursor: pointer;
+                color: var(--sw-on-status);
+                background: var(--sw-warning);
+
+                .badge {
+                    color: var(--sw-on-status);
+                    background: var(--sw-warning);
+                    border-color: transparent;
+                }
+            }
+
+            &.hidden {
+                display: none;
+                visibility: hidden;
+            }
+
+            &.disabled,
+            &:disabled {
+                opacity: var(--sw-disabled-opacity);
+                pointer-events: none;
+                cursor: not-allowed;
+            }
+        }
+
+        // NAV SCROLL
+        &>.sw-nav-scroll-btn {
+            display: flex;
+            width: 40px;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            color: var(--sw-text);
+            padding: 0;
+            flex-shrink: 0;
+            position: sticky;
+            z-index: 20;
+            opacity: .5;
+            font-size: 2em;
+            transition: var(--sw-transition);
+            background: var(--sw-bg);
+
+            &:before {
+                content: ' ';
+                display: inline-block;
+                transition: transform 0.2s ease;
+            }
+
+            &:first-child {
+                left: 0;
+                border-right: var(--sw-border-width) solid var(--sw-border);
+
+                &:before {
+                    content: '\2039';
+                }
+            }
+
+            &:last-child {
+                right: 0;
+                border-left: var(--sw-border-width) solid var(--sw-border);
+
+                &:before {
+                    content: '\203A';
+                }
+            }
+
+            &:hover {
+                background: var(--sw-surface-2);
+                color: var(--sw-text);
+                opacity: 1;
+            }
+        }
+    }
+
+    // Justified navigation
+    &.sw-justified {
+        &>.sw-nav {
+            justify-content: space-between;
+        }
+    }
+
+    // RTL Support
+    &[dir="rtl"]>.sw-nav {
+        .sw-nav-item {
+            &>.badge {
+                float: right;
+            }
+        }
+    }
+}

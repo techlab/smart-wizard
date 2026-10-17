@@ -1,0 +1,57 @@
+{
+    "name": "@smart-wizard/extension-url-hash",
+    "version": "1.0.0",
+    "description": "URL hash + browser history navigation extension for SmartWizard",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "build": "tsup src/index.ts --format cjs,esm --dts --external @smart-wizard/core",
+        "dev": "tsup src/index.ts --format cjs,esm --dts --watch --external @smart-wizard/core"
+    },
+    "keywords": [
+        "extension",
+        "history",
+        "smartwizard",
+        "url-hash",
+        "wizard"
+    ],
+    "license": "MIT",
+    "peerDependencies": {
+        "@smart-wizard/core": ">=1.0.0"
+    },
+    "devDependencies": {
+        "@smart-wizard/core": "workspace:*",
+        "tsup": "^8.0.0",
+        "typescript": "^5.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/techlab/smart-wizard.git",
+        "directory": "packages/extensions/url-hash"
+    },
+    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "bugs": {
+        "url": "https://github.com/techlab/smart-wizard/issues"
+    },
+    "author": {
+        "name": "Dipu Rajendran",
+        "email": "hello.techlab@gmail.com",
+        "url": "https://github.com/techlab"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.mjs",
+            "require": "./dist/index.js"
+        }
+    }
+}

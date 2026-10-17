@@ -1,0 +1,51 @@
+{
+    "name": "smart-wizard",
+    "version": "1.0.0",
+    "title": "Smart Wizard",
+    "private": true,
+    "description": "A modern, framework-agnostic wizard/stepper component",
+    "author": {
+        "name": "Dipu Rajendran",
+        "email": "hello.techlab@gmail.com",
+        "url": "https://github.com/techlab"
+    },
+    "keywords": [
+        "wizard",
+        "stepper",
+        "form",
+        "component"
+    ],
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/techlab/smart-wizard.git"
+    },
+    "bugs": {
+        "url": "https://github.com/techlab/smart-wizard/issues"
+    },
+    "scripts": {
+        "start": "turbo run dev",
+        "dev": "turbo run dev",
+        "dev:react": "turbo run dev --filter=@smart-wizard/react --filter=smartwizard-react-example",
+        "dev:vanilla": "turbo run dev --filter=smartwizard-vanilla-example --filter=@smart-wizard/ui",
+        "dev:vue": "turbo run dev --filter=@smart-wizard/vue --filter=smartwizard-vue-example",
+        "dev:ui": "turbo run dev --filter=@smart-wizard/ui",
+        "build": "turbo run build",
+        "lint": "turbo run lint",
+        "test": "turbo run test",
+        "changeset": "changeset",
+        "version": "changeset version",
+        "version-packages": "changeset version",
+        "release": "pnpm build && changeset publish",
+        "publish": "changeset publish"
+    },
+    "devDependencies": {
+        "@changesets/cli": "^3.0.3",
+        "turbo": "^2.9.14"
+    },
+    "packageManager": "pnpm@8.15.0",
+    "engines": {
+        "node": ">=18.0.0",
+        "pnpm": ">=8.0.0"
+    }
+}

@@ -1,0 +1,8 @@
+@import "../../../packages/ui/dist/smartwizard-full.css";
+
+body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}

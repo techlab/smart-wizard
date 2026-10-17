@@ -1,0 +1,45 @@
+// TOOLBAR
+.sw {
+    .sw-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        flex-wrap: wrap;
+        background: var(--sw-surface);
+        gap: 1rem;
+
+        &-top {
+            border-top: none;
+            border-bottom: var(--sw-border-width) solid var(--sw-border);
+        }
+
+        &-bottom {
+            border-bottom: none;
+            border-top: var(--sw-border-width) solid var(--sw-border);
+        }
+
+        &-divider {
+            width: 1px;
+            height: 24px;
+            background: var(--sw-border);
+            margin: 0 0.5rem;
+        }
+
+        &-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex: auto;
+            justify-content: center;
+
+            &:first-child {
+                justify-content: flex-start;
+            }
+
+            &:last-child {
+                justify-content: flex-end;
+            }
+        }
+    }
+}

@@ -1,0 +1,99 @@
+// ============================================================================
+// SmartWizard theme tokens
+// ----------------------------------------------------------------------------
+// - Every variable is prefixed --sw- to avoid collisions with other apps
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// DARK values
+// ----------------------------------------------------------------------------
+@mixin sw-dark {
+    color-scheme: dark;
+
+    // Surfaces
+    --sw-bg: #11151d;
+    --sw-surface: #1b2130;
+    --sw-surface-2: #252c3d;
+    --sw-border: #31384b;
+    --sw-border-strong: #6b7689;
+
+    // Text
+    --sw-text: #f1f5f9;
+    --sw-text-muted: #94a3b8;
+    --sw-text-disabled: #5f6778;
+
+    // Brand: lighter shade on dark, with dark ink on top of it
+    --sw-primary: #818cf8;
+    --sw-on-primary: #0f1226;
+
+    // Elevation
+    --sw-shadow: 0 4px 20px rgba(0, 0, 0, .5), 0 0 0 1px rgba(255, 255, 255, .06);
+
+    // Hover/active move toward white on dark surfaces
+    --_sw-mix: #ffffff;
+}
+
+// ----------------------------------------------------------------------------
+// LIGHT values
+// ----------------------------------------------------------------------------
+.sw {
+    color-scheme: light;
+
+    // ── Surfaces ──────────────────────────────────────────────────────────────
+    --sw-bg: #ffffff; // wizard container, nav
+    --sw-surface: #f8fafc; // content panel, toolbar, inputs
+    --sw-surface-2: #f1f5f9; // hover / raised / secondary buttons
+    --sw-border: #e2e8f0; // dividers, panel and nav borders
+    --sw-border-strong: #8a96a8; // input and control outlines (about 3:1)
+
+    // ── Text ──────────────────────────────────────────────────────────────────
+    --sw-text: #0f172a; // body and headings
+    --sw-text-muted: #475569; // labels, hints, inactive steps
+    --sw-text-disabled: #94a3b8; // disabled controls
+
+    // ── Brand ─────────────────────────────────────────────────────────────────
+    --sw-primary: #4f46e5; // white on this is about 6:1
+    --sw-on-primary: #ffffff; // ONLY on a primary fill
+
+    // ── Status (fills) ────────────────────────────────────────────────────────
+    --sw-success: #22c55e;
+    --sw-warning: #f59e0b;
+    --sw-danger: #ef4444;
+    --sw-info: #0ea5e9;
+    --sw-on-status: #0b1220; // dark ink, passes AA on all four, both themes
+
+    // ── Shape, motion, spacing (optional hooks) ───────────────────────────────
+    --sw-radius: .4rem;
+    --sw-radius-lg: .75rem;
+    --sw-border-width: 1px;
+    --sw-shadow: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-transition: .2s cubic-bezier(.4, 0, .2, 1);
+    --sw-panel-padding: 24px;
+    --sw-nav-padding: 14px 20px;
+    --sw-btn-padding: 8px 18px;
+    --sw-disabled-opacity: .45;
+
+    // ── Private derived values (do not override; may change between versions) ─
+    --_sw-mix: #000000; // flips to white in dark mode
+    --_sw-primary-hover: color-mix(in srgb, var(--sw-primary) 88%, var(--_sw-mix));
+    --_sw-primary-active: color-mix(in srgb, var(--sw-primary) 76%, var(--_sw-mix));
+    --_sw-primary-tint: color-mix(in srgb, var(--sw-primary) 14%, transparent);
+    --_sw-primary-tint-strong: color-mix(in srgb, var(--sw-primary) 22%, transparent);
+    --_sw-ring: color-mix(in srgb, var(--sw-primary) 45%, transparent);
+    --_sw-overlay: color-mix(in srgb, var(--sw-bg) 70%, transparent);
+}
+
+// ----------------------------------------------------------------------------
+// DARK selectors
+// ----------------------------------------------------------------------------
+.sw[data-color-scheme="dark"],
+[data-color-scheme="dark"] .sw,
+.dark .sw {
+    @include sw-dark;
+}
+
+@media (prefers-color-scheme: dark) {
+    .sw[data-color-scheme="auto"] {
+        @include sw-dark;
+    }
+}
