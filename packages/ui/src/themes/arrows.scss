@@ -1,0 +1,166 @@
+// Arrows theme
+@use '../base/variables' as *;
+@use '../base/mixins' as *;
+
+.sw-theme-arrows {
+    // Arrow geometry
+    --sw-arrow-height: 56px;
+    --sw-arrow-tip: 20px;
+    --sw-arrow-gap: 0px;
+    --sw-min-step-width: 120px;
+
+    border: 1px solid var(--sw-border);
+
+    // Navigation style
+    &>.sw-nav {
+
+        .sw-nav-item-group {
+
+            // Layout 1: When items are grouped
+            &:last-of-type {
+                .sw-nav-item:last-of-type {
+                    margin-right: 0;
+                    @include arrow-clip-last(20px);
+                }
+            }
+
+            // First item: no left chevron indent
+            &:first-of-type {
+                .sw-nav-item {
+
+                    &:first-of-type {
+                        margin-right: calc(-1 * var(--sw-arrow-tip));
+                        padding-left: 14px;
+                        @include arrow-clip-first(20px);
+                    }
+                }
+            }
+        }
+
+        // Layout 2: When items are flat/ungrouped at the root - Last item: no right arrow point
+        &>*:not(.sw-nav-item-group) {
+            &:last-of-type {
+                margin-right: 0;
+                @include arrow-clip-last(20px);
+            }
+
+            // First item: no left chevron indent
+            &:first-of-type {
+                margin-right: calc(-1 * var(--sw-arrow-tip));
+                padding-left: 14px;
+                @include arrow-clip-first(20px);
+            }
+        }
+
+        // Nav item
+        .sw-nav-item {
+            flex: 1 0 var(--sw-min-step-width);
+            margin-right: calc(-1 * var(--sw-arrow-tip));
+            gap: 10px;
+            min-height: var(--sw-arrow-height);
+            padding: 10px 20px 10px calc(var(--sw-arrow-tip) + 14px);
+            @include arrow-clip(20px);
+
+            @media screen and (max-width: $breakpoint-phone) {
+                min-height: unset;
+                overflow: hidden;
+                text-align: left !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+
+                clip-path: none !important;
+                padding: 10px 14px !important;
+            }
+
+            &:only-of-type {
+                margin-right: 0;
+
+                clip-path: none;
+                border-radius: var(--sw-radius);
+            }
+        }
+    }
+
+
+    // Vertical layout: reset horizontal arrow clip-paths
+    &.sw-layout-vertical>.sw-nav {
+
+        // All nav items in vertical mode: plain rectangles, no horizontal arrow geometry
+        .sw-nav-item {
+            clip-path: none !important;
+            margin-right: 0 !important;
+            padding: 10px calc(var(--sw-arrow-tip) + 14px) !important;
+        }
+
+        // Grouped items: undo first/last overrides applied by the horizontal rules
+        .sw-nav-item-group {
+            .sw-nav-item:first-of-type,
+            .sw-nav-item:last-of-type {
+                clip-path: none !important;
+                margin-right: 0 !important;
+                padding-left: calc(var(--sw-arrow-tip) + 14px) !important;
+            }
+        }
+
+        // Ungrouped (flat) first/last items at root level
+        &>.sw-nav-item:first-of-type,
+        &>.sw-nav-item:last-of-type {
+            clip-path: none !important;
+            margin-right: 0 !important;
+            padding-left: calc(var(--sw-arrow-tip) + 14px) !important;
+        }
+    }
+
+    // RTL Support
+    &[dir="rtl"]>.sw-nav {
+
+        .sw-nav-item {
+            margin-right: 0;
+            margin-left: calc(-1 * var(--sw-arrow-tip));
+            padding: 10px calc(var(--sw-arrow-tip) + 14px) 10px 20px;
+            clip-path: polygon(100% 0%,
+                    var(--sw-arrow-tip) 0%,
+                    0% 50%,
+                    var(--sw-arrow-tip) 100%,
+                    100% 100%,
+                    calc(100% - var(--sw-arrow-tip)) 50%);
+
+            @media screen and (max-width: $breakpoint-phone) {
+                text-align: right !important;
+                margin-right: 0 !important;
+                margin-left: 0 !important;
+                flex: 1 0 auto;
+                clip-path: none !important;
+                padding: 10px 14px !important;
+            }
+
+            // First item (RTL): no right chevron indent
+            &:first-of-type {
+                margin-left: calc(-1 * var(--sw-arrow-tip));
+                padding-right: 14px;
+                clip-path: polygon(var(--sw-arrow-tip) 0%,
+                        100% 0%,
+                        100% 100%,
+                        var(--sw-arrow-tip) 100%,
+                        0% 50%);
+            }
+
+            // Last item (RTL): no left arrow point
+            &:last-of-type {
+                margin-left: 0;
+                clip-path: polygon(0% 0%,
+                        100% 0%,
+                        calc(100% - var(--sw-arrow-tip)) 50%,
+                        100% 100%,
+                        0% 100%);
+            }
+
+            &:only-of-type {
+                margin-left: 0;
+                clip-path: none;
+                border-radius: var(--sw-radius);
+            }
+        }
+    }
+}

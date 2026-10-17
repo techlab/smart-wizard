@@ -1,0 +1,19 @@
+{
+    "name": "smartwizard-vanilla-example",
+    "version": "0.1.0",
+    "private": true,
+    "description": "Vanilla JavaScript implementation of SmartWizard",
+    "main": "dist/index.js",
+    "module": "dist/index.mjs",
+    "types": "dist/index.d.ts",
+    "scripts": {
+        "dev": "vite"
+    },
+    "dependencies": {
+        "@smart-wizard/core": "workspace:*",
+        "@smart-wizard/ui": "workspace:*"
+    },
+    "devDependencies": {
+        "vite": "^5.0.0"
+    }
+}
