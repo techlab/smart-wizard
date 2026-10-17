@@ -26,7 +26,8 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/adapters/react"
     },
-    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "license": "MIT",
+    "homepage": "https://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
     },

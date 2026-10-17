@@ -3,7 +3,7 @@
 **The framework-agnostic engine for SmartWizard.**  
 Zero dependencies · TypeScript · Accessible · Extensible · Themeable
 
-> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular jQuery SmartWizard.
+> This package is part of the **[SmartWizard](https://github.com/techlab/smart-wizard)** project, the next-generation continuation of the popular [jQuery SmartWizard](https://github.com/techlab/jquery-smartwizard).
 
 ---
 

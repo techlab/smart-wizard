@@ -16,6 +16,7 @@
         "component"
     ],
     "license": "MIT",
+    "homepage": "https://techlaboratory.net/smart-wizard",
     "repository": {
         "type": "git",
         "url": "https://github.com/techlab/smart-wizard.git"

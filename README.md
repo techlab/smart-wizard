@@ -3,7 +3,7 @@
 **A modern, framework-agnostic wizard / multi-step component.**  
 Zero dependencies · TypeScript · React & Vue adapters · Accessible · Themeable
 
-_**SmartWizard** is the next-generation continuation of the popular [jQuery SmartWizard](https://techlaboratory.net/smartwizard), rebuilt from the ground up for the modern web._
+> **SmartWizard** is the next-generation continuation of the popular [jQuery SmartWizard](https://github.com/techlab/jquery-smartwizard), rebuilt from the ground up for the modern web.
 
 ---
 

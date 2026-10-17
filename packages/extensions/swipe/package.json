@@ -30,7 +30,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/extensions/swipe"
     },
-    "homepage": "https://github.com/techlab/smart-wizard#readme",
+    "homepage": "https://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
     },
