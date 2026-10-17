@@ -4,9 +4,9 @@
         align-items: center;
         gap: 4px;
         font-weight: 600;
-        font-size: var(--sw-badge-font-size);
-        padding: var(--sw-badge-padding);
-        border-radius: var(--sw-badge-radius);
+        font-size: 0.75rem;
+        padding: 4px 8px;
+        border-radius: var(--sw-radius-lg);
         background: var(--sw-badge-default-bg);
         color: var(--sw-badge-default-text);
         border: 1px solid var(--sw-badge-default-border);
@@ -14,31 +14,31 @@
 
     .sw-badge-primary {
         --sw-badge-default-bg: var(--sw-primary);
-        --sw-badge-default-text: var(--sw-primary-light);
-        --sw-badge-default-border: var(--sw-primary-dark);
+        --sw-badge-default-text: var(--sw-on-primary);
+        --sw-badge-default-border: var(--_sw-primary-hover);
     }
 
     .sw-badge-success {
         --sw-badge-default-bg: var(--sw-success);
-        --sw-badge-default-text: var(--sw-success-light);
-        --sw-badge-default-border: var(--sw-success-dark, var(--sw-success));
+        --sw-badge-default-text: var(--sw-on-status);
+        --sw-badge-default-border: var(--sw-success);
     }
 
     .sw-badge-danger {
-        --sw-badge-default-bg: var(--sw-error);
-        --sw-badge-default-text: var(--sw-error-light);
-        --sw-badge-default-border: var(--sw-error-dark, var(--sw-error));
+        --sw-badge-default-bg: var(--sw-danger);
+        --sw-badge-default-text: var(--sw-on-status);
+        --sw-badge-default-border: var(--sw-danger);
     }
 
     .sw-badge-warning {
         --sw-badge-default-bg: var(--sw-warning);
-        --sw-badge-default-text: var(--sw-warning-light);
-        --sw-badge-default-border: var(--sw-warning-dark, var(--sw-warning));
+        --sw-badge-default-text: var(--sw-on-status);
+        --sw-badge-default-border: var(--sw-warning);
     }
 
     .sw-badge-info {
         --sw-badge-default-bg: var(--sw-info);
-        --sw-badge-default-text: var(--sw-info-light);
-        --sw-badge-default-border: var(--sw-info-dark, var(--sw-info));
+        --sw-badge-default-text: var(--sw-on-status);
+        --sw-badge-default-border: var(--sw-info);
     }
 }

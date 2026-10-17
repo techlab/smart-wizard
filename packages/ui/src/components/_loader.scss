@@ -10,7 +10,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--sw-loader-bg);
+            background: var(--_sw-overlay);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -26,8 +26,8 @@
             height: 40px;
             margin-top: -20px;
             margin-left: -20px;
-            border: 4px solid var(--sw-gray-200);
-            border-top-color: var(--sw-loader-color);
+            border: 4px solid var(--sw-border);
+            border-top-color: var(--sw-primary);
             border-radius: 50%;
             animation: sw-spinner 0.8s linear infinite;
             z-index: 1001;

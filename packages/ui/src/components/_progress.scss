@@ -5,15 +5,15 @@
         margin: 0;
         border: 0;
         width: 100%;
-        background: var(--sw-progress-bg);
+        background: var(--sw-border);
         overflow: hidden;
         height: 4px;
-        border-radius: var(--sw-border-radius);
+        border-radius: var(--sw-radius);
 
         .sw-progress-bar {
             height: 100%;
             width: 0%;
-            background: var(--sw-progress-fill);
+            background: var(--sw-primary);
             transition: width var(--sw-transition);
         }
     }

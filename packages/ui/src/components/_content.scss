@@ -4,15 +4,15 @@
     &>.sw-panels {
         position: relative;
         padding: var(--sw-panel-padding);
-        background: var(--sw-panel-bg);
-        color: var(--sw-panel-text);
+        background: var(--sw-surface);
+        color: var(--sw-text);
         min-height: 140px;
         transition: height 0.5s ease;
 
         &>.sw-panel {
             padding: var(--sw-panel-padding);
-            background: var(--sw-panel-bg);
-            color: var(--sw-panel-text);
+            background: var(--sw-surface);
+            color: var(--sw-text);
             width: 100%;
             display: none;
 
@@ -24,12 +24,12 @@
                 font-size: 1.5rem;
                 font-weight: 700;
                 margin-bottom: 0.5rem;
-                color: var(--sw-text-primary);
+                color: var(--sw-text);
             }
 
             .sw-desc {
                 font-size: 1rem;
-                color: var(--sw-text-secondary);
+                color: var(--sw-text);
                 margin-bottom: 1.5rem;
             }
 
@@ -37,27 +37,27 @@
             .sw-label {
                 display: block;
                 margin-bottom: 1rem;
-                color: var(--sw-text-secondary);
+                color: var(--sw-text);
             }
 
             .sw-input {
                 width: 100%;
                 padding: 0.5rem;
                 border: var(--sw-border-width) solid var(--sw-border);
-                border-radius: var(--sw-border-radius);
+                border-radius: var(--sw-radius);
                 background: var(--sw-bg);
-                color: var(--sw-text-primary);
+                color: var(--sw-text);
                 margin-bottom: 1.25rem;
                 outline: none;
                 transition: var(--sw-transition);
 
                 &:focus {
                     border-color: var(--sw-primary);
-                    box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-focus-ring-color);
+                    box-shadow: 0 0 0 2px var(--_sw-ring);
                 }
 
                 &::placeholder {
-                    color: var(--sw-text-tertiary);
+                    color: var(--sw-text-muted);
                 }
             }
 

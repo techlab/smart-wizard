@@ -12,7 +12,7 @@
 
     &>.sw-nav {
         flex-shrink: 0;
-        border-right: var(--sw-border-width) solid var(--sw-nav-border);
+        border-right: var(--sw-border-width) solid var(--sw-border);
         flex-direction: column;
         grid-column: 1;
         overflow-y: auto;
@@ -23,7 +23,7 @@
 
         @media screen and (max-width: $breakpoint-phone) {
             border-right: none;
-            border-bottom: var(--sw-border-width) solid var(--sw-nav-border);
+            border-bottom: var(--sw-border-width) solid var(--sw-border);
             position: relative;
         }
 
@@ -37,7 +37,7 @@
                 justify-content: flex-start;
                 padding: 15px 20px 5px;
                 font-size: 0.75em;
-                color: var(--sw-text-secondary, #6c757d);
+                color: var(--sw-text);
                 background: transparent;
                 border-right: none;
             }
@@ -56,14 +56,14 @@
 
             &:first-child {
                 top: 0;
-                border-bottom: var(--sw-border-width) solid var(--sw-nav-border);
+                border-bottom: var(--sw-border-width) solid var(--sw-border);
                 left: auto;
                 border-right: none;
             }
 
             &:last-child {
                 bottom: 0;
-                border-top: var(--sw-border-width) solid var(--sw-nav-border);
+                border-top: var(--sw-border-width) solid var(--sw-border);
                 right: auto;
                 border-left: none;
             }

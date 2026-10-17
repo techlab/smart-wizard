@@ -1,15 +1,15 @@
 import {
     WizardOptions, WizardInterface, StepDirection, StepPosition,
-    ContentDirection, StepEventArgs, LeaveStepEventArgs, StepInfo, WizardInfo, TransitionHandler, StepItem,
-    WizardExtension, ExtensionBeforeShowArgs, ExtensionAfterShowArgs, WizardEvents,
-    EventCallback, StepState, IWizardStep, IWizardStepCollection, WizardLoader
+    ContentDirection, StepEventArgs, LeaveStepEventArgs, WizardInfo, TransitionHandler, StepItem,
+    WizardExtension, WizardEvents,
+    EventCallback, WizardLoader
 } from './types';
 import { transitions } from './transitions';
 import {
-    addClass, removeClass, hasClass, hideElement,
+    addClass, removeClass, hideElement,
     getAttribute, setAttribute,
     getFirstDescendant, getAllDescendants,
-    getElementHeight, setElementHeight, deepMerge
+    getElementHeight, setElementHeight
 } from './util';
 import { EventEmitter } from './EventEmitter';
 import { EventBinder } from './EventBinder';
@@ -21,7 +21,7 @@ import { ProgressBar } from './ProgressBar';
 import { StepNavigator } from './StepNavigator';
 import { WizardStep } from './WizardStep';
 import { WizardStepCollection } from './WizardStepCollection';
-import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION, LAYOUT } from './constants';
+import { STYLES, DATA_ATTRIBUTES, EVENTS, STEP_DIRECTION, STEP_POSITION, CONTENT_DIRECTION } from './constants';
 
 export class SmartWizard implements WizardInterface {
     private _options: WizardOptions;
@@ -468,7 +468,6 @@ export class SmartWizard implements WizardInterface {
             this.setProgressbar(stepIdx);
         });
     }
-
 
     private loadContent(idx: number, callback: () => void): void {
         if (!this._options.contentLoader || typeof this._options.contentLoader !== 'function') {

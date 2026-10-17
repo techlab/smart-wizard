@@ -6,7 +6,6 @@
       :prev="prev"
       :first="first"
       :last="last"
-      :skip="skip"
       :goTo="goTo"
       :reset="reset"
       :destroy="destroy"
@@ -27,6 +26,6 @@ const props = defineProps<{
 
 const containerRef = ref<HTMLElement | null>(null);
 
-const { info, next, prev, first, last, skip, goTo, reset, destroy, setOptions, wizard } =
+const { info, next, prev, first, last, goTo, reset, destroy, setOptions, wizard } =
   useSmartWizard(containerRef, props.options ?? {});
 </script>

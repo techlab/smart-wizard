@@ -1,155 +1,99 @@
-// Root CSS variables used for theming and color customization
+// ============================================================================
+// SmartWizard theme tokens
+// ----------------------------------------------------------------------------
+// - Every variable is prefixed --sw- to avoid collisions with other apps
+// ============================================================================
 
-:root {
-    /* Backgrounds */
-    --sw-bg: #ffffff;
-    --sw-surface: #f8fafc;
-    --sw-surface-hover: #f1f5f9;
+// ----------------------------------------------------------------------------
+// DARK values
+// ----------------------------------------------------------------------------
+@mixin sw-dark {
+    color-scheme: dark;
 
-    /* Borders */
-    --sw-border: #dfe3ea;
+    // Surfaces
+    --sw-bg: #11151d;
+    --sw-surface: #1b2130;
+    --sw-surface-2: #252c3d;
+    --sw-border: #31384b;
+    --sw-border-strong: #6b7689;
 
-    /* Text */
-    --sw-text: #111827;
-    --sw-text-muted: #6b7280;
-    --sw-text-disabled: #9ca3af;
+    // Text
+    --sw-text: #f1f5f9;
+    --sw-text-muted: #94a3b8;
+    --sw-text-disabled: #5f6778;
 
-    // PRIMARY THEME
-    --sw-primary: #6366f1;
-    --sw-primary-hover: #5558e8;
-    --sw-primary-active: #4548d8;
-    --sw-on-primary: #ffffff;
+    // Brand: lighter shade on dark, with dark ink on top of it
+    --sw-primary: #818cf8;
+    --sw-on-primary: #0f1226;
 
-    // SEMANTIC COLORS
+    // Elevation
+    --sw-shadow: 0 4px 20px rgba(0, 0, 0, .5), 0 0 0 1px rgba(255, 255, 255, .06);
+
+    // Hover/active move toward white on dark surfaces
+    --_sw-mix: #ffffff;
+}
+
+// ----------------------------------------------------------------------------
+// LIGHT values
+// ----------------------------------------------------------------------------
+.sw {
+    color-scheme: light;
+
+    // ── Surfaces ──────────────────────────────────────────────────────────────
+    --sw-bg: #ffffff; // wizard container, nav
+    --sw-surface: #f8fafc; // content panel, toolbar, inputs
+    --sw-surface-2: #f1f5f9; // hover / raised / secondary buttons
+    --sw-border: #e2e8f0; // dividers, panel and nav borders
+    --sw-border-strong: #8a96a8; // input and control outlines (about 3:1)
+
+    // ── Text ──────────────────────────────────────────────────────────────────
+    --sw-text: #0f172a; // body and headings
+    --sw-text-muted: #475569; // labels, hints, inactive steps
+    --sw-text-disabled: #94a3b8; // disabled controls
+
+    // ── Brand ─────────────────────────────────────────────────────────────────
+    --sw-primary: #4f46e5; // white on this is about 6:1
+    --sw-on-primary: #ffffff; // ONLY on a primary fill
+
+    // ── Status (fills) ────────────────────────────────────────────────────────
     --sw-success: #22c55e;
     --sw-warning: #f59e0b;
     --sw-danger: #ef4444;
     --sw-info: #0ea5e9;
-}
+    --sw-on-status: #0b1220; // dark ink, passes AA on all four, both themes
 
-// ─────────────────────────────────────────────
-// DARK MODE
-// ─────────────────────────────────────────────
-[data-color-scheme="dark"] {
-    // SURFACE COLORS
-    --sw-bg: #11151d;
-    --sw-surface: #1b2130;
-    --sw-surface-hover: #252c3d;
-
-    --sw-border: #31384b;
-
-    --sw-text: #f8fafc;
-    --sw-text-muted: #9ca3af;
-    --sw-text-disabled: #5f6778;
-}
-
-/* Smart Wizard Variables */
-.sw {
-    // ============================================
-    // STEP STATE VARIABLES
-    --sw-step-bg: transparent;
-    --sw-step-border: var(--sw-border);
-    --sw-step-text: var(--sw-text-muted);
-
-    --sw-step-active-bg: color-mix(in srgb, var(--sw-primary) 12%, transparent);
-    --sw-step-active-border: var(--sw-primary);
-    --sw-step-active-text: var(--sw-text);
-
-    --sw-step-complete-bg: color-mix(in srgb, var(--sw-primary) 18%, transparent);
-    --sw-step-complete-border: var(--sw-primary);
-    --sw-step-complete-text: var(--sw-text);
-
-    --sw-step-disabled-opacity: .45;
-
-    // FORM CONTROLS
-    --sw-input-bg: var(--sw-surface);
-    --sw-input-border: var(--sw-border);
-    --sw-input-focus: var(--sw-primary);
-
-    // BUTTONS
-    --sw-button-bg: var(--sw-primary);
-    --sw-button-text: var(--sw-on-primary);
-
-    --sw-button-secondary-bg: var(--sw-surface);
-    --sw-button-secondary-text: var(--sw-text);
-
-    // Progress
-    --sw-progress-bg: var(--sw-border);
-    --sw-progress-fill: var(--sw-primary);
-
-    // ============================================
-
-    // Wizard Container
-    --sw-wizard-bg: var(--sw-bg);
-    --sw-wizard-border: var(--sw-border);
-    --sw-wizard-shadow: var(--sw-shadow);
-    --sw-wizard-radius: var(--sw-border-radius);
-
-    // Navigation
-    --sw-nav-bg: var(--sw-bg);
-    --sw-nav-border: var(--sw-border);
-    --sw-nav-item-padding: 14px 20px;
-    --sw-nav-item-gap: 10px;
-
-    --sw-nav-item-default-bg: transparent;
-    --sw-nav-item-default-text: var(--sw-on-primary);
-    --sw-nav-item-active-bg: var(--sw-primary);
-    --sw-nav-item-active-text: var(--sw-on-primary);
-    --sw-nav-item-completed-bg: var(--sw-bg);
-    --sw-nav-item-completed-text: var(--sw-primary);
-
-    // Badge
-    --sw-badge-padding: 4px 8px;
-    --sw-badge-radius: 20px;
-    --sw-badge-font-size: 11px;
-    --sw-badge-default-text: var(--sw-on-primary);
-    --sw-badge-default-border: var(--sw-border);
-
-    // Toolbar
-    --sw-toolbar-bg: var(--sw-surface);
-    --sw-toolbar-border: var(--sw-border);
-
-    // Buttons
-    --sw-btn-primary-bg: var(--sw-bg);
-    --sw-btn-primary-text: var(--sw-on-primary);
-    --sw-btn-padding: 8px 18px;
-    --sw-btn-radius: var(--sw-border-radius);
-    --sw-btn-font-weight: 600;
-    --sw-btn-transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
-
-    --sw-btn-default-text: var(--sw-on-primary);
-    --sw-btn-default-border: var(--sw-border);
-
-    --sw-btn-hover-bg: var(--sw-bg);
-    --sw-btn-hover-text: var(--sw-primary);
-    --sw-btn-hover-border: var(--sw-bg);
-
-    // Content Panels
-    --sw-panel-padding: 24px;
-    --sw-panel-bg: var(--sw-surface);
-    --sw-panel-text: var(--sw-on-primary);
-
-    // Loader
-    --sw-loader-color: var(--sw-primary);
-    --sw-loader-bg: rgba(255, 255, 255, 0.7);
-
-    // Connector Line
-    --sw-connector-color: var(--sw-border);
-    --sw-connector-height: 2px;
-
-    // GLOBAL PROPERTIES
-    --sw-border-radius: 0.4rem;
-    --sw-border-radius-lg: 0.75rem;
+    // ── Shape, motion, spacing (optional hooks) ───────────────────────────────
+    --sw-radius: .4rem;
+    --sw-radius-lg: .75rem;
     --sw-border-width: 1px;
-
     --sw-shadow: 0 4px 20px rgba(0, 0, 0, .08), 0 0 0 1px rgba(0, 0, 0, .04);
+    --sw-transition: .2s cubic-bezier(.4, 0, .2, 1);
+    --sw-panel-padding: 24px;
+    --sw-nav-padding: 14px 20px;
+    --sw-btn-padding: 8px 18px;
+    --sw-disabled-opacity: .45;
 
-    --sw-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    // ── Private derived values (do not override; may change between versions) ─
+    --_sw-mix: #000000; // flips to white in dark mode
+    --_sw-primary-hover: color-mix(in srgb, var(--sw-primary) 88%, var(--_sw-mix));
+    --_sw-primary-active: color-mix(in srgb, var(--sw-primary) 76%, var(--_sw-mix));
+    --_sw-primary-tint: color-mix(in srgb, var(--sw-primary) 14%, transparent);
+    --_sw-primary-tint-strong: color-mix(in srgb, var(--sw-primary) 22%, transparent);
+    --_sw-ring: color-mix(in srgb, var(--sw-primary) 45%, transparent);
+    --_sw-overlay: color-mix(in srgb, var(--sw-bg) 70%, transparent);
+}
 
-    // Focus Ring
-    --sw-focus-ring-color: rgba(52, 152, 219, 0.4);
-    --sw-focus-ring-width: 1px;
+// ----------------------------------------------------------------------------
+// DARK selectors
+// ----------------------------------------------------------------------------
+.sw[data-color-scheme="dark"],
+[data-color-scheme="dark"] .sw,
+.dark .sw {
+    @include sw-dark;
+}
 
-    --sw-badge-default-bg: var(--sw-bg);
-    --sw-btn-default-bg: var(--sw-bg);
+@media (prefers-color-scheme: dark) {
+    .sw[data-color-scheme="auto"] {
+        @include sw-dark;
+    }
 }

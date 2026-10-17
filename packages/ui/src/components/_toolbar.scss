@@ -6,17 +6,17 @@
         justify-content: space-between;
         padding: 1rem;
         flex-wrap: wrap;
-        background: var(--sw-toolbar-bg);
+        background: var(--sw-surface);
         gap: 1rem;
 
         &-top {
             border-top: none;
-            border-bottom: var(--sw-border-width) solid var(--sw-toolbar-border);
+            border-bottom: var(--sw-border-width) solid var(--sw-border);
         }
 
         &-bottom {
             border-bottom: none;
-            border-top: var(--sw-border-width) solid var(--sw-toolbar-border);
+            border-top: var(--sw-border-width) solid var(--sw-border);
         }
 
         &-divider {

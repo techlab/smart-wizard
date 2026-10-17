@@ -6,19 +6,19 @@
         font-weight: 600;
         cursor: pointer;
         padding: var(--sw-btn-padding);
-        border-radius: var(--sw-btn-radius);
+        border-radius: var(--sw-radius);
         border: var(--sw-border-width) solid var(--sw-btn-default-border);
         background: var(--sw-btn-default-bg);
         color: var(--sw-btn-default-text);
-        transition: var(--sw-btn-transition);
+        transition: var(--sw-transition);
 
         &:hover {
-            box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-btn-default-bg);
+            box-shadow: 0 0 0 2px var(--sw-surface-2);
         }
 
         &:focus-visible {
             outline: none;
-            box-shadow: 0 0 0 var(--sw-focus-ring-width) var(--sw-focus-ring-color);
+            box-shadow: 0 0 0 2px var(--_sw-ring);
         }
 
         &:disabled,
@@ -32,51 +32,51 @@
     .sw-btn-primary {
         --sw-btn-default-bg: var(--sw-primary);
         --sw-btn-default-border: var(--sw-primary);
-        --sw-btn-default-text: var(--sw-primary-contrast);
+        --sw-btn-default-text: var(--sw-on-primary);
 
-        --sw-btn-hover-bg: var(--sw-primary-dark);
-        --sw-btn-hover-border: var(--sw-primary-dark);
-        --sw-btn-hover-text: var(--sw-primary-contrast);
+        --sw-btn-hover-bg: var(--_sw-primary-hover);
+        --sw-btn-hover-border: var(--_sw-primary-hover);
+        --sw-btn-hover-text: var(--sw-on-primary);
     }
 
     .sw-btn-success {
         --sw-btn-default-bg: var(--sw-success);
         --sw-btn-default-border: var(--sw-success);
-        --sw-btn-default-text: var(--sw-white);
+        --sw-btn-default-text: var(--sw-on-status);
 
-        --sw-btn-hover-bg: var(--sw-success-dark, var(--sw-success)); // Fallback if dark not defined
-        --sw-btn-hover-border: var(--sw-success-dark, var(--sw-success));
-        --sw-btn-hover-text: var(--sw-white);
+        --sw-btn-hover-bg: var(--sw-success); // Fallback if dark not defined
+        --sw-btn-hover-border: var(--sw-success);
+        --sw-btn-hover-text: var(--sw-on-status);
     }
 
     .sw-btn-danger {
         --sw-btn-default-bg: var(--sw-danger);
         --sw-btn-default-border: var(--sw-danger);
-        --sw-btn-default-text: var(--sw-white);
+        --sw-btn-default-text: var(--sw-on-status);
 
-        --sw-btn-hover-bg: var(--sw-danger-dark, var(--sw-danger));
-        --sw-btn-hover-border: var(--sw-danger-dark, var(--sw-danger));
-        --sw-btn-hover-text: var(--sw-white);
+        --sw-btn-hover-bg: var(--sw-danger);
+        --sw-btn-hover-border: var(--sw-danger);
+        --sw-btn-hover-text: var(--sw-on-status);
     }
 
     .sw-btn-warning {
         --sw-btn-default-bg: var(--sw-warning);
         --sw-btn-default-border: var(--sw-warning);
-        --sw-btn-default-text: var(--sw-white);
+        --sw-btn-default-text: var(--sw-on-status);
 
-        --sw-btn-hover-bg: var(--sw-warning-dark, var(--sw-warning));
-        --sw-btn-hover-border: var(--sw-warning-dark, var(--sw-warning));
-        --sw-btn-hover-text: var(--sw-white);
+        --sw-btn-hover-bg: var(--sw-warning);
+        --sw-btn-hover-border: var(--sw-warning);
+        --sw-btn-hover-text: var(--sw-on-status);
     }
 
     .sw-btn-info {
         --sw-btn-default-bg: var(--sw-info);
         --sw-btn-default-border: var(--sw-info);
-        --sw-btn-default-text: var(--sw-white);
+        --sw-btn-default-text: var(--sw-on-status);
 
-        --sw-btn-hover-bg: var(--sw-info-dark, var(--sw-info));
-        --sw-btn-hover-border: var(--sw-info-dark, var(--sw-info));
-        --sw-btn-hover-text: var(--sw-white);
+        --sw-btn-hover-bg: var(--sw-info);
+        --sw-btn-hover-border: var(--sw-info);
+        --sw-btn-hover-text: var(--sw-on-status);
     }
 
     .sw-btn-sm {

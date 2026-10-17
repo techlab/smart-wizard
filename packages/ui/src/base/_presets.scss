@@ -2,83 +2,85 @@
    COLOR PRESETS
    Each preset overrides the CSS variables defined in _root.scss.
    ───────────────────────────────────────────── */
+.sw {
 
-// ── Ocean ──────────────────────────────────────
-[data-color="ocean"] {
-    --sw-primary: #0288d1;
-    --sw-primary-hover: #01579b;
-    --sw-primary-active: #00897b;
-    --sw-on-primary: #ffffff;
-}
+    // ── Ocean ──────────────────────────────────────
+    &[data-color="ocean"] {
+        --sw-primary: #0288d1;
+        // (derived) --sw-primary-hover: #01579b;
+        // (derived) --sw-primary-active: #00897b;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Forest ─────────────────────────────────────
-[data-color="forest"] {
-    --sw-primary: #388e3c;
-    --sw-primary-hover: #1b5e20;
-    --sw-primary-active: #4c6938;
-    --sw-on-primary: #f1f8e9;
-}
+    // ── Forest ─────────────────────────────────────
+    &[data-color="forest"] {
+        --sw-primary: #388e3c;
+        // (derived) --sw-primary-hover: #1b5e20;
+        // (derived) --sw-primary-active: #4c6938;
+        --sw-on-primary: #f1f8e9;
+    }
 
-// ── Violet ─────────────────────────────────────
-[data-color="violet"] {
-    --sw-primary: #7b1fa2;
-    --sw-primary-hover: #4a148c;
-    --sw-primary-active: #9c27b0;
-    --sw-on-primary: #f3e5f5;
-}
+    // ── Violet ─────────────────────────────────────
+    &[data-color="violet"] {
+        --sw-primary: #7b1fa2;
+        // (derived) --sw-primary-hover: #4a148c;
+        // (derived) --sw-primary-active: #9c27b0;
+        --sw-on-primary: #f3e5f5;
+    }
 
-// ── Crimson ────────────────────────────────────
-[data-color="crimson"] {
-    --sw-primary: #c2185b;
-    --sw-primary-hover: #880e4f;
-    --sw-primary-active: #e91e63;
-    --sw-on-primary: #fce4ec;
-}
+    // ── Crimson ────────────────────────────────────
+    &[data-color="crimson"] {
+        --sw-primary: #c2185b;
+        // (derived) --sw-primary-hover: #880e4f;
+        // (derived) --sw-primary-active: #e91e63;
+        --sw-on-primary: #fce4ec;
+    }
 
-// ── Amber ──────────────────────────────────────
-[data-color="amber"] {
-    --sw-primary: #ffa000;
-    --sw-primary-hover: #ff6f00;
-    --sw-primary-active: #f57c00;
-    --sw-on-primary: #ffffff;
-}
+    // ── Amber ──────────────────────────────────────
+    &[data-color="amber"] {
+        --sw-primary: #ffa000;
+        // (derived) --sw-primary-hover: #ff6f00;
+        // (derived) --sw-primary-active: #f57c00;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Indigo ─────────────────────────────────────
-[data-color="indigo"] {
-    --sw-primary: #3949ab;
-    --sw-primary-hover: #283593;
-    --sw-primary-active: #5c6bc0;
-    --sw-on-primary: #ffffff;
-}
+    // ── Indigo ─────────────────────────────────────
+    &[data-color="indigo"] {
+        --sw-primary: #3949ab;
+        // (derived) --sw-primary-hover: #283593;
+        // (derived) --sw-primary-active: #5c6bc0;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Slate ─────────────────────────────
-[data-color="slate"] {
-    --sw-primary: #1e40af;
-    --sw-primary-hover: #1e3a8a;
-    --sw-primary-active: #3b82f6;
-    --sw-on-primary: #ffffff;
-}
+    // ── Slate ─────────────────────────────
+    &[data-color="slate"] {
+        --sw-primary: #1e40af;
+        // (derived) --sw-primary-hover: #1e3a8a;
+        // (derived) --sw-primary-active: #3b82f6;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Teal ───────────────────────────────
-[data-color="teal"] {
-    --sw-primary: #0097a7;
-    --sw-primary-hover: #006064;
-    --sw-primary-active: #4dd0e1;
-    --sw-on-primary: #ffffff;
-}
+    // ── Teal ───────────────────────────────
+    &[data-color="teal"] {
+        --sw-primary: #0097a7;
+        // (derived) --sw-primary-hover: #006064;
+        // (derived) --sw-primary-active: #4dd0e1;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Purple ───────────────────────────────
-[data-color="purple"] {
-    --sw-primary: #7c3aed;
-    --sw-primary-hover: #6d28d9;
-    --sw-primary-active: #5b21b6;
-    --sw-on-primary: #ffffff;
-}
+    // ── Purple ───────────────────────────────
+    &[data-color="purple"] {
+        --sw-primary: #7c3aed;
+        // (derived) --sw-primary-hover: #6d28d9;
+        // (derived) --sw-primary-active: #5b21b6;
+        --sw-on-primary: #ffffff;
+    }
 
-// ── Green ───────────────────────────────
-[data-color="green"] {
-    --sw-primary: #16a34a;
-    --sw-primary-hover: #15803d;
-    --sw-primary-active: #166534;
-    --sw-on-primary: #ffffff;
+    // ── Green ───────────────────────────────
+    &[data-color="green"] {
+        --sw-primary: #16a34a;
+        // (derived) --sw-primary-hover: #15803d;
+        // (derived) --sw-primary-active: #166534;
+        --sw-on-primary: #ffffff;
+    }
 }
