@@ -88,7 +88,7 @@
           <button
             v-for="(lbl, key) in colorList"
             :key="key"
-            :class="['btn btn-color-theme', { active: selectedColor === key }]"
+            :class="['sw btn btn-color-theme', { active: selectedColor === key }]"
             :data-color="key || 'default'"
             @click="handleColorChange(key)"
           >
@@ -545,10 +545,10 @@ const transitionList: Record<string, Record<string, string>> = {
 
 const demoPages: Record<string, string> = {
   Main: "index.html",
-  Ajax: "ajax.html",
-  Validation: "validation.html",
-  RTL: "rtl.html",
-  Multiple: "multiple.html",
+  // Ajax: "ajax.html",
+  // Validation: "validation.html",
+  // RTL: "rtl.html",
+  // Multiple: "multiple.html",
 };
 
 // ── Dark mode helpers ──────────────────────────────────────────────────────

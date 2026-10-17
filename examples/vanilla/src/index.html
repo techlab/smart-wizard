@@ -79,8 +79,8 @@
       <div class="section-desc">All steps visible simultaneously. Numbers + labels + connectors.</div>
 
       <!-- WIZARD -->
-      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-color="ocean"
-        data-start-step="0" role="region" aria-label="Setup Wizard">
+      <div id="smartwizard-1" class="sw" data-layout="circular" data-theme="arrows" data-start-step="0" role="region"
+        aria-label="Setup Wizard">
 
         <!-- TOOLBAR (optional, can be multiple) -->
         <div class="sw-toolbar sw-toolbar-top">
@@ -471,6 +471,7 @@
 
     // Initialize SmartWizard
     const wizardElement = document.getElementById('smartwizard-1');
+    window.activeColor = '';
 
     window.wizard1 = new SmartWizard(wizardElement, {
       transition: {

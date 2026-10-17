@@ -187,15 +187,16 @@ body[data-ui-theme="dark"] .btn.active {
 }
 
 .btn-color-theme {
-    background: linear-gradient(135deg, var(--sw-primary, #3b82f6), var(--sw-primary-active, #1d4ed8)) !important;
-    color: #fff !important;
-    border-color: var(--sw-primary, #3b82f6) !important;
+    color: var(--sw-primary) !important;
+    border-color: var(--sw-primary) !important;
     cursor: pointer;
-    transition: opacity 0.2s;
+    transition: var(--trans);
+    position: relative;
 }
 
-.btn-color-theme:hover {
-    opacity: 0.85;
+.btn-color-theme.active {
+    background: var(--sw-primary) !important;
+    color: #fff !important;
 }
 
 .btn-group {

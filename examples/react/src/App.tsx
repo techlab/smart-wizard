@@ -81,10 +81,10 @@ const transitionList: Record<string, Record<string, string>> = {
 
 const demoPages: Record<string, string> = {
     Main: "index.html",
-    Ajax: "ajax.html",
-    Validation: "validation.html",
-    RTL: "rtl.html",
-    Multiple: "multiple.html",
+    // Ajax: "ajax.html",
+    // Validation: "validation.html",
+    // RTL: "rtl.html",
+    // Multiple: "multiple.html",
 };
 
 // ── Dark mode helpers ──────────────────────────────────────────────────────
@@ -106,7 +106,7 @@ function isDarkFromPref(pref: string): boolean {
 function App() {
     // ── Wizard 1 (Horizontal Classic) ──
     const wizard1Ref = useRef<HTMLDivElement>(null);
-    const { stepInfo: stepInfo1, setOptions: setOptions1 } =
+    const { stepInfo: stepInfo1, setOptions: setOptions1, reset: reset1, next: next1, prev: prev1 } =
         useSmartWizard(wizard1Ref, {
             transition: {
                 effect: "css" as any,
@@ -117,7 +117,7 @@ function App() {
 
     // ── Wizard 2 (Grouped / Vertical) ──
     const wizard2Ref = useRef<HTMLDivElement>(null);
-    const { stepInfo: stepInfo2, setOptions: setOptions2 } =
+    const { stepInfo: stepInfo2, setOptions: setOptions2, reset: reset2, next: next2, prev: prev2 } =
         useSmartWizard(wizard2Ref, {});
 
     // ── Shared control state ──
@@ -283,7 +283,7 @@ function App() {
                             {Object.entries(colorList).map(([key, lbl]) => (
                                 <button
                                     key={key}
-                                    className={`btn btn-color-theme${selectedColor === key ? " active" : ""}`}
+                                    className={`sw btn btn-color-theme${selectedColor === key ? " active" : ""}`}
                                     data-color={key || "default"}
                                     onClick={() => handleColorChange(key)}
                                 >
@@ -299,9 +299,9 @@ function App() {
                     <div className="control-group">
                         <label className="control-label">External Controls:</label>
                         <div className="btn-group">
-                            <button className="btn btn-prev" onClick={() => { setOptions1?.({ startStep: Math.max(0, stepInfo1.currentStep - 1) }); }}>← Prev</button>
-                            <button className="btn btn-next" onClick={() => { setOptions1?.({ startStep: Math.min(stepInfo1.totalSteps - 1, stepInfo1.currentStep + 1) }); }}>Next →</button>
-                            <button className="btn btn-reset" onClick={() => { setOptions1?.({ startStep: 0 }); setOptions2?.({ startStep: 0 }); }}>↺ Reset</button>
+                            <button className="btn btn-prev" onClick={() => { prev1?.(); prev2?.(); }}>← Prev</button>
+                            <button className="btn btn-next" onClick={() => { next1?.(); next2?.(); }}>Next →</button>
+                            <button className="btn btn-reset" onClick={() => { reset1?.(); reset2?.(); }}>↺ Reset</button>
                         </div>
                     </div>
 

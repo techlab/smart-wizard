@@ -178,7 +178,7 @@ function initWizardControls() {
             btn.classList.add('btn');
             btn.classList.add('btn-color-theme');
             btn.classList.add('sw');
-            // if (typeof activeColor !== 'undefined' && key === activeColor) btn.classList.add('active');
+            if (typeof activeColor !== 'undefined' && key === activeColor) btn.classList.add('active');
             colorListControls.appendChild(btn);
         });
     }

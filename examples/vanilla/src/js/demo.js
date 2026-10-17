@@ -24,10 +24,10 @@ function applyTheme(isDark) {
 const demoNavs = document.getElementById('demo-nav');
 const demoList = {
     'Main': 'index.html',
-    'Ajax': 'ajax.html',
-    'Validation': 'validation.html',
-    'RTL': 'rtl.html',
-    'Multiple': 'multiple.html',
+    // 'Ajax': 'ajax.html',
+    // 'Validation': 'validation.html',
+    // 'RTL': 'rtl.html',
+    // 'Multiple': 'multiple.html',
 };
 if (demoNavs) {
     let activePage = window.location.pathname.split('/').pop();
