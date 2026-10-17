@@ -35,6 +35,8 @@
         "test": "turbo run test",
         "changeset": "changeset",
         "version": "changeset version",
+        "version-packages": "changeset version",
+        "release": "pnpm build && changeset publish",
         "publish": "changeset publish"
     },
     "devDependencies": {
