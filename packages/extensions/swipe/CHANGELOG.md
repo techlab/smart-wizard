@@ -1,5 +1,13 @@
 # @smart-wizard/extension-swipe
 
+## 1.0.2
+
+### Patch Changes
+
+- 939df13: Initial corrections and readme updates
+- Updated dependencies [939df13]
+  - @smart-wizard/core@1.0.2
+
 ## 1.0.1
 
 ### Patch Changes

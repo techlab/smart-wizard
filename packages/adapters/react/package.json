@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/react",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "React bindings for SmartWizard - modern, framework-agnostic wizard/stepper component",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
