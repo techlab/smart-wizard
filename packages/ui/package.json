@@ -27,7 +27,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "sideEffects": [
         "*.css"
@@ -40,20 +41,27 @@
         "dev": "sass --watch src/core.scss:dist/smartwizard.css src/full.scss:dist/smartwizard-full.css src/themes:dist/themes"
     },
     "keywords": [
-        "wizard",
-        "stepper",
-        "form",
-        "multi-step",
         "styles",
         "css",
-        "scss"
+        "scss",
+        "wizard",
+        "step-wizard",
+        "stepper",
+        "steps",
+        "form",
+        "forms",
+        "form-wizard",
+        "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface"
     ],
     "author": {
         "name": "Dipu Rajendran",
         "email": "hello.techlab@gmail.com",
         "url": "https://github.com/techlab"
     },
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "devDependencies": {
         "autoprefixer": "^10.5.0",
         "cssnano": "^7.1.9",

@@ -6,16 +6,33 @@
     "description": "A modern, framework-agnostic wizard/stepper component",
     "author": {
         "name": "Dipu Rajendran",
-        "email": "hello.techlab@gmail.com",
         "url": "https://github.com/techlab"
     },
     "keywords": [
         "wizard",
+        "step-wizard",
         "stepper",
+        "steps",
         "form",
-        "component"
+        "forms",
+        "form-wizard",
+        "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface",
+        "react",
+        "reactjs",
+        "react-stepper",
+        "vue",
+        "vuejs",
+        "vue-stepper",
+        "zero-dependencies",
+        "component",
+        "components",
+        "javascript",
+        "typescript"
     ],
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "homepage": "https://techlaboratory.net/smart-wizard",
     "repository": {
         "type": "git",

@@ -41,4 +41,10 @@ import '@smart-wizard/ui/themes/arrows.css'; // Optional theme (arrows, pills)
 
 ## 📝 License
 
-Dual-licensed under [MIT](https://github.com/techlab/smart-wizard/blob/main/LICENSE) (open-source) and [Commercial License](https://techlaboratory.net/smart-wizard#license).
+**Smart Wizard** is dual-licensed:
+
+**[GNU General Public License v3.0 (GPLv3)](https://github.com/techlab/smart-wizard/blob/main/LICENSE)** - free and open-source under the GNU General Public License v3.0
+
+**[Commercial License](https://techlaboratory.net/smart-wizard#license)** — Required for **proprietary (closed-source) application, commercial SaaS, or client project** without releasing your application's source code under the GPLv3.
+
+Commercial licenses help support continued development, maintenance, and new features.

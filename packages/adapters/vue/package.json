@@ -25,7 +25,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/adapters/vue"
     },
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "homepage": "https://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
@@ -41,7 +41,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "exports": {
         ".": {
@@ -52,10 +53,23 @@
     },
     "keywords": [
         "wizard",
+        "step-wizard",
         "stepper",
+        "steps",
         "form",
+        "forms",
+        "form-wizard",
         "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface",
         "vue",
-        "smartwizard"
+        "vuejs",
+        "vue-stepper",
+        "zero-dependencies",
+        "component",
+        "components",
+        "javascript",
+        "typescript"
     ]
 }

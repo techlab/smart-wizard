@@ -14,9 +14,30 @@
         "smartwizard",
         "swipe",
         "touch",
-        "wizard"
+        "wizard",
+        "step-wizard",
+        "stepper",
+        "steps",
+        "form",
+        "forms",
+        "form-wizard",
+        "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface",
+        "react",
+        "reactjs",
+        "react-stepper",
+        "vue",
+        "vuejs",
+        "vue-stepper",
+        "zero-dependencies",
+        "component",
+        "components",
+        "javascript",
+        "typescript"
     ],
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "peerDependencies": {
         "@smart-wizard/core": ">=1.0.2"
     },
@@ -45,7 +66,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "exports": {
         ".": {

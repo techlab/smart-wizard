@@ -818,7 +818,7 @@ Code contributions are also welcome! Please open an issue or submit a pull reque
 
 ```bash
 # Clone and install
-git clone https://github.com/techlaboratory/smart-wizard
+git clone https://github.com/techlab/smart-wizard
 cd smart-wizard
 pnpm install
 
@@ -837,10 +837,9 @@ pnpm run build
 
 **Smart Wizard** is dual-licensed:
 
-**[MIT License](https://github.com/techlab/smart-wizard/blob/main/LICENSE)** — Free for personal and open-source projects.
+**[GNU General Public License v3.0 (GPLv3)](https://github.com/techlab/smart-wizard/blob/main/LICENSE)** - free and open-source under the GNU General Public License v3.0
 
-**[Commercial License](https://techlaboratory.net/smart-wizard#license)** — Required for closed-source, SaaS, or any  commercial projects.  
-If you use **Smart Wizard** in a commercial or client application, please purchase a commercial license.
+**[Commercial License](https://techlaboratory.net/smart-wizard#license)** — Required for **proprietary (closed-source) application, commercial SaaS, or client project** without releasing your application's source code under the GPLv3.
 
 Commercial licenses help support continued development, maintenance, and new features.
 
