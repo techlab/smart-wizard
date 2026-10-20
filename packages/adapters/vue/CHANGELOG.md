@@ -1,5 +1,13 @@
 # @smart-wizard/vue
 
+## 1.0.3
+
+### Patch Changes
+
+- 7b0189f: License correction, keywords update
+- Updated dependencies [7b0189f]
+  - @smart-wizard/core@1.0.3
+
 ## 1.0.2
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/ui",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Core styles for SmartWizard - framework-agnostic wizard component",
     "style": "dist/smartwizard.css",
     "main": "dist/smartwizard.css",

@@ -1,6 +1,6 @@
 {
     "name": "@smart-wizard/extension-swipe",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Touch swipe navigation extension for SmartWizard",
     "main": "dist/index.js",
     "module": "dist/index.mjs",
@@ -39,7 +39,7 @@
     ],
     "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "peerDependencies": {
-        "@smart-wizard/core": ">=1.0.2"
+        "@smart-wizard/core": ">=1.0.3"
     },
     "devDependencies": {
         "@smart-wizard/core": "workspace:*",
