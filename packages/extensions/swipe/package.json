@@ -16,7 +16,7 @@
         "touch",
         "wizard"
     ],
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "peerDependencies": {
         "@smart-wizard/core": ">=1.0.1"
     },
@@ -45,7 +45,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "exports": {
         ".": {

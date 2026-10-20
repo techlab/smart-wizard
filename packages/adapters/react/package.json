@@ -26,7 +26,7 @@
         "url": "https://github.com/techlab/smart-wizard.git",
         "directory": "packages/adapters/react"
     },
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "homepage": "https://techlaboratory.net/smart-wizard",
     "bugs": {
         "url": "https://github.com/techlab/smart-wizard/issues"
@@ -42,7 +42,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "exports": {
         ".": {

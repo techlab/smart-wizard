@@ -15,7 +15,7 @@
         "form",
         "component"
     ],
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "homepage": "https://techlaboratory.net/smart-wizard",
     "repository": {
         "type": "git",

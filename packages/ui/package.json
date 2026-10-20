@@ -27,7 +27,8 @@
     "files": [
         "dist",
         "README.md",
-        "LICENSE"
+        "LICENSE",
+        "LICENSE-COMMERCIAL.md"
     ],
     "sideEffects": [
         "*.css"
@@ -53,7 +54,7 @@
         "email": "hello.techlab@gmail.com",
         "url": "https://github.com/techlab"
     },
-    "license": "MIT",
+    "license": "(GPL-3.0-or-later OR LicenseRef-commercial)",
     "devDependencies": {
         "autoprefixer": "^10.5.0",
         "cssnano": "^7.1.9",
