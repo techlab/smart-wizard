@@ -41,13 +41,20 @@
         "dev": "sass --watch src/core.scss:dist/smartwizard.css src/full.scss:dist/smartwizard-full.css src/themes:dist/themes"
     },
     "keywords": [
-        "wizard",
-        "stepper",
-        "form",
-        "multi-step",
         "styles",
         "css",
-        "scss"
+        "scss",
+        "wizard",
+        "step-wizard",
+        "stepper",
+        "steps",
+        "form",
+        "forms",
+        "form-wizard",
+        "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface"
     ],
     "author": {
         "name": "Dipu Rajendran",

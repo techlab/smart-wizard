@@ -53,10 +53,23 @@
     },
     "keywords": [
         "wizard",
+        "step-wizard",
         "stepper",
+        "steps",
         "form",
+        "forms",
+        "form-wizard",
         "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface",
         "vue",
-        "smartwizard"
+        "vuejs",
+        "vue-stepper",
+        "zero-dependencies",
+        "component",
+        "components",
+        "javascript",
+        "typescript"
     ]
 }

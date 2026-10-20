@@ -10,11 +10,28 @@
         "dev": "tsup src/index.ts --format cjs,esm --dts --watch"
     },
     "keywords": [
-        "form",
-        "multi-step",
-        "smartwizard",
+        "wizard",
+        "step-wizard",
         "stepper",
-        "wizard"
+        "steps",
+        "form",
+        "forms",
+        "form-wizard",
+        "multi-step",
+        "multi-step-form",
+        "onboarding",
+        "user-interface",
+        "react",
+        "reactjs",
+        "react-stepper",
+        "vue",
+        "vuejs",
+        "vue-stepper",
+        "zero-dependencies",
+        "component",
+        "components",
+        "javascript",
+        "typescript"
     ],
     "author": {
         "name": "Dipu Rajendran",
