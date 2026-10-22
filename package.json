@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "title": "Smart Wizard",
     "private": true,
-    "description": "A modern, framework-agnostic wizard/stepper component",
+    "description": "A modern, framework-agnostic wizard component with React & Vue support",
     "author": {
         "name": "Dipu Rajendran",
         "url": "https://github.com/techlab"
@@ -52,8 +52,8 @@
         "lint": "turbo run lint",
         "test": "turbo run test",
         "changeset": "changeset",
-        "version": "changeset version",
-        "version-packages": "changeset version",
+        "version": "changeset version && node scripts/sync-version.mjs",
+        "version-packages": "changeset version && node scripts/sync-version.mjs",
         "release": "pnpm build && changeset publish",
         "publish": "changeset publish"
     },

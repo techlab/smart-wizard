@@ -6,8 +6,8 @@
     "module": "dist/index.mjs",
     "types": "dist/index.d.ts",
     "scripts": {
-        "build": "tsup src/index.ts --format cjs,esm --dts --external @smart-wizard/core --external react",
-        "dev": "tsup src/index.ts --format cjs,esm --watch"
+        "build": "tsup",
+        "dev": "tsup --watch"
     },
     "dependencies": {
         "@smart-wizard/core": "workspace:*"
